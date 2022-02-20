@@ -5,7 +5,7 @@ from .db_mock import spark
 
 @pytest.fixture
 def df():
-    cvm = cqml.pkg_cqml(TEST_YAML, spark, '.')
+    cvm = cqml.pkg_cqml('cqml_test', spark, 'tests')
     return cvm.df
 
 def test_load(df):

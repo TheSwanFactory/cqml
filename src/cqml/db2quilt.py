@@ -237,16 +237,20 @@ def save_ext(pkg, dfs, key, ext):
         return save_table(dfs[key], key, "append")
     return pkg.save_file(dfs[key], f'{key}.{ext}')
 
-def cvm2pkg(cvm):
-    cvm.run()
+def exract_pkg(cvm):
     dict = cvm.yaml
-    proj = Project(dict.org, dict.s3_bucket, dict.project)
-    pkg_name = f"{dict.project}/{dict.name}"
+    proj_name = dict['project']
+    print(proj_name)
+    proj = Project(dict['org'], dict['s3.bucket'], proj_name)
+    pkg_name = f"{proj_name}/{dict['name']}"
     if cvm.debug == True:
          pkg_name = pkg_name + "-debug"
-    print("cvm2quilt package: "+pkg_name)
+    print("exract_pkg: "+pkg_name)
     pkg = proj.package(pkg_name)
 
+def cvm2pkg(cvm):
+    cvm.run()
+    pkg = exract_pkg(cvm)
     doc = cvm.key_actions('doc')
     doc["cvm.actions"] = cvm.actions
     pkg.save_dict(cvm.actions, name)
