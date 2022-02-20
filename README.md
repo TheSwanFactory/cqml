@@ -10,6 +10,13 @@ The initial back-end is written for the DataBrick's flavor of PySpark and Spark 
 import cqml
 ```
 
+# Testing
+From top-level directory:
+```
+$ pip install pytest
+$ python3 -m pytest
+```
+
 # Building the Packages
 
 ```

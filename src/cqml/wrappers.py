@@ -1,5 +1,5 @@
 import yaml
-from sangam import cvm2quilt
+from .sangam import cvm2quilt
 from .cvm import CVM
 from .cqml12 import ensure_v02
 
