@@ -1,16 +1,12 @@
 #!/usr/bin/env python3
-
-import sys
-sys.path.insert(0,'..')
-
 import pytest
-from cqml import make_frames
+from .context import cqml
 from db_mock import spark
 TEST_YAML="pipes/cqml_test.yml"
 
 @pytest.fixture
 def df():
-    cvm = make_frames(TEST_YAML, spark)
+    cvm = cqml.make_frames(TEST_YAML, spark)
     return cvm.df
 
 def test_load(df):
