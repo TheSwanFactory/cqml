@@ -1,0 +1,6 @@
+recursive-include main_directory *
+recursive-include tests *.py
+recursive-include tests *.yml
+include *
+global-exclude *.pyc
+global-exclude .DS_Store
