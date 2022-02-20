@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import pytest
+import pytest, sys
 from .context import cqml
 
 if len(sys.argv) > 1:

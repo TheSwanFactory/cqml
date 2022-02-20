@@ -4,7 +4,7 @@
 ## db2quilt - integrating Quilt Packages into DataBricks
 """
 import shutil, os, re, json
-#import pandas as pd
+import pandas as pd
 import quilt3 as q3
 import nbformat as nbf
 from datetime import datetime,date,timezone
