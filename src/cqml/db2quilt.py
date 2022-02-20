@@ -100,15 +100,15 @@ class Project:
         self.project = project
         self.path = f"{PYROOT}/{pkg_dir}"
 
-    def package(self, pkg):
-        return Package(pkg, self)
+    def package(self, pkg_name):
+        return Package(pkg_name, self)
 
 class Package:
-    def __init__(self, pkg, proj, reset=False):
-        self.pkg = pkg
+    def __init__(self, pkg_name, proj, reset=False):
+        self.pkg_name = pkg_name
         self.proj = proj
-        self.url = f"{proj.url}/{pkg}/"
-        self.path = f"{proj.path}/{pkg}/"
+        self.url = f"{proj.url}/{pkg_name}/"
+        self.path = f"{proj.path}/{pkg_name}/"
         self.dir = to_dir(self.path)
         if reset:
             shutil.rmtree(self.path,ignore_errors=True)
@@ -116,7 +116,7 @@ class Package:
         self.summaries={}
 
     def setup(self):
-        QPKG.install(self.pkg, registry=self.proj.repo, dest=self.path)
+        QPKG.install(self.pkg_name, registry=self.proj.repo, dest=self.path)
 
     def read_csv(self, filename):
         path = self.path+filename
@@ -128,9 +128,9 @@ class Package:
     def cleanup(self, msg, meta = {"db2quilt":"v0.1"}):
         self.write_summary()
         QPKG.set_dir('/',path=self.path, meta=meta)
-        QPKG.push(self.pkg, self.proj.repo, message=msg)
+        QPKG.push(self.pkg_name, self.proj.repo, message=msg)
         #shutil.rmtree(self.path)
-        self.html = f'Published <a href="{self.url}">{self.pkg}</a> for <b>{msg}</b>'
+        self.html = f'Published <a href="{self.url}">{self.pkg_name}</a> for <b>{msg}</b>'
         return self
 
     def export(self, dfs, key):
@@ -222,3 +222,43 @@ class Package:
             f.write(jsonString + "\n")
         print(path)
         return path
+
+#
+# Helpers
+#
+
+
+def save_ext(pkg, dfs, key, ext):
+    if ext == "report":
+        return pkg.export(dfs, key)
+    elif ext == "table":
+        return save_table(dfs[key], key)
+    elif ext == "series":
+        return save_table(dfs[key], key, "append")
+    return pkg.save_file(dfs[key], f'{key}.{ext}')
+
+def cvm2pkg(cvm):
+    cvm.run()
+    dict = cvm.yaml
+    proj = Project(dict.org, dict.s3_bucket, dict.project)
+    pkg_name = f"{dict.project}/{dict.name}"
+    if cvm.debug == True:
+         pkg_name = pkg_name + "-debug"
+    print("cvm2quilt package: "+pkg_name)
+    pkg = proj.package(pkg_name)
+
+    doc = cvm.key_actions('doc')
+    doc["cvm.actions"] = cvm.actions
+    pkg.save_dict(cvm.actions, name)
+    msg = "Auto-generated from CQML"
+    files = cvm.saveable()
+    for key in files:
+        ext = files[key]
+        msg = save_ext(pkg, cvm.df, key, ext)
+    try:
+        pkg.copy_file(f'{name}.md','README.md')
+        pkg.copy_file(f'REPORT_HELP.md')
+    except FileNotFoundError as err:
+        print(err)
+        #cvm.log(err)
+    return pkg.cleanup(msg, doc)
