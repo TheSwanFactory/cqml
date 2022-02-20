@@ -1,9 +1,7 @@
 import yaml
-from .sangam import cvm2quilt
+from .db2quilt import cvm2pkg
 from .cvm import CVM
 from .cqml12 import ensure_v02
-
-LOAD_FOLDER="pipes"
 
 class CQML(CVM):
     def __init__(self, yaml_data, spark):
@@ -35,17 +33,17 @@ def make_frames(yaml_file, spark):
     cvm.run()
     return cvm
 
-def load_cqml(name, spark):
-    yaml_file=f"{LOAD_FOLDER}/{name}.yml"
+def load_cqml(name, spark, folder="pipes"):
+    yaml_file=f"{folder}/{name}.yml"
     return from_file(yaml_file, spark)
 
-def exec_cqml(name, spark):
-    cvm = load_cqml(name, spark)
+def exec_cqml(name, spark, folder="pipes"):
+    cvm = load_cqml(name, spark, folder)
     cvm.run()
     return cvm
 
-def pkg_cqml(name, spark):
+def pkg_cqml(name, spark, folder="pipes"):
     print("\npkg_cqml: "+name)
-    cvm = exec_cqml(name, spark)
-    pkg = cvm2quilt(cvm, name)
-    return {'pkg': pkg, 'html': pkg.html, 'cvm': cvm.actions}
+    cvm = exec_cqml(name, spark, folder)
+    pkg = cvm2pkg(cvm)
+    return {'pkg': pkg, 'html': pkg.html, 'actions': cvm.actions}
