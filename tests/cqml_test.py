@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 import pytest
-from .context import cqml
+from .context import cqml, TEST_YAML
 from .db_mock import spark
-TEST_YAML="tests/pipes/cqml_test.yml"
 
 @pytest.fixture
 def df():
