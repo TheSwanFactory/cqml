@@ -5,7 +5,7 @@ from .cqml12 import ensure_v02
 
 LOAD_FOLDER="pipes"
 
-class Runner(CVM):
+class CQML(CVM):
     def __init__(self, yaml_data, spark):
         super().__init__(yaml_data, spark)
 
@@ -28,7 +28,7 @@ def from_file(yaml_file, spark):
     with open(yaml_file) as data:
         raw_yaml = yaml.full_load(data)
         v02 = ensure_v02(raw_yaml)
-        return Runner(v02, spark)
+        return CQML(v02, spark)
 
 def make_frames(yaml_file, spark):
     cvm = from_file(yaml_file, spark)
