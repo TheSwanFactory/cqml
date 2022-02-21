@@ -1,4 +1,11 @@
 cqml: 0.2
+id: cqml_test
+meta:
+    org: nauto
+    project: sangam
+    s3.bucket: biz-databricks-root-prod-us
+    catalog: quilt
+    root: /tmp
 actions:
   netsuite_suiteanalytics:
     do: load
