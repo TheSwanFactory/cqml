@@ -1,8 +1,2 @@
-Changelog for CQML
-=================
-
-0.2.1
+0.2.1 (2022-02-21)
 ------------------
-- remove sangam
-- replace with cvm2pkg
-- place Quilt config in meta
