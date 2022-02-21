@@ -1,6 +1,5 @@
-# BOX Configuration for QUILT
+# BOX Configuration for Quilt
 
-from .sangam import QUILT
 from .db2quilt import make_dir
 
 FILE_EXT='csv'
@@ -36,16 +35,15 @@ def get_secrets(cf, scope, keys):
 
 class BoxQuilt:
 
-    def __init__(self, key, sort, spark):
+    def __init__(self, key, sort, pkg, spark):
         self.spark = spark
         self.client = self.jwt_init() #token_init()#
         self.root = self.client.folder(BOX_ROOTID)
         self.key = key
         self.sort = sort
-        self.name = f"box/{key}"
-        self.sg = QUILT.package(self.name)
-        self.dir = self.sg.dir + DATA_DIR
-        self.path = self.sg.path + DATA_DIR
+        self.pkg = pkg
+        self.dir = self.pkg.dir + DATA_DIR
+        self.path = self.pkg.path + DATA_DIR
         make_dir(self.path)
         self.rows = {}
 
@@ -89,9 +87,9 @@ class BoxQuilt:
             print("not skipSave")
             df.coalesce(1).sort(*self.sort).write.mode("overwrite").partitionBy(self.key).option("header", "true").csv(self.dir)
         files = os.listdir(self.path)
-        msg = f"{self.key}: {self.sg.now()} <{len(files)}>"
+        msg = f"{self.key}: {self.pkg.now()} <{len(files)}>"
         print(msg)
-        self.sg.cleanup(msg, meta=files)
+        self.pkg.cleanup(msg, meta=files)
         return files
 
     def box_entries(self):

@@ -15,9 +15,7 @@ class MockCol(object):
         return True
 
 class MockWriter(object):
-    def __init__(self, df):
-        self.df = df
-
+    def __init__(self, df): self.df = df
     def mode(self, arg): return self
     def option(self, *arg): return self
     def format(self, arg): return self

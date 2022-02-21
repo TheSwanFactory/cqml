@@ -251,8 +251,9 @@ def exract_pkg(cvm):
     return pkg
 
 def cvm2pkg(cvm):
-    cvm.run()
     pkg = exract_pkg(cvm)
+    cvm.pkg = pkg
+    cvm.run()
     doc = cvm.key_actions('doc')
     doc["cvm.actions"] = cvm.actions
     pkg.save_dict(cvm.actions, pkg.id)
