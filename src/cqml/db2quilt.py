@@ -262,7 +262,7 @@ def cvm2pkg(cvm):
         ext = files[key]
         msg = save_ext(pkg, cvm.df, key, ext)
     try:
-        pkg.copy_file(f'{name}.md','README.md')
+        pkg.copy_file(f'{pkg.id}.md','README.md')
         pkg.copy_file(f'REPORT_HELP.md')
     except FileNotFoundError as err:
         print(err)

@@ -18,6 +18,7 @@ class MockFrame(object):
     def __init__(self):
         self.items = {}
         self.columns = []
+        self.write = self
 
     def __getitem__(self, item):
         return self.items[item] if item in self.items else MockCol(item)
@@ -45,10 +46,14 @@ class MockFrame(object):
     def count(self): return 1
     def distinct(self): return self
     def filter(self, arg): return self
+    def format(self, arg): return self
     def groupby(self, *arg): return self
     def join(self, df_from, join, how): return deepcopy(df_from)
+    def mode(self, arg): return self
+    def option(self, *arg): return self
     def orderBy(self, arg): return self
     def pivot(self, arg): return self
+    def saveAsTable(self, arg): return self
     def sort(self, arg): return self
     def union(self, arg): return self
     def withColumn(self, *arg): return self
