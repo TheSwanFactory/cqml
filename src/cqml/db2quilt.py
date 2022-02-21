@@ -95,21 +95,25 @@ Quilt Wrappers
 """
 
 class Project:
-    def __init__(self, org, bucket, project, pkg_dir=PKG_DIR):
+    def __init__(self, config):
+        org, bucket, project = itemgetter('org','s3.bucket','project')(config)
+        pkg_dir = config['catalog'] if 'catalog' in config else PKG_DIR
+        root = config['root'] if 'root' in config else PYROOT
         self.repo = "s3://"+bucket
         self.url = f"https://quilt.{org}.com/b/{bucket}/packages"
-        self.project = project
-        self.path = f"{PYROOT}/{pkg_dir}"
+        self.name = project
+        self.path = f"{root}/{pkg_dir}"
 
-    def package(self, pkg_name):
-        return Package(pkg_name, self)
+    def package(self, id):
+        return Package(id, self)
 
 class Package:
-    def __init__(self, pkg_name, proj, reset=False):
-        self.pkg_name = pkg_name
+    def __init__(self, id, proj, reset=False):
+        self.id = id
+        self.name = f"{proj.name}/{id}"
         self.proj = proj
-        self.url = f"{proj.url}/{pkg_name}/"
-        self.path = f"{proj.path}/{pkg_name}/"
+        self.url = f"{proj.url}/{self.name}/"
+        self.path = f"{proj.path}/{self.name}/"
         self.dir = to_dir(self.path)
         if reset:
             shutil.rmtree(self.path,ignore_errors=True)
@@ -117,7 +121,7 @@ class Package:
         self.summaries={}
 
     def setup(self):
-        QPKG.install(self.pkg_name, registry=self.proj.repo, dest=self.path)
+        QPKG.install(self.name, registry=self.proj.repo, dest=self.path)
 
     def read_csv(self, filename):
         path = self.path+filename
@@ -129,9 +133,9 @@ class Package:
     def cleanup(self, msg, meta = {"db2quilt":"v0.1"}):
         self.write_summary()
         QPKG.set_dir('/',path=self.path, meta=meta)
-        QPKG.push(self.pkg_name, self.proj.repo, message=msg)
+        QPKG.push(self.name, self.proj.repo, message=msg)
         #shutil.rmtree(self.path)
-        self.html = f'Published <a href="{self.url}">{self.pkg_name}</a> for <b>{msg}</b>'
+        self.html = f'Published <a href="{self.url}">{self.name}</a> for <b>{msg}</b>'
         return self
 
     def export(self, dfs, key):
@@ -239,21 +243,19 @@ def save_ext(pkg, dfs, key, ext):
     return pkg.save_file(dfs[key], f'{key}.{ext}')
 
 def exract_pkg(cvm):
-    id, meta = itemgetter('id','meta')(cvm.yaml)
-    org, bucket, proj_name = itemgetter('org','s3.bucket','project')(meta)
-    proj = Project(org, bucket, proj_name)
-    pkg_name = f"{proj_name}/{id}"
-    if cvm.debug == True:
-         pkg_name = pkg_name + "-debug"
-    print("exract_pkg: "+pkg_name)
-    pkg = proj.package(pkg_name)
+    id, config = itemgetter('id','meta')(cvm.yaml)
+    proj = Project(config)
+    pkg_id = id + "-debug" if cvm.debug == True else id
+    print("exract_pkg: "+pkg_id)
+    pkg = proj.package(pkg_id)
+    return pkg
 
 def cvm2pkg(cvm):
     cvm.run()
     pkg = exract_pkg(cvm)
     doc = cvm.key_actions('doc')
     doc["cvm.actions"] = cvm.actions
-    pkg.save_dict(cvm.actions, name)
+    pkg.save_dict(cvm.actions, pkg.id)
     msg = "Auto-generated from CQML"
     files = cvm.saveable()
     for key in files:
