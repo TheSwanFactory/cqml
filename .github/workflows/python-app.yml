@@ -38,5 +38,4 @@ jobs:
     - name: Test with pytest
       run: |
         echo $AWS_DEFAULT_REGION
-        printenv
         pytest
