@@ -7,6 +7,7 @@ import shutil, os, re, json
 import pandas as pd
 import quilt3 as q3
 import nbformat as nbf
+from operator import itemgetter
 from datetime import datetime,date,timezone
 import pytz
 time_format = "%A, %d %b %Y %H:%M:%S %p"
@@ -238,11 +239,10 @@ def save_ext(pkg, dfs, key, ext):
     return pkg.save_file(dfs[key], f'{key}.{ext}')
 
 def exract_pkg(cvm):
-    dict = cvm.yaml
-    proj_name = dict['project']
-    print(proj_name)
-    proj = Project(dict['org'], dict['s3.bucket'], proj_name)
-    pkg_name = f"{proj_name}/{dict['name']}"
+    id, meta = itemgetter('id','meta')(cvm.yaml)
+    org, bucket, proj_name = itemgetter('org','s3.bucket','project')(meta)
+    proj = Project(org, bucket, proj_name)
+    pkg_name = f"{proj_name}/{id}"
     if cvm.debug == True:
          pkg_name = pkg_name + "-debug"
     print("exract_pkg: "+pkg_name)

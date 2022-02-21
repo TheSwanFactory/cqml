@@ -1,8 +1,9 @@
 cqml: 0.2
-org: nauto
-project: sangam
-name: cqml_test
-s3.bucket: biz-databricks-root-prod-us
+id: cqml_test
+meta:
+    org: nauto
+    project: sangam
+    s3.bucket: biz-databricks-root-prod-us
 actions:
   netsuite_suiteanalytics:
     do: load
