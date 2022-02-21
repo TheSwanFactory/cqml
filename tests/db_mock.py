@@ -14,15 +14,23 @@ class MockCol(object):
     def desc(self):
         return True
 
+class MockWriter(object):
+    def __init__(self, df):
+        self.df = df
+
+    def mode(self, arg): return self
+    def option(self, *arg): return self
+    def format(self, arg): return self
+    def saveAsTable(self, arg): return self
+
 class MockFrame(object):
     def __init__(self):
         self.items = {}
         self.columns = []
-        self.write = self
+        self.write = MockWriter(self)
 
     def __getitem__(self, item):
         return self.items[item] if item in self.items else MockCol(item)
-
 
     def select(self, *input):
         columns = list(input.values()) if isinstance(input, dict) else input
@@ -32,7 +40,6 @@ class MockFrame(object):
             setattr(self, col, mcol)
             self.items[col] = mcol
         return self
-
 
     def drop(self, col):
         try:
@@ -46,14 +53,10 @@ class MockFrame(object):
     def count(self): return 1
     def distinct(self): return self
     def filter(self, arg): return self
-    def format(self, arg): return self
     def groupby(self, *arg): return self
     def join(self, df_from, join, how): return deepcopy(df_from)
-    def mode(self, arg): return self
-    def option(self, *arg): return self
     def orderBy(self, arg): return self
     def pivot(self, arg): return self
-    def saveAsTable(self, arg): return self
     def sort(self, arg): return self
     def union(self, arg): return self
     def withColumn(self, *arg): return self
