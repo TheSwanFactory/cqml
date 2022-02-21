@@ -32,6 +32,20 @@ actions:
     into: devices
     join: nauto_pn_id
     region: NA
+  box_devices:
+    do: box
+    from: devices
+    group: deployed_fleet
+    +doc: Split by fleet, upload, store URLs
+    box:
+        root_folder: CQML_Test
+        root_id: 156760265584
+        data_dir: test
+        file_ext: csv
+        expiration_date: 2022-02-23
+    cols:
+      serial: tbd
+      install_status: tbd
   items_grouped:
     do: group
     from: items

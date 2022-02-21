@@ -39,11 +39,11 @@ class CVM(VM):
     def do_box(self, action):
         if not HAS_BOX or not cvm.pkg:
             return None
-        from_key, group = itemgetter('from','group')(action)
+        from_key, group, config = itemgetter('from','group','box')(action)
         df_from = self.get_frame(from_key)
         sort = action[kSort] if kSort in action else [group]
         self.log('do_box: init')
-        bq = BoxQuilt(group, sort, cvm.pkg, self.spark)
+        bq = BoxQuilt(group, sort, cvm, config)
         self.log('do_box: save_groups')
         bq.save_groups(df_from, kSkipSave in action) #
         self.log('do_box: load_groups')
