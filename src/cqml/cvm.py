@@ -37,10 +37,11 @@ class CVM(VM):
         return df_from
 
     def do_box(self, action):
-        if not HAS_BOX or not cvm.pkg:
-            return None
+        print('do_box')
         from_key, group, config = itemgetter('from','group','box')(action)
         df_from = self.get_frame(from_key)
+        if not HAS_BOX or not cvm.pkg:
+            return df_from
         sort = action[kSort] if kSort in action else [group]
         self.log('do_box: init')
         bq = BoxQuilt(group, sort, cvm, config)
