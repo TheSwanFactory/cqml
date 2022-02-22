@@ -1,7 +1,9 @@
 0.2.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fixed BOX Return
+- Added BOX configuration to Yaml
+- Added sample CSV for future tests
 
 
 0.2.1 (2022-02-21)
