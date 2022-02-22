@@ -28,8 +28,10 @@ def from_file(yaml_file, spark):
         v02 = ensure_v02(raw_yaml)
         return CQML(v02, spark)
 
-def make_frames(yaml_file, spark):
+def make_frames(yaml_file, spark, debug=False):
     cvm = from_file(yaml_file, spark)
+    if debug:
+        cvm.debug = True
     cvm.run()
     return cvm
 

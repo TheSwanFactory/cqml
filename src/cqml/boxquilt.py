@@ -2,12 +2,12 @@
 
 from .db2quilt import make_dir
 
-FILE_EXT='csv'
-BOX_ROOT='3G_Sunset'
-BOX_ROOTID=154982259864
-EXPIRY_DATE='2022-02-29'
+#FILE_EXT='csv'
+#BOX_ROOT='3G_Sunset'
+#BOX_ROOTID=154982259864
+#EXPIRY_DATE='2022-02-29'
+#DATA_DIR="raw"
 BOX_KEYS="client_id,client_secret,enterprise_id,jwt_key_id,rsa_private_key_file_sys_path,rsa_private_key_passphrase".split(',')
-DATA_DIR="raw"
 
 from boxsdk import Client, OAuth2, JWTAuth
 from pyspark.sql import Row
@@ -26,8 +26,8 @@ def dir_row(folder):
     }
     return row
 
-def get_file_url(file):
-    url = file.get_shared_link(access='open',unshared_at=EXPIRY_DATE,allow_preview=True)
+def get_file_url(file, until):
+    url = file.get_shared_link(access='open',unshared_at=until,allow_preview=True)
     return url
 
 def get_secrets(cf, scope, keys):
@@ -35,15 +35,18 @@ def get_secrets(cf, scope, keys):
 
 class BoxQuilt:
 
-    def __init__(self, key, sort, pkg, spark):
-        self.spark = spark
+    def __init__(self, key, sort, cvm, config):
+        self.spark = cvm.spark
         self.client = self.jwt_init() #token_init()#
-        self.root = self.client.folder(BOX_ROOTID)
+        self.root = self.client.folder(config['root_id'])
         self.key = key
         self.sort = sort
-        self.pkg = pkg
-        self.dir = self.pkg.dir + DATA_DIR
-        self.path = self.pkg.path + DATA_DIR
+        self.pkg = cvm.pkg
+        self.dir = self.pkg.dir + config['data_dir']
+        self.path = self.pkg.path + config['data_dir']
+        self.until = config['expiration_date']
+        self.root = config['root_folder']
+        self.ext = config['file_ext']
         make_dir(self.path)
         self.rows = {}
 
@@ -98,10 +101,10 @@ class BoxQuilt:
     def load_groups(self):
       for root, dirs, files in os.walk(self.path, topdown = False):
          for file in files:
-            if file.endswith(FILE_EXT):
+            if file.endswith(self.ext):
               sf_id = root.split("=")[1]
               path = os.path.join(root, file)
-              filename = f'{BOX_ROOT}_{sf_id}.{FILE_EXT}'
+              filename = f'{self.root}_{sf_id}.{self.ext}'
               print(filename)
               self.rows[sf_id] = {"sf_id": sf_id, "dir": root, "db_file":file, "db_path":path, "box_file": filename}
       return self.rows
@@ -121,7 +124,7 @@ class BoxQuilt:
             row = self.rows[name]
             folder = self.root.create_subfolder(name)
             file = folder.upload(row["db_path"], file_name=row["box_file"], file_description=row["db_file"])
-            row['box_url'] = get_file_url(file)
+            row['box_url'] = get_file_url(file, self.until)
             print(f"{n} create[{file.id}]: {file.name}")
 
         n = 0
