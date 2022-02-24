@@ -1,4 +1,4 @@
-0.2.4 (unreleased)
+0.2.4 (2022-02-24)
 ------------------
 
 - Fix output date stamp
