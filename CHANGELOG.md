@@ -1,4 +1,4 @@
-0.2.6 (unreleased)
+0.2.6 (2022-02-24)
 ------------------
 
 - Do not check-manifest or checkout tag
