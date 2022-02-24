@@ -1,7 +1,13 @@
-0.2.4 (unreleased)
+0.2.5 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- FIX urgent typo in 0.2.4
+
+
+0.2.4 (2022-02-24)
+------------------
+
+- Fix output date stamp
 
 
 0.2.3 (2022-02-24)
