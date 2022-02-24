@@ -116,9 +116,12 @@ actions:
         Deployed: contains
         Exported: contains
   days_unseen:
-    do: eval
+    do: call
     from: status_pending
-    sql: datediff(current_date(),_fivetran_synced)
+    function: datediff
+    args:
+        - current_date()
+        - _fivetran_synced
   is_silent:
     do: flag
     from: days_unseen

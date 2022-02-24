@@ -55,6 +55,12 @@ class CVM(VM):
         df = bq.box_table()
         return df
 
+    def do_call(self, action):
+        fn, args  = itemgetter(kFunc,kArgs)(action)
+        arglist = ",".join(args)
+        action[kSQL] = f'{fn}({arglist})' 
+        return self.do_eval(action)
+
     def do_eval(self, action):
         id, from_key, sql = itemgetter('id','from',kSQL)(action)
         df_from = self.get_frame(from_key)

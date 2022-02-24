@@ -1,7 +1,14 @@
-0.2.6 (unreleased)
+0.2.7 (unreleased)
 ------------------
 
 - Nothing changed yet.
+
+
+0.2.6 (2022-02-24)
+------------------
+
+- Do not check-manifest or checkout tag
+- Use call instead of SQL
 
 
 0.2.5 (2022-02-24)
