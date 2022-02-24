@@ -257,11 +257,11 @@ def cvm2pkg(cvm):
     doc = cvm.key_actions('doc')
     doc["cvm.actions"] = cvm.actions
     pkg.save_dict(cvm.actions, pkg.id)
-    msg = "Auto-generated from CQML"
+    msg = sg.now()
     files = cvm.saveable()
     for key in files:
         ext = files[key]
-        msg = save_ext(pkg, cvm.df, key, ext)
+        save_ext(pkg, cvm.df, key, ext)
     try:
         pkg.copy_file(f'{pkg.id}.md','README.md')
         pkg.copy_file(f'REPORT_HELP.md')
