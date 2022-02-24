@@ -58,7 +58,7 @@ class CVM(VM):
     def do_call(self, action):
         fn, args  = itemgetter(kFunc,kArgs)(action)
         arglist = ",".join(args)
-        action.sql = f'{fn}({arglist})' 
+        action[kSQL] = f'{fn}({arglist})' 
         return self.do_eval(action)
 
     def do_eval(self, action):
