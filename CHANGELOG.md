@@ -1,7 +1,8 @@
 0.2.6 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Do not check-manifest or checkout tag
+- Use call instead of SQL
 
 
 0.2.5 (2022-02-24)
