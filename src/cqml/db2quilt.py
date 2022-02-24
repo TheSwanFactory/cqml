@@ -257,7 +257,7 @@ def cvm2pkg(cvm):
     doc = cvm.key_actions('doc')
     doc["cvm.actions"] = cvm.actions
     pkg.save_dict(cvm.actions, pkg.id)
-    msg = sg.now()
+    msg = pkg.now()
     files = cvm.saveable()
     for key in files:
         ext = files[key]

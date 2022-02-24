@@ -1,7 +1,7 @@
 0.2.5 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- FIX urgent typo in 0.2.4
 
 
 0.2.4 (2022-02-24)
