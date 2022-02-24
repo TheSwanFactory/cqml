@@ -1,4 +1,4 @@
-0.2.3 (unreleased)
+0.2.3 (2022-02-24)
 ------------------
 
 - QuiltConflictException: Use force=True to overwrite (Quilt bug workaround)
