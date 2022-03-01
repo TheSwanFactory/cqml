@@ -156,12 +156,12 @@ class Package:
 
     def save_file(self, df, filename):
         """stores spark dataframes in dbfs"""
-        is_csv = filename.endswith(".csv")
-        type = ".csv" if is_csv else ".parquet"
+        is_pq = filename.endswith(".parquet")
+        type = ".parquet" if is_pq else ".csv"
         path = self.path+filename
         print(path)
         writer = df.coalesce(1).write.mode('overwrite').option("header", "true")
-        writer.csv(TEMP_DIR) if is_csv else writer.parquet(TEMP_DIR)
+        writer.parquet(TEMP_DIR) if is_pq else writer.csv(TEMP_DIR)
         try:
             files = os.listdir(PYTEMP)
             file_path = next(f"{PYTEMP}/{f}" for f in files if f.endswith(type))
