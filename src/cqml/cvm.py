@@ -111,12 +111,13 @@ class CVM(VM):
         id, tables = itemgetter('id', 'tables')(action)
         self.spark.catalog.setCurrentDatabase(id)
         for key in tables:
-          table_name = tables[key]
-          df = self.spark.table(table_name)
-          if latest:
-              df = unique(df, DATE_COL, [DATE_UNIQ])
-          print(f" - {key}: {table_name}")
-          self.set_frame(key, df)
+          if key not in self.df:
+              table_name = tables[key]
+              df = self.spark.table(table_name)
+              if latest:
+                  df = unique(df, DATE_COL, [DATE_UNIQ])
+              print(f" - {key}: {table_name}")
+              self.set_frame(key, df)
         return self.df
 
     def do_load(self, action):
