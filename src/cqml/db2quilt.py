@@ -29,6 +29,7 @@ def cleanup_names(df):
 # Package Directory
 #
 
+DBNAME='nauto'
 DATE_COL='daily_ts'
 DBFS="/dbfs"
 DELTA_TABLE="delta"
@@ -40,7 +41,7 @@ def to_dir(s): return s.replace(DBFS,'')
 
 def save_table(df, name, mode="overwrite"):
     """saves into managed delta tables in default database"""
-    table_name = f'default.{name}'
+    table_name = f'{DBNAME}.{name}'
     print(f"save_table[{mode}]: {table_name}")
     try:
         df = df.withColumn(DATE_COL, f.current_timestamp())
