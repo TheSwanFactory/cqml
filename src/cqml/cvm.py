@@ -120,7 +120,7 @@ class CVM(VM):
         return self.df
 
     def do_load(self, action):
-        df = do_latest(self, action, False)
+        df = self.do_latest(action, False)
         return df
 
     def do_loadfiles(self, action):

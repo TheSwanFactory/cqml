@@ -8,6 +8,7 @@ import pandas as pd
 import quilt3 as q3
 import nbformat as nbf
 from .keys import *
+from .helpers import *
 from operator import itemgetter
 from datetime import datetime,date,timezone
 import pytz
@@ -18,13 +19,18 @@ import pprint
 pp = pprint.PrettyPrinter(indent=4)
 QPKG = q3.Package()
 
-import pyspark.sql.functions as f
 def cleanup_names(df):
     for c in df.columns:
         #print(c)
         if 'nam' in c.lower():
             df = df.withColumn(c, f.regexp_replace(c, ',.*$', ''))
     return df
+
+try:
+    import pyspark.sql.functions as f
+    f.col('f')
+except AttributeError:
+    f = mock_functions()
 
 #
 # Package Directory
@@ -42,10 +48,7 @@ def save_table(df, name, mode="overwrite"):
     """saves into managed delta tables in default database"""
     table_name = f'{DB_NAME}.{name}'
     print(f"save_table[{mode}]: {table_name}")
-    try:
-        df = df.withColumn(DATE_COL, f.current_timestamp())
-    except AttributeError:
-        print(f'skipping: {DATE_COL}')
+    df = df.withColumn(DATE_COL, f.current_timestamp())
     df.write\
       .format(DELTA_TABLE) \
       .mode(mode) \
