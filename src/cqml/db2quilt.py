@@ -162,10 +162,13 @@ class Package:
         print(path)
         writer = df.coalesce(1).write.mode('overwrite').option("header", "true")
         writer.csv(TEMP_DIR) if is_csv else writer.parquet(TEMP_DIR)
-        files = os.listdir(PYTEMP)
-        file_path = next(f"{PYTEMP}/{f}" for f in files if f.endswith(type))
-        shutil.copy(file_path, path)
-        shutil.rmtree(PYTEMP)
+        try:
+            files = os.listdir(PYTEMP)
+            file_path = next(f"{PYTEMP}/{f}" for f in files if f.endswith(type))
+            shutil.copy(file_path, path)
+            shutil.rmtree(PYTEMP)
+        except os.error:
+            print(f'os.error: "{PYTEMP}" not found')
         return path
 
     def save_dict(self, dict, key):
