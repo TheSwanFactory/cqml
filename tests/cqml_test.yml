@@ -68,7 +68,7 @@ actions:
       type_name: tbd
   summarize:
     do: summary
-    save: series
+    save: csv
     from: devices
     count: nauto_item_shipment_detail_nam
     as: n_serial
