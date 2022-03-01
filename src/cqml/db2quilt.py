@@ -141,7 +141,7 @@ class Package:
     def cleanup(self, msg, meta = {"db2quilt":"v0.1"}):
         self.write_summary()
         QPKG.set_dir('/',path=self.path, meta=meta)
-        QPKG.push(self.name, self.proj.repo, message=msg, force=True)
+        QPKG.push(self.name, self.proj.repo, message=msg) #, force=True
         #shutil.rmtree(self.path)
         self.html = f'Published <a href="{self.url}">{self.name}</a> for <b>{msg}</b>'
         return self
