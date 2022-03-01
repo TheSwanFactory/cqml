@@ -7,6 +7,7 @@ The initial back-end is written for the DataBrick's flavor of PySpark and Spark 
 
 # USAGE
 ```
+pip install cqml #==0.3.0
 import cqml
 ```
 
