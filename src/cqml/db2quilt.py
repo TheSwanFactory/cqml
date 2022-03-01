@@ -244,15 +244,16 @@ class Package:
 #
 
 
-def save_ext(pkg, dfs, key, ext):
+def save_ext(pkg, dfs, key, ext, debug=False):
     print(f'save_ext: {ext} for {key} in {pkg.name}')
+    id = f'{key}_debug' if debug else key
     if ext == "report":
         return pkg.export(dfs, key)
     elif ext == "table":
-        return save_table(dfs[key], key)
+        return save_table(dfs[key], id)
     elif ext == "daily":
-        return save_table(dfs[key], key, "append")
-    return pkg.save_file(dfs[key], f'{key}.{ext}')
+        return save_table(dfs[key], id, "append")
+    return pkg.save_file(dfs[key], f'{id}.{ext}')
 
 def exract_pkg(cvm):
     id, config = itemgetter('id','meta')(cvm.yaml)
@@ -273,7 +274,7 @@ def cvm2pkg(cvm):
     files = cvm.saveable()
     for key in files:
         ext = files[key]
-        save_ext(pkg, cvm.df, key, ext)
+        save_ext(pkg, cvm.df, key, ext, cvm.debug)
     try:
         pkg.copy_file(f'{pkg.id}.md','README.md')
         pkg.copy_file(f'REPORT_HELP.md')
