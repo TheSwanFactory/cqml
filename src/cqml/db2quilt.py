@@ -156,6 +156,19 @@ class Package:
         doc = self.to_report(pfile, msg)
         return doc
 
+
+
+    def save_ext(self, dfs, key, ext, debug=False):
+        print(f'save_ext: {ext} for {key} in {self.name}')
+        id = f'{key}_debug' if debug else key
+        if ext == "report":
+            return self.export(dfs, key)
+        elif ext == "table":
+            return save_table(dfs[key], id)
+        elif ext == "daily":
+            return save_table(dfs[key], id, "append")
+        return self.save_file(dfs[key], f'{id}.{ext}')
+
     def copy_file(self, source, dest_name=False):
         """into package"""
         path = self.path + (dest_name if dest_name else source)
@@ -243,18 +256,6 @@ class Package:
 # Helpers
 #
 
-
-def save_ext(pkg, dfs, key, ext, debug=False):
-    print(f'save_ext: {ext} for {key} in {pkg.name}')
-    id = f'{key}_debug' if debug else key
-    if ext == "report":
-        return pkg.export(dfs, key)
-    elif ext == "table":
-        return save_table(dfs[key], id)
-    elif ext == "daily":
-        return save_table(dfs[key], id, "append")
-    return pkg.save_file(dfs[key], f'{id}.{ext}')
-
 def exract_pkg(cvm):
     id, config = itemgetter('id','meta')(cvm.yaml)
     proj = Project(config)
@@ -274,7 +275,7 @@ def cvm2pkg(cvm):
     files = cvm.saveable()
     for key in files:
         ext = files[key]
-        save_ext(pkg, cvm.df, key, ext, cvm.debug)
+        pkg.save_ext(cvm.df, key, ext, cvm.debug)
     try:
         pkg.copy_file(f'{pkg.id}.md','README.md')
         pkg.copy_file(f'REPORT_HELP.md')

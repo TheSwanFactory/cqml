@@ -12,6 +12,10 @@ class CQML(CVM):
         pkgs = {cqml:pkg_cqml(cqml, self.spark) for cqml in runs}
         return pkgs
 
+    def do_save(self, action):
+        pkg = cvm2pkg(cvm)
+        return pkg
+
 def upgrade_file(yaml_file):
     print("Upgrading "+yaml_file)
     with open(yaml_file) as data:
