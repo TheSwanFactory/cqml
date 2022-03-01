@@ -15,10 +15,12 @@ def mock_functions():
     return func(*l2)
 
 try:
+    from pyspark.sql.window import Window
     import pyspark.sql.functions as f
     f.col('f')
 except AttributeError:
     f = mock_functions()
+    Window = mock_functions()
 
 def alias_columns(df, columns, table='.'):
     new_columns = []
@@ -122,3 +124,13 @@ def summarize(df, table, col, count, now):
       f.lit(now).alias('timestamp'),
     )
     return dsum.orderBy('value')
+
+def unique(df_from, sort, cols):
+    N = "windowIndx"
+    col = f.desc(sort) #if kReverse else f.asc(sort)
+    win = Window.partitionBy(cols).orderBy(col)
+    df_win = df_from.withColumn(N,f.row_number().over(win))
+    df_dupes = df_win.filter(f.col(N) != 1).drop(N)
+    #self.save("DUPE_"+id, df_dupes, "csv")
+    df = df_win.filter(f.col(N) == 1).drop(N)
+    return df

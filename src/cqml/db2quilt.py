@@ -7,6 +7,7 @@ import shutil, os, re, json
 import pandas as pd
 import quilt3 as q3
 import nbformat as nbf
+from .keys import *
 from operator import itemgetter
 from datetime import datetime,date,timezone
 import pytz
@@ -29,8 +30,6 @@ def cleanup_names(df):
 # Package Directory
 #
 
-DBNAME='nauto'
-DATE_COL='daily_ts'
 DBFS="/dbfs"
 DELTA_TABLE="delta"
 PYROOT=DBFS+"/FileStore"
@@ -41,7 +40,7 @@ def to_dir(s): return s.replace(DBFS,'')
 
 def save_table(df, name, mode="overwrite"):
     """saves into managed delta tables in default database"""
-    table_name = f'{DBNAME}.{name}'
+    table_name = f'{DB_NAME}.{name}'
     print(f"save_table[{mode}]: {table_name}")
     try:
         df = df.withColumn(DATE_COL, f.current_timestamp())

@@ -7,6 +7,10 @@ meta:
     catalog: quilt
     root: /tmp
 actions:
+  nauto:
+    do: latest
+    tables:
+      devices: nauto_devices
   netsuite_suiteanalytics:
     do: load
     tables:

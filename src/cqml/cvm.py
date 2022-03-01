@@ -5,12 +5,10 @@ from .helpers import *
 from .vm import VM
 
 try:
-    from pyspark.sql.window import Window
     import pyspark.sql.functions as f
     f.col('f')
 except AttributeError:
     f = mock_functions()
-    Window = mock_functions()
 
 HAS_TEMPO=True
 try:
@@ -58,7 +56,7 @@ class CVM(VM):
     def do_call(self, action):
         fn, args  = itemgetter(kFunc,kArgs)(action)
         arglist = ",".join(args)
-        action[kSQL] = f'{fn}({arglist})' 
+        action[kSQL] = f'{fn}({arglist})'
         return self.do_eval(action)
 
     def do_eval(self, action):
@@ -108,6 +106,16 @@ class CVM(VM):
         name = '_'.join(cols)
         df = df.withColumn(name, f.concat_ws(".", *cols))
         return df
+
+    def do_latest(self, action):
+        id, tables = itemgetter('id', 'tables')(action)
+        self.spark.catalog.setCurrentDatabase(id)
+        for key in tables:
+          table_name = tables[key]
+          df = self.spark.table(table_name)
+          print(f" - {key}: {table_name}")
+          self.set_frame(key, df)
+        return self.df
 
     def do_load(self, action):
         id, tables = itemgetter('id', 'tables')(action)
@@ -212,12 +220,7 @@ class CVM(VM):
         id, key, sort = itemgetter('id', 'from', kSort)(action)
         df_from = self.get_frame(key)
         cols = get_cols(action, df_from)
-        col = f.desc(sort) #if kReverse else f.asc(sort)
-        win = Window.partitionBy(cols).orderBy(col)
-        df_win = df_from.withColumn(N,f.row_number().over(win))
-        df_dupes = df_win.filter(f.col(N) != 1).drop(N)
-        #self.save("DUPE_"+id, df_dupes, "csv")
-        df = df_win.filter(f.col(N) == 1).drop(N)
+        df = unique(df_from, sort, cols)
         return df
 
     def do_update(self, action):

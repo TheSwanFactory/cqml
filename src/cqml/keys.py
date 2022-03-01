@@ -2,7 +2,9 @@
 # Magic Keys
 #
 
-DB='default'
+DB_NAME='nauto'
+DATE_COL='daily_ts'
+
 cAlias='|'
 kAbove='above'
 kArgs='args'
