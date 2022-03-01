@@ -107,25 +107,21 @@ class CVM(VM):
         df = df.withColumn(name, f.concat_ws(".", *cols))
         return df
 
-    def do_latest(self, action):
+    def do_latest(self, action, latest=True):
         id, tables = itemgetter('id', 'tables')(action)
         self.spark.catalog.setCurrentDatabase(id)
         for key in tables:
           table_name = tables[key]
           df = self.spark.table(table_name)
+          if latest:
+              df = unique(df, DATE_COL, [DATE_UNIQ])
           print(f" - {key}: {table_name}")
           self.set_frame(key, df)
         return self.df
 
     def do_load(self, action):
-        id, tables = itemgetter('id', 'tables')(action)
-        self.spark.catalog.setCurrentDatabase(id)
-        for key in tables:
-          table_name = tables[key]
-          df = self.spark.table(table_name)
-          print(f" - {key}: {table_name}")
-          self.set_frame(key, df)
-        return self.df
+        df = do_latest(self, action, False):
+        return df
 
     def do_loadfiles(self, action):
         folder, files = itemgetter('id', 'tables')(action)

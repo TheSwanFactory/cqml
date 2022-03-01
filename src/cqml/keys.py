@@ -4,6 +4,7 @@
 
 DB_NAME='nauto'
 DATE_COL='daily_ts'
+DATE_UNIQ='serial_number'
 
 cAlias='|'
 kAbove='above'
