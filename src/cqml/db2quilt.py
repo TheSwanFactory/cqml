@@ -17,18 +17,19 @@ import pprint
 pp = pprint.PrettyPrinter(indent=4)
 QPKG = q3.Package()
 
-from pyspark.sql.functions import regexp_replace
+import pyspark.sql.functions as f
 def cleanup_names(df):
     for c in df.columns:
         #print(c)
         if 'nam' in c.lower():
-            df = df.withColumn(c, regexp_replace(c, ',.*$', ''))
+            df = df.withColumn(c, f.regexp_replace(c, ',.*$', ''))
     return df
 
 #
 # Package Directory
 #
 
+DATE_COL='daily_ts'
 DBFS="/dbfs"
 DELTA_TABLE="delta"
 PYROOT=DBFS+"/FileStore"
@@ -41,6 +42,10 @@ def save_table(df, name, mode="overwrite"):
     """saves into managed delta tables in default database"""
     table_name = f'default.{name}'
     print(f"save_table[{mode}]: {table_name}")
+    try:
+        df = df.withColumn(DATE_COL, f.current_timestamp())
+    except AttributeError:
+        print(f'skipping: {DATE_COL}')
     df.write\
       .format(DELTA_TABLE) \
       .mode(mode) \
@@ -241,7 +246,7 @@ def save_ext(pkg, dfs, key, ext):
         return pkg.export(dfs, key)
     elif ext == "table":
         return save_table(dfs[key], key)
-    elif ext == "series":
+    elif ext == "daily":
         return save_table(dfs[key], key, "append")
     return pkg.save_file(dfs[key], f'{key}.{ext}')
 
