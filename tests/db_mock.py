@@ -16,6 +16,7 @@ class MockCol(object):
 
 class MockWriter(object):
     def __init__(self, df): self.df = df
+    def csv(self, arg): return self
     def mode(self, arg): return self
     def option(self, *arg): return self
     def format(self, arg): return self
@@ -49,6 +50,7 @@ class MockFrame(object):
 
     def agg(self, *aggs): return self
     def count(self): return 1
+    def coalesce(self, arg): return self
     def distinct(self): return self
     def filter(self, arg): return self
     def groupby(self, *arg): return self

@@ -7,6 +7,8 @@ import shutil, os, re, json
 import pandas as pd
 import quilt3 as q3
 import nbformat as nbf
+from .keys import *
+from .helpers import *
 from operator import itemgetter
 from datetime import datetime,date,timezone
 import pytz
@@ -17,13 +19,18 @@ import pprint
 pp = pprint.PrettyPrinter(indent=4)
 QPKG = q3.Package()
 
-from pyspark.sql.functions import regexp_replace
 def cleanup_names(df):
     for c in df.columns:
         #print(c)
         if 'nam' in c.lower():
-            df = df.withColumn(c, regexp_replace(c, ',.*$', ''))
+            df = df.withColumn(c, f.regexp_replace(c, ',.*$', ''))
     return df
+
+try:
+    import pyspark.sql.functions as f
+    f.col('f')
+except AttributeError:
+    f = mock_functions()
 
 #
 # Package Directory
@@ -39,8 +46,9 @@ def to_dir(s): return s.replace(DBFS,'')
 
 def save_table(df, name, mode="overwrite"):
     """saves into managed delta tables in default database"""
-    table_name = f'default.{name}'
+    table_name = f'{DB_NAME}.{name}'
     print(f"save_table[{mode}]: {table_name}")
+    df = df.withColumn(DATE_COL, f.current_timestamp())
     df.write\
       .format(DELTA_TABLE) \
       .mode(mode) \
@@ -156,16 +164,19 @@ class Package:
 
     def save_file(self, df, filename):
         """stores spark dataframes in dbfs"""
-        is_csv = filename.endswith(".csv")
-        type = ".csv" if is_csv else ".parquet"
+        is_pq = filename.endswith(".parquet")
+        type = ".parquet" if is_pq else ".csv"
         path = self.path+filename
         print(path)
         writer = df.coalesce(1).write.mode('overwrite').option("header", "true")
-        writer.csv(TEMP_DIR) if is_csv else writer.parquet(TEMP_DIR)
-        files = os.listdir(PYTEMP)
-        file_path = next(f"{PYTEMP}/{f}" for f in files if f.endswith(type))
-        shutil.copy(file_path, path)
-        shutil.rmtree(PYTEMP)
+        writer.parquet(TEMP_DIR) if is_pq else writer.csv(TEMP_DIR)
+        try:
+            files = os.listdir(PYTEMP)
+            file_path = next(f"{PYTEMP}/{f}" for f in files if f.endswith(type))
+            shutil.copy(file_path, path)
+            shutil.rmtree(PYTEMP)
+        except os.error:
+            print(f'os.error: "{PYTEMP}" not found')
         return path
 
     def save_dict(self, dict, key):
@@ -233,14 +244,16 @@ class Package:
 #
 
 
-def save_ext(pkg, dfs, key, ext):
+def save_ext(pkg, dfs, key, ext, debug=False):
+    print(f'save_ext: {ext} for {key} in {pkg.name}')
+    id = f'{key}_debug' if debug else key
     if ext == "report":
         return pkg.export(dfs, key)
     elif ext == "table":
-        return save_table(dfs[key], key)
-    elif ext == "series":
-        return save_table(dfs[key], key, "append")
-    return pkg.save_file(dfs[key], f'{key}.{ext}')
+        return save_table(dfs[key], id)
+    elif ext == "daily":
+        return save_table(dfs[key], id, "append")
+    return pkg.save_file(dfs[key], f'{id}.{ext}')
 
 def exract_pkg(cvm):
     id, config = itemgetter('id','meta')(cvm.yaml)
@@ -261,7 +274,7 @@ def cvm2pkg(cvm):
     files = cvm.saveable()
     for key in files:
         ext = files[key]
-        save_ext(pkg, cvm.df, key, ext)
+        save_ext(pkg, cvm.df, key, ext, cvm.debug)
     try:
         pkg.copy_file(f'{pkg.id}.md','README.md')
         pkg.copy_file(f'REPORT_HELP.md')

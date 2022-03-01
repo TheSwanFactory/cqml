@@ -1,7 +1,14 @@
-0.2.7 (unreleased)
+0.3.1 (unreleased)
 ------------------
 
 - Nothing changed yet.
+
+
+0.3.0 (2022-02-28)
+------------------
+
+- Append daily results
+- Pull only latest
 
 
 0.2.6 (2022-02-24)

@@ -51,9 +51,6 @@ class VM:
 
     def saveable(self):
       saves = self.key_actions(kSave)
-      for id, save in saves.items():
-        if save != 'series':
-          drop_table(self.spark, id)
       return saves
 
     def save(self, id, df, type):
