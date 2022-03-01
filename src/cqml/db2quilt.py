@@ -243,6 +243,7 @@ class Package:
 
 
 def save_ext(pkg, dfs, key, ext):
+    print(f'save_ext: {ext} for {key} in {pkg.name}')
     if ext == "report":
         return pkg.export(dfs, key)
     elif ext == "table":
