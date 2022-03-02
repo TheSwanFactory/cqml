@@ -53,7 +53,7 @@ def pkg_cqml(name, spark, folder="pipes"):
     print("\npkg_cqml: "+name)
     cvm = exec_cqml(name, spark, folder)
     pkg = cvm2pkg(cvm)
-    return {'pkg': pkg, 'html': pkg.html, 'actions': cvm.actions}
+    return {'pkg': pkg, 'html': pkg.html,  'url': pkg.url, 'actions': cvm.actions}
 
 def pkg_all(spark, folder="pipes"):
     files = os.listdir(folder)
