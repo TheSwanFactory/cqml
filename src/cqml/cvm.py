@@ -108,7 +108,8 @@ class CVM(VM):
         return df
 
     def do_latest(self, action, latest=True):
-        id, tables = itemgetter('id', 'tables')(action)
+        name, tables = itemgetter('id', 'tables')(action)
+        id = name.split('.')[0] if "." in name else name
         self.spark.catalog.setCurrentDatabase(id)
         group = [DATE_UNIQ] if kCols not in action else get_cols(action, None)
         for key in tables:
