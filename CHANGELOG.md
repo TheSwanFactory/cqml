@@ -1,4 +1,4 @@
-0.3.1 (unreleased)
+0.3.1 (2022-03-02)
 ------------------
 
 - Smart Loading (reuse if already exists)
