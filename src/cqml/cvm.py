@@ -110,12 +110,13 @@ class CVM(VM):
     def do_latest(self, action, latest=True):
         id, tables = itemgetter('id', 'tables')(action)
         self.spark.catalog.setCurrentDatabase(id)
+        group = [DATE_UNIQ] if kCols not in action else get_cols(action, None)
         for key in tables:
           if key not in self.df:
               table_name = tables[key]
               df = self.spark.table(table_name)
               if latest:
-                  df = unique(df, DATE_COL, [DATE_UNIQ])
+                  df = unique(df, DATE_COL, group)
               print(f" - {key}: {table_name}")
               self.set_frame(key, df)
         return self.df
