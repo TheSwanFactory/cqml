@@ -4,6 +4,8 @@
 - Smart Loading (reuse if already exists)
 - do_save (embed packaging in actions)
 - pkg_all #folder
+- latest cols
+- database.n for latest
 
 
 0.3.0 (2022-02-28)
