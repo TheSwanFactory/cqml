@@ -146,7 +146,7 @@ class Package:
         if MOCK:
             QPKG.push(self.name, self.proj.repo, message=msg) #, force=True
         else:
-            QPKG.push(self.name, self.proj.repo, message=msg,force=True) #, 
+            QPKG.push(self.name, self.proj.repo, message=msg,force=True) #,
         #shutil.rmtree(self.path)
         self.html = f'Published <a href="{self.url}">{self.name}</a> for <b>{msg}</b>'
         return self
@@ -169,6 +169,7 @@ class Package:
         elif ext == "table":
             return save_table(dfs[key], id)
         elif ext == "daily":
+            self.save_file(dfs[key], f'{id}.csv')
             return save_table(dfs[key], id, "append")
         return self.save_file(dfs[key], f'{id}.{ext}')
 
