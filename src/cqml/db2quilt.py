@@ -156,8 +156,6 @@ class Package:
         doc = self.to_report(pfile, msg)
         return doc
 
-
-
     def save_ext(self, dfs, key, ext, debug=False):
         print(f'save_ext: {ext} for {key} in {self.name}')
         id = f'{key}_debug' if debug else key
@@ -262,6 +260,7 @@ def exract_pkg(cvm):
     pkg_id = id + "-debug" if cvm.debug == True else id
     print("exract_pkg: "+pkg_id)
     pkg = proj.package(pkg_id)
+    pkg.setup()
     return pkg
 
 def cvm2pkg(cvm):
