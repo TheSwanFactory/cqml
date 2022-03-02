@@ -1,4 +1,5 @@
 import yaml
+import os,shutil
 from .db2quilt import cvm2pkg
 from .cvm import CVM
 from .cqml12 import ensure_v02
@@ -53,3 +54,11 @@ def pkg_cqml(name, spark, folder="pipes"):
     cvm = exec_cqml(name, spark, folder)
     pkg = cvm2pkg(cvm)
     return {'pkg': pkg, 'html': pkg.html, 'actions': cvm.actions}
+
+def pkg_all(spark, folder="pipes"):
+    files = os.listdir(folder)
+    keys = [os.path.splitext(file)[0] for file in files if file.endswith("ml")]
+    keys.sort()
+    print(keys)
+    pkgs = {key:pkg_cqml(key, spark, folder) for key in keys}
+    return pkgs
