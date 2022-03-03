@@ -1,4 +1,5 @@
 import yaml
+import os,shutil
 from .db2quilt import cvm2pkg
 from .cvm import CVM
 from .cqml12 import ensure_v02
@@ -11,6 +12,10 @@ class CQML(CVM):
         runs = action['pipes']
         pkgs = {cqml:pkg_cqml(cqml, self.spark) for cqml in runs}
         return pkgs
+
+    def do_save(self, action):
+        pkg = cvm2pkg(self)
+        return pkg
 
 def upgrade_file(yaml_file):
     print("Upgrading "+yaml_file)

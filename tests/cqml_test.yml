@@ -9,8 +9,10 @@ meta:
 actions:
   nauto:
     do: latest
+    cols:
+      customer_id: join
     tables:
-      devices: nauto_devices
+      accounts: nauto_devices
   netsuite_suiteanalytics:
     do: load
     tables:

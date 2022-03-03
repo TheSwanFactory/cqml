@@ -29,7 +29,9 @@ def cleanup_names(df):
 try:
     import pyspark.sql.functions as f
     f.col('f')
+    MOCK=False
 except AttributeError:
+    MOCK=True
     f = mock_functions()
 
 #
@@ -141,7 +143,10 @@ class Package:
     def cleanup(self, msg, meta = {"db2quilt":"v0.1"}):
         self.write_summary()
         QPKG.set_dir('/',path=self.path, meta=meta)
-        QPKG.push(self.name, self.proj.repo, message=msg, force=True)
+        if MOCK:
+            QPKG.push(self.name, self.proj.repo, message=msg) #, force=True
+        else:
+            QPKG.push(self.name, self.proj.repo, message=msg,force=True) #,
         #shutil.rmtree(self.path)
         self.html = f'Published <a href="{self.url}">{self.name}</a> for <b>{msg}</b>'
         return self
@@ -155,6 +160,18 @@ class Package:
         msg = self.save_file(df, pfile)
         doc = self.to_report(pfile, msg)
         return doc
+
+    def save_ext(self, dfs, key, ext, debug=False):
+        print(f'save_ext: {ext} for {key} in {self.name}')
+        id = f'{key}_debug' if debug else key
+        if ext == "report":
+            return self.export(dfs, key)
+        elif ext == "table":
+            return save_table(dfs[key], id)
+        elif ext == "daily":
+            self.save_file(dfs[key], f'{id}.csv')
+            return save_table(dfs[key], id, "append")
+        return self.save_file(dfs[key], f'{id}.{ext}')
 
     def copy_file(self, source, dest_name=False):
         """into package"""
@@ -243,24 +260,13 @@ class Package:
 # Helpers
 #
 
-
-def save_ext(pkg, dfs, key, ext, debug=False):
-    print(f'save_ext: {ext} for {key} in {pkg.name}')
-    id = f'{key}_debug' if debug else key
-    if ext == "report":
-        return pkg.export(dfs, key)
-    elif ext == "table":
-        return save_table(dfs[key], id)
-    elif ext == "daily":
-        return save_table(dfs[key], id, "append")
-    return pkg.save_file(dfs[key], f'{id}.{ext}')
-
 def exract_pkg(cvm):
     id, config = itemgetter('id','meta')(cvm.yaml)
     proj = Project(config)
     pkg_id = id + "-debug" if cvm.debug == True else id
     print("exract_pkg: "+pkg_id)
     pkg = proj.package(pkg_id)
+    #pkg.setup()
     return pkg
 
 def cvm2pkg(cvm):
@@ -274,7 +280,7 @@ def cvm2pkg(cvm):
     files = cvm.saveable()
     for key in files:
         ext = files[key]
-        save_ext(pkg, cvm.df, key, ext, cvm.debug)
+        pkg.save_ext(cvm.df, key, ext, cvm.debug)
     try:
         pkg.copy_file(f'{pkg.id}.md','README.md')
         pkg.copy_file(f'REPORT_HELP.md')
