@@ -27,3 +27,8 @@ $ python3 -m pip install --upgrade build
 $ python3 -m pip install --upgrade twine
 $ prerelease && release && python3 -m build && python3 -m twine upload dist/* && postrelease
 ```
+
+# Development Build
+```
+awk -Fv '{printf("%sv%d\n",$1,v$2+1)}' version.txt > /tmp/version.txt && cp /tmp/version.txt version.txt && git commit -am && $ git push
+```
