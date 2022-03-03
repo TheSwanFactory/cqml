@@ -8,3 +8,7 @@ def test_pkg():
     assert 'pkg' in dict
     assert 'html' in dict
     assert 'actions' in dict
+
+def test_all():
+    dict = cqml.pkg_all(spark, 'tests')
+    assert 'cqml_test' in dict

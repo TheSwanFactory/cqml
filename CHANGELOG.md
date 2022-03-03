@@ -1,7 +1,17 @@
-0.3.1 (unreleased)
+0.3.2 (unreleased)
 ------------------
 
 - Nothing changed yet.
+
+
+0.3.1 (2022-03-02)
+------------------
+
+- Smart Loading (reuse if already exists)
+- do_save (embed packaging in actions)
+- pkg_all #folder
+- latest cols
+- database.n for latest
 
 
 0.3.0 (2022-02-28)
