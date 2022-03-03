@@ -30,5 +30,5 @@ $ prerelease && release && python3 -m build && python3 -m twine upload dist/* &&
 
 # Development Build
 ```
-awk -Fv '{printf("%sv%d\n",$1,v$2+1)}' version.txt > /tmp/version.txt && cp /tmp/version.txt version.txt && git commit -a && $ git push
+awk -Fv '{printf("%sv%d\n",$1,v$2+1)}' version.txt > /tmp/version.txt && cp /tmp/version.txt version.txt && git commit -a && git push
 ```
