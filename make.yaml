@@ -12,6 +12,7 @@ steps:
       defaults:
         install: False
         test: False
+        watch: False
 
   - name: pypyr.steps.echo
     in:
@@ -25,12 +26,22 @@ steps:
   - name: pypyr.steps.cmd
     run: '{test}'
     in:
-      cmd: pip install pytest
+      cmd: pip3 install pytest
 
   - name: pypyr.steps.cmd
     run: '{test}'
     in:
       cmd: python3 -m pytest
+
+  - name: pypyr.steps.cmd
+    run: '{watch}'
+    in:
+      cmd: pip3 install pytest-watch
+
+  - name: pypyr.steps.cmd
+    run: '{watch}'
+    in:
+      cmd: pytest-watch
 
   - name: pypyr.steps.echo
     in:

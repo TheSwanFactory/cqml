@@ -29,9 +29,7 @@ def cleanup_names(df):
 try:
     import pyspark.sql.functions as f
     f.col('f')
-    MOCK=False
 except AttributeError:
-    MOCK=True
     f = mock_functions()
 
 #
@@ -143,10 +141,6 @@ class Package:
     def cleanup(self, msg, meta = {"db2quilt":"v0.1"}):
         self.write_summary()
         QPKG.set_dir('/',path=self.path, meta=meta)
-        print(f'MOCK={MOCK}')
-        #if MOCK:
-        #    QPKG.push(self.name, self.proj.repo, message=msg) #, force=True
-        #else:
         QPKG.push(self.name, self.proj.repo, message=msg,force=True) #,
         #shutil.rmtree(self.path)
         self.html = f'Published <a href="{self.url}">{self.name}</a> for <b>{msg}</b>'
