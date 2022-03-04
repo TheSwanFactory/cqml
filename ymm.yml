@@ -1,0 +1,24 @@
+# - install
+# - test
+# - watch
+# - release
+# - dev
+install:
+    - python3 -m pip install -r requirements.txt
+build:
+    - pip3 install --upgrade pytest
+    - pip3 install --upgrade pytest-watch
+    - pip3 install --upgrade build
+    - pip3 install --upgrade twine
+
+test:
+    - python3 -m pytest
+watch:
+    - pytest-watch
+release:
+    - prerelease
+    - release
+    - python3 -m build
+    - python3 -m twine upload dist/*
+    - postrelease
+# - dev
