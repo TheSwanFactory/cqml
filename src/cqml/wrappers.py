@@ -14,7 +14,7 @@ class CQML(CVM):
         return pkgs
 
     def do_save(self, action):
-        pkg = cvm2pkg(self, False) # do not return
+        pkg = cvm2pkg(self, False) # do not re-run
         return pkg
 
 def upgrade_file(yaml_file):
