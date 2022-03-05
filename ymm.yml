@@ -20,10 +20,12 @@ watch:
 
 release:
     - prerelease --no-input
+    - cat version.txt
     - release --no-input
     - python3 -m build
     - python3 -m twine upload dist/*
     - postrelease --no-input
+    - cat version.txt
 
 dev:
     - cat version.txt
