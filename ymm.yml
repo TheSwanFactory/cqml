@@ -21,4 +21,11 @@ release:
     - python3 -m build
     - python3 -m twine upload dist/*
     - postrelease --no-input
-# - dev
+
+# udpate version dev? string, commit and push new version
+dev:
+    - awk -Fv '{printf("%sv%d\n",$1,v$2+1)}' version.txt > /tmp/version.txt
+    - cp /tmp/version.txt version.txt
+    - git commit -am `cat version.txt`
+    - git push
+    - cat version.txt
