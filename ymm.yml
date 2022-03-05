@@ -31,5 +31,5 @@ dev:
     - echo next_version {__version_next__}
     - sed -i .new s/{__version__}/{__version_next__}/ version.txt
     - git commit -am {__version_next__}
-    - git push
+ #   - git push
     - cat version.txt
