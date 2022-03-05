@@ -4,10 +4,11 @@
 - Nothing changed yet.
 
 
-0.3.2 (unreleased)
+0.3.2 (2022-03-05)
 ------------------
 
-- Nothing changed yet.
+- `ymm dev` support
+- store frames in pkg return
 
 
 0.3.1 (2022-03-02)
