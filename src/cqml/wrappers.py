@@ -14,7 +14,7 @@ class CQML(CVM):
         return pkgs
 
     def do_save(self, action):
-        pkg = cvm2pkg(self)
+        pkg = cvm2pkg(self, False) # do not re-run
         return pkg
 
 def upgrade_file(yaml_file):
@@ -53,7 +53,15 @@ def pkg_cqml(name, spark, folder="pipes"):
     print("\npkg_cqml: "+name)
     cvm = exec_cqml(name, spark, folder)
     pkg = cvm2pkg(cvm)
-    return {'pkg': pkg, 'html': pkg.html,  'url': pkg.url, 'actions': cvm.actions}
+    return {
+    'pkg': pkg,
+    'html': pkg.html,
+    'url': pkg.url,
+    'actions': cvm.actions,
+    'sizes': cvm.sizes,
+    'times': cvm.times,
+    'frames': cvm.df,
+    }
 
 def pkg_all(spark, folder="pipes"):
     files = os.listdir(folder)
