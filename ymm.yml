@@ -4,7 +4,7 @@
 # - release
 # - dev
 install:
-    - python3 -m pip install -r requirements.txt
+    - pip3 install -r requirements.txt
 build:
     - pip3 install --upgrade pytest
     - pip3 install --upgrade pytest-watch
@@ -14,11 +14,11 @@ build:
 test:
     - python3 -m pytest
 watch:
-    - pytest-watch
+    - echo Type `ptw` in a Terminal. Verify it is using Python 3.x.
 release:
-    - prerelease
-    - release
+    - prerelease --no-input
+    - release --no-input
     - python3 -m build
     - python3 -m twine upload dist/*
-    - postrelease
+    - postrelease --no-input
 # - dev
