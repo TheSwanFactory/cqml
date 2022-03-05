@@ -19,6 +19,7 @@ watch:
     - echo Use `ptw`
 
 release:
+    - echo Must update CHANGELOG in order to bump version
     - prerelease --no-input
     - cat version.txt
     - release --no-input
