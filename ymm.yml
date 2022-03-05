@@ -13,8 +13,11 @@ build:
 
 test:
     - python3 -m pytest
+
+
 watch:
-    - echo Type `ptw` in a Terminal. Verify it is using Python 3.x.
+    - echo Use `ptw`
+
 release:
     - prerelease --no-input
     - release --no-input
@@ -22,10 +25,11 @@ release:
     - python3 -m twine upload dist/*
     - postrelease --no-input
 
-# udpate version dev? string, commit and push new version
 dev:
-    - awk -Fv '{printf("%sv%d\n",$1,v$2+1)}' version.txt > /tmp/version.txt
-    - cp /tmp/version.txt version.txt
-    - git commit -am `cat version.txt`
+    - cat version.txt
+    - echo old_version {__version__}
+    - echo next_version {__version_next__}
+    - sed -i .new s/{__version__}/{__version_next__}/ version.txt
+    - git commit -am {__version_next__}
     - git push
     - cat version.txt
