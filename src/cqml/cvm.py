@@ -193,8 +193,8 @@ class CVM(VM):
         from_key = itemgetter('from')(action)
         df = self.get_frame(from_key)
         cols = get_cols(action, df)
-        if 'where' in action:
-            expression = make_expr(action['where'])
+        if kWhere in action:
+            expression = make_expr(action[kWhere])
             self.log(' - do_select: '+expression)
             df = df.filter(expression)
         if 'dedupe' in action:

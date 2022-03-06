@@ -50,7 +50,7 @@ def drop_table(spark, id):
     spark.sql(f'drop table if exists {DB}.{id}')
 
 def flag2sql(action):
-    where = action['where']
+    where = action[kWhere]
     condition = make_expr(where)
     action[kSQL] =f"CASE WHEN {condition} THEN true END"
     return action
