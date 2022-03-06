@@ -12,17 +12,17 @@ actions:
     cols:
       customer_id: join
     tables:
-      accounts: nauto_devices
+      devs: nauto_devices
   netsuite_suiteanalytics:
     do: load
     tables:
       deploy_status: deployment_status
       device_status: netsuite_device_status
-      devices: nauto_item_shipment_detail
+      details: nauto_item_shipment_detail
       items: items
-  box_devices:
+  box_details:
     do: box
-    from: devices
+    from: details
     group: deployed_fleet
     +doc: Split by fleet, upload, store URLs
     box:
@@ -49,7 +49,7 @@ actions:
         "{region}": contains
   map_pn:
     do: macro.map_sku
-    into: devices
+    into: details
     join: nauto_pn_id
     region: NA
   items_grouped:
@@ -75,7 +75,7 @@ actions:
   summarize:
     do: summary
     save: daily
-    from: devices
+    from: details
     count: nauto_item_shipment_detail_nam
     as: n_serial
     cols:
@@ -95,9 +95,9 @@ actions:
       item_id: tbd
       name|sku: tbd
       displayname|item_name: tbd
-  na_devices:
+  na_details:
     do: merge
-    into: devices
+    into: details
     join: nauto_pn_id
     from: items
     join_type: inner
@@ -144,12 +144,15 @@ actions:
     sort: n_is_silent
     cols:
       date_created: tbd
-  active_devices:
+  active_details:
     do: select
-    from: devices
+    from: details
     where:
       is_inactive:
         T: not_contains
+    matching:
+      serial_number:
+          details: serial_number
   nonunique_imei:
     do: unique
     from: $id

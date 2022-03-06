@@ -195,8 +195,14 @@ class CVM(VM):
         cols = get_cols(action, df)
         if kWhere in action:
             expression = make_expr(action[kWhere])
-            self.log(' - do_select: '+expression)
+            self.log(f' - do_select[{kWhere}]: '+expression)
             df = df.filter(expression)
+        if kIsIn in action:
+            for col, dict in action[kIsIn].items():
+                for table, tcol in dict.items():
+                    self.log(' - do_select[{kIsIn}]: ({col}).leftsemi({table},{tcol})')
+                    dft = self.get_frame(table)
+                    df = df.join(dft, df[col] == dft[tcol], "leftsemi")
         if 'dedupe' in action:
             df = df.drop_duplicates([action['dedupe']])
         column_map = alias_columns(df, cols, from_key)

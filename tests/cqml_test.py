@@ -20,7 +20,7 @@ def test_select(cvm):
     # how to test filter with Mock?
 
 def test_merge(cvm):
-    dev = cvm.df["na_devices"]
+    dev = cvm.df["na_details"]
     assert dev
     assert 'sku' in dev.columns # alias
     assert 'item_id' not in dev.columns # alias

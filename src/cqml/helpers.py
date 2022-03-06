@@ -80,6 +80,10 @@ def make_expr(query):
     field_expr = [make_any(field, query[field]) for field in query.keys()]
     return " AND ".join(field_expr)
 
+def make_isin(query):
+    field_expr = [make_any(field, query[field]) for field in query.keys()]
+    return " AND ".join(field_expr)
+
 def join_expr(df_into, df_from, joins):
   expression = join_item(df_into, df_from, joins[0])
   return expression
