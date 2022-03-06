@@ -6,7 +6,7 @@
 
 # COMMAND ----------
 
-!python -m pip install --upgrade pip
+!pip install --upgrade pip
 #!pip install cqml
 !pip --no-cache-dir install git+https://github.com/TheSwanFactory/cqml.git@v33-fixes
 !pip install cqml==0.3.3.dev1
