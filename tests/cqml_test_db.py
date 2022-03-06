@@ -1,31 +1,32 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC # 3G Sunset - Master Devices Report
-# MAGIC ## Debugging Notebook
+# MAGIC # CQML
+# MAGIC ## Compact Query Meta Language
+# MAGIC ### Databricks Test Notebook
 
 # COMMAND ----------
 
 !python -m pip install --upgrade pip
 #!pip install cqml
-!pip --no-cache-dir install git+https://github.com/TheSwanFactory/cqml.git@v32-reframe
-!pip install cqml==0.3.2.dev2
+!pip --no-cache-dir install git+https://github.com/TheSwanFactory/cqml.git@v33-fixes
+!pip install cqml==0.3.3.dev1
+
 import cqml
 
 # COMMAND ----------
+
 KEY="cqml_test"
-#dict = cqml.pkg_all(spark, 'pipes')
-#dict = cqml.pkg_cqml(KEYS[6],spark, 'pipes')
 cvm = cqml.load_cqml(KEY,spark, '.')
 cvm.debug = True
 cvm.run()
 
 # COMMAND ----------
 
-dict = cvm.do_save({})
+#dict = cvm.do_save({})
 
 # COMMAND ----------
 
-displayHTML(dict['html'])
+#displayHTML(dict['html'])
 #dict
 
 # COMMAND ----------
