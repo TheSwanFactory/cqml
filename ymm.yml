@@ -43,4 +43,4 @@ db:
    - git commit -am {^}
    - git push
    - git rev-parse --abbrev-ref HEAD
-   - databricks repos update --repo-id 935675106724176 --branch {^}
+   - databricks repos update --repo-id 898875077533893 --branch {^}

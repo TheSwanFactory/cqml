@@ -12,7 +12,7 @@ actions:
     cols:
       customer_id: join
     tables:
-      devs: nauto_devices
+      devs: unique_devices
   netsuite_suiteanalytics:
     do: load
     tables:
