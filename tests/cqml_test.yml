@@ -160,13 +160,3 @@ actions:
     ensure_unique: imei
     cols:
       imei: tbd
-  default:
-    do: load
-    tables:
-      check: 3g_checkfleet
-  checkmate:
-    do: select
-    from: check
-  3g_checkfleet:
-    do: select
-    from: checkmate

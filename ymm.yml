@@ -3,6 +3,10 @@
 # - watch
 # - release
 # - dev
+_env:
+    JOB: 327
+    REPO: 898875077533893
+    
 install:
     - pip3 install -r requirements.txt
 build:
