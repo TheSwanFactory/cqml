@@ -151,8 +151,8 @@ actions:
       is_inactive:
         T: not_contains
     matching:
-      serial_number:
-          details: serial_number
+      device_status_id:
+          device_status: list_id
   nonunique_imei:
     do: unique
     from: $id
