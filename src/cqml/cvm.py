@@ -193,10 +193,16 @@ class CVM(VM):
         from_key = itemgetter('from')(action)
         df = self.get_frame(from_key)
         cols = get_cols(action, df)
-        if 'where' in action:
-            expression = make_expr(action['where'])
-            self.log(' - do_select: '+expression)
+        if kWhere in action:
+            expression = make_expr(action[kWhere])
+            self.log(f' - do_select[{kWhere}]: '+expression)
             df = df.filter(expression)
+        if kMatch in action:
+            for col, dict in action[kMatch].items():
+                for table, tcol in dict.items():
+                    self.log(' - do_select[{kMatch}]: ({col}).leftsemi({table},{tcol})')
+                    dft = self.get_frame(table)
+                    df = df.join(dft, df[col] == dft[tcol], "leftsemi")
         if 'dedupe' in action:
             df = df.drop_duplicates([action['dedupe']])
         column_map = alias_columns(df, cols, from_key)

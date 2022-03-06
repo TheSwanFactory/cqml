@@ -3,6 +3,10 @@
 # - watch
 # - release
 # - dev
+_env:
+    JOB: 327
+    REPO: 898875077533893
+    URL: https://nauto-biz-prod-us.cloud.databricks.com/?o=4194856255001463#job/327
 install:
     - pip3 install -r requirements.txt
 build:
@@ -14,12 +18,12 @@ build:
 test:
     - python3 -m pytest
 
-
 watch:
     - echo Use `ptw`
 
 release:
     - echo Must update CHANGELOG in order to bump version
+    - echo
     - prerelease --no-input
     - cat version.txt
     - release --no-input
@@ -28,11 +32,22 @@ release:
     - postrelease --no-input
     - cat version.txt
 
+bump-dev:
+    - cat version.txt
+    - awk -Fv {{printf("%sv%d\n",$1,$2+1)}} version.txt
+    - sed -i .prev s/{^^}/{^}/ version.txt
+
 dev:
+    - $bump-dev
     - cat version.txt
-    - echo old_version {__version__}
-    - echo next_version {__version_next__}
-    - sed -i .new s/{__version__}/{__version_next__}/ version.txt
-    - git commit -am {__version_next__}
+    - git commit -am {^}
     - git push
-    - cat version.txt
+
+db:
+   - date -u +"%Y-%m-%dT%H:%M:%SZ"
+   - git commit -am {^}
+   - git push
+   - git rev-parse --abbrev-ref HEAD
+   - databricks repos update --repo-id 898875077533893 --branch {^}
+   - databricks jobs run-now --job-id 327
+   - open https://nauto-biz-prod-us.cloud.databricks.com/?o=4194856255001463#job/327

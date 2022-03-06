@@ -1,7 +1,16 @@
-0.3.3 (unreleased)
+0.3.4 (unreleased)
 ------------------
 
 - Nothing changed yet.
+
+
+0.3.3 (2022-03-06)
+------------------
+
+- matching
+- cqml_test_db
+- ymm db
+- cleanup yaml
 
 
 0.3.2 (2022-03-05)

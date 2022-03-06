@@ -50,7 +50,7 @@ def drop_table(spark, id):
     spark.sql(f'drop table if exists {DB}.{id}')
 
 def flag2sql(action):
-    where = action['where']
+    where = action[kWhere]
     condition = make_expr(where)
     action[kSQL] =f"CASE WHEN {condition} THEN true END"
     return action
@@ -77,6 +77,10 @@ def make_any(field, sub_query):
     return f'({" OR ".join(any_expr)})'
 
 def make_expr(query):
+    field_expr = [make_any(field, query[field]) for field in query.keys()]
+    return " AND ".join(field_expr)
+
+def make_isin(query):
     field_expr = [make_any(field, query[field]) for field in query.keys()]
     return " AND ".join(field_expr)
 
