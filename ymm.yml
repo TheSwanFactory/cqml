@@ -14,7 +14,6 @@ build:
 test:
     - python3 -m pytest
 
-
 watch:
     - echo Use `ptw`
 
@@ -28,11 +27,20 @@ release:
     - postrelease --no-input
     - cat version.txt
 
+bump-dev:
+    - cat version.txt
+    - awk -Fv {{printf("%sv%d\n",$1,$2+1)}} version.txt
+    - sed -i .prev s/{^^}/{^}/ version.txt
+
 dev:
+    - $bump-dev
     - cat version.txt
-    - echo old_version {__version__}
-    - echo next_version {__version_next__}
-    - sed -i .new s/{__version__}/{__version_next__}/ version.txt
-    - git commit -am {__version_next__}
+    - git commit -am {^}
     - git push
-    - cat version.txt
+
+db:
+   - date -u +"%Y-%m-%dT%H:%M:%SZ"
+   - git commit -am {^}
+   - git push
+   - git rev-parse --abbrev-ref HEAD
+   - databricks repos update --repo-id 935675106724176 --branch {^}
