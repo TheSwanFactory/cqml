@@ -44,3 +44,4 @@ db:
    - git push
    - git rev-parse --abbrev-ref HEAD
    - databricks repos update --repo-id 898875077533893 --branch {^}
+   - databricks jobs run-now --job-id 327
