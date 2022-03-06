@@ -10,7 +10,7 @@ actions:
   nauto:
     do: latest
     cols:
-      customer_id: join
+      hardware: unique oh
     tables:
       devs: unique_devices
   netsuite_suiteanalytics:
