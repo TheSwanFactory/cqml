@@ -50,6 +50,6 @@ db:
    - git rev-parse --abbrev-ref HEAD
    - databricks repos update --repo-id 898875077533893 --branch {^}
    - cat version.txt
-   - '{{"version": "{^}"}}'
+   - {{"version":"{^}"}}
    - databricks jobs run-now --job-id 327 --notebook-params {^}
    - open https://nauto-biz-prod-us.cloud.databricks.com/?o=4194856255001463#job/327
