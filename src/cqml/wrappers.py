@@ -51,7 +51,7 @@ def exec_cqml(name, spark, folder="pipes"):
 def pkg_cqml(name, spark, folder="pipes"):
     print("\npkg_cqml: "+name)
     cvm = exec_cqml(name, spark, folder)
-    pkg = cvm2pkg(cvm)
+    pkg = cvm2pkg(cvm, False)
     return {
     'pkg': pkg,
     'html': pkg.html,
