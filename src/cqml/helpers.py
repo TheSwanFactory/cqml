@@ -78,7 +78,7 @@ def make_any(field, sub_query):
 
 def make_expr(query, op="AND"):
     field_expr = [make_any(field, query[field]) for field in query.keys()]
-    return " {op} ".join(field_expr)
+    return f" {op} ".join(field_expr)
 
 def make_isin(query):
     field_expr = [make_any(field, query[field]) for field in query.keys()]
