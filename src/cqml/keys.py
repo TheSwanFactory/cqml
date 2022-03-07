@@ -6,6 +6,8 @@ DB_NAME='nauto'
 DATE_COL='daily_ts'
 DATE_UNIQ='serial_number'
 
+TRACE=True
+
 cAlias='|'
 kAbove='above'
 kAny='any'

@@ -264,7 +264,7 @@ def exract_pkg(cvm):
     #pkg.setup()
     return pkg
 
-def cvm2pkg(cvm, run=True):
+def cvm2pkg(cvm, run=False):
     if run: cvm.run()
     pkg = exract_pkg(cvm)
     cvm.pkg = pkg

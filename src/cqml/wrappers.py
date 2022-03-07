@@ -35,8 +35,7 @@ def from_file(yaml_file, spark):
 
 def make_frames(yaml_file, spark, debug=False):
     cvm = from_file(yaml_file, spark)
-    if debug:
-        cvm.debug = True
+    if debug: cvm.debug = True
     cvm.run()
     return cvm
 
