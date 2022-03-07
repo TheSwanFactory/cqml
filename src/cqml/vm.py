@@ -166,7 +166,7 @@ class VM:
 
     def perform(self, action):
         id, do = itemgetter('id', 'do')(action)
-        print(f'perform[{do}]: {id}')
+        print(f'*perform[{do}]: {id}')
         method = getattr(self, f'do_{do}')
         df = method(action)
         self.sizes[id] = len(df) if isinstance(df, dict) else df.count()

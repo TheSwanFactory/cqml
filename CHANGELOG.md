@@ -1,7 +1,7 @@
 0.3.4 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- ANY clause
 
 
 0.3.3 (2022-03-06)

@@ -8,6 +8,7 @@ DATE_UNIQ='serial_number'
 
 cAlias='|'
 kAbove='above'
+kAny='any'
 kArgs='args'
 kCast='as_number'
 kCols='cols'
