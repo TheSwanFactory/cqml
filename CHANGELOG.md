@@ -3,7 +3,6 @@
 
 - ANY clause
 - fix cvm2pkg / pkg_all
-- parameterize test notebook
 
 
 0.3.3 (2022-03-06)

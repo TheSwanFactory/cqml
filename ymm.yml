@@ -23,6 +23,7 @@ watch:
 
 release:
     - echo Must update CHANGELOG in order to bump version
+    - head CHANGELOG.md
     - echo
     - prerelease --no-input
     - cat version.txt
