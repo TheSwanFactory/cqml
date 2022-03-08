@@ -35,8 +35,7 @@ def from_file(yaml_file, spark):
 
 def make_frames(yaml_file, spark, debug=False):
     cvm = from_file(yaml_file, spark)
-    if debug:
-        cvm.debug = True
+    if debug: cvm.debug = True
     cvm.run()
     return cvm
 
@@ -52,7 +51,7 @@ def exec_cqml(name, spark, folder="pipes"):
 def pkg_cqml(name, spark, folder="pipes"):
     print("\npkg_cqml: "+name)
     cvm = exec_cqml(name, spark, folder)
-    pkg = cvm2pkg(cvm)
+    pkg = cvm2pkg(cvm, False)
     return {
     'pkg': pkg,
     'html': pkg.html,

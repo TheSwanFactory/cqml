@@ -1,7 +1,8 @@
 0.3.4 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- ANY clause
+- fix cvm2pkg / pkg_all
 
 
 0.3.3 (2022-03-06)

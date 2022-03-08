@@ -197,10 +197,14 @@ class CVM(VM):
             expression = make_expr(action[kWhere])
             self.log(f' - do_select[{kWhere}]: '+expression)
             df = df.filter(expression)
+        if kAny in action:
+            expression = make_expr(action[kAny], "OR")
+            self.log(f' - do_select[{kAny}]: '+expression)
+            df = df.filter(expression)
         if kMatch in action:
             for col, dict in action[kMatch].items():
                 for table, tcol in dict.items():
-                    self.log(' - do_select[{kMatch}]: ({col}).leftsemi({table},{tcol})')
+                    self.log(f' - do_select[{kMatch}]: ({col}).leftsemi({table},{tcol})')
                     dft = self.get_frame(table)
                     df = df.join(dft, df[col] == dft[tcol], "leftsemi")
         if 'dedupe' in action:
