@@ -7,6 +7,7 @@ _env:
     JOB: 327
     REPO: 898875077533893
     URL: https://nauto-biz-prod-us.cloud.databricks.com/?o=4194856255001463#job/327
+
 install:
     - pip3 install -r requirements.txt
 build:
@@ -35,7 +36,7 @@ release:
 
 bump-dev:
     - cat version.txt
-    - awk -Fv {{printf("%sv%d\n",$1,$2+1)}} version.txt
+    - awk -Fv "{{printf("%sv%d\n",$1,$2+1)}}" version.txt
     - sed -i .prev s/{^^}/{^}/ version.txt
 
 dev:
@@ -51,6 +52,6 @@ db:
    - git rev-parse --abbrev-ref HEAD
    - databricks repos update --repo-id 898875077533893 --branch {^}
    - cat version.txt
-   - {{"version":"{^}"}}
+   - '{{"version":"{^}"}}'
    - databricks jobs run-now --job-id 327 --notebook-params {^}
    - open https://nauto-biz-prod-us.cloud.databricks.com/?o=4194856255001463#job/327
