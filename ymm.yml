@@ -36,7 +36,7 @@ release:
 
 bump-dev:
     - cat version.txt
-    - awk -Fv "{{printf("%sv%d\n",$1,$2+1)}}" version.txt
+    - awk -Fv {{printf("%sv%d\n",$1,$2+1)}} version.txt
     - sed -i .prev s/{^^}/{^}/ version.txt
 
 dev:
