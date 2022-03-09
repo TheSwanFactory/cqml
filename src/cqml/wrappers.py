@@ -62,10 +62,14 @@ def pkg_cqml(name, spark, folder="pipes"):
     'frames': cvm.df,
     }
 
-def pkg_all(spark, folder="pipes"):
+def yml_keys(folder="pipes"):
     files = os.listdir(folder)
     keys = [os.path.splitext(file)[0] for file in files if file.endswith("ml")]
     keys.sort()
     print(keys)
+    return keys
+
+def pkg_all(spark, folder="pipes"):
+    keys = yml_keys(folder)
     pkgs = {key:pkg_cqml(key, spark, folder) for key in keys}
     return pkgs
