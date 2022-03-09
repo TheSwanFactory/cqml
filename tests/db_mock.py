@@ -16,6 +16,7 @@ class MockCol(object):
 
 class MockWriter(object):
     def __init__(self, df): self.df = df
+    def parquet(self, arg): return self
     def csv(self, arg): return self
     def mode(self, arg): return self
     def option(self, *arg): return self
