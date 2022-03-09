@@ -7,6 +7,8 @@ env:
     - echo 327
     - echo 898875077533893
     - echo https://nauto-biz-prod-us.cloud.databricks.com/?o=4194856255001463#job/327
+    - echo {"run_id":14445,"number_in_job":14445}
+    - echo https://nauto-biz-prod-us.cloud.databricks.com/?o=4194856255001463#job/327/run/14445
 
 install:
     - pip3 install -r requirements.txt
