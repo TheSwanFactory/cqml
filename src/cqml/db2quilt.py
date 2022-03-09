@@ -164,7 +164,10 @@ class Package:
         elif ext == "table":
             return save_table(dfs[key], id)
         elif ext == "daily":
-            self.save_file(dfs[key], f'{id}.csv')
+            pfile = f"{key}.parquet"
+            msg = self.save_file(dfs[key], pfile)
+            doc = self.to_report(pfile, msg)
+#            self.save_file(dfs[key], f'{id}.csv')
             return save_table(dfs[key], id, "append")
         return self.save_file(dfs[key], f'{id}.{ext}')
 
