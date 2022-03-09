@@ -1,7 +1,8 @@
 0.3.5 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- yml_keys
+- smart report on daily
 
 
 0.3.4 (2022-03-07)
