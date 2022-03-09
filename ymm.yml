@@ -53,6 +53,6 @@ db:
     - git rev-parse --abbrev-ref HEAD
     - databricks repos update --repo-id {env#2} --branch {^}
     - cat version.txt
-    - '{{"version":"{^}"}}'
+    - echo '{{"version":"{^}"}}'
     - databricks jobs run-now --job-id {env#1}  --notebook-params {^}
     - open {env#3}
