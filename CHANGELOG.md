@@ -1,8 +1,9 @@
 0.3.6 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Rename Right Join Key
+- Export CSV for Daily reports (deprecate 'report'?)
+- possible to clean out old files?
 
 0.3.5 (2022-03-09)
 ------------------
