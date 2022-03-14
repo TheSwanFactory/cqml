@@ -2,6 +2,7 @@
 ------------------
 
 - Rename Right Join Key
+- Use 'on' versus first col (v0.4.0)
 - Export CSV for Daily reports (deprecate 'report'?)
 - possible to clean out old files?
 

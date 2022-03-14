@@ -45,7 +45,9 @@ dev:
     - $bump-dev
     - cat version.txt
     - git commit -am {^}
-    - git push
+    - git rev-parse --abbrev-ref HEAD
+    - git push --set-upstream origin {^}
+    #- git push
 
 db:
     - $env
