@@ -150,7 +150,7 @@ class Package:
         pfile = f"{key}.parquet"
         cfile = f"{key}.csv"
         df = cleanup_names(dfs[key])
-        save_table(df, key)
+        save_table(df, key, "append")
         self.save_file(df, cfile)
         msg = self.save_file(df, pfile)
         doc = self.to_report(pfile, msg)
@@ -159,16 +159,10 @@ class Package:
     def save_ext(self, dfs, key, ext, debug=False):
         print(f'save_ext: {ext} for {key} in {self.name}')
         id = f'{key}_debug' if debug else key
-        if ext == "report":
+        if ext == "daily":
             return self.export(dfs, key)
         elif ext == "table":
             return save_table(dfs[key], id)
-        elif ext == "daily":
-            pfile = f"{key}.parquet"
-            msg = self.save_file(dfs[key], pfile)
-            doc = self.to_report(pfile, msg)
-#            self.save_file(dfs[key], f'{id}.csv')
-            return save_table(dfs[key], id, "append")
         return self.save_file(dfs[key], f'{id}.{ext}')
 
     def copy_file(self, source, dest_name=False):
