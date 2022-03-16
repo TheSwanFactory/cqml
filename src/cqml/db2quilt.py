@@ -47,7 +47,7 @@ def to_dir(s): return s.replace(DBFS,'')
 
 def save_table(df, name, mode="overwrite"):
     """saves into managed delta tables in default database"""
-    table_name = f'{DB_NAME}.{name}'
+    table_name = f'{DB_NAME}.{name}'.replace('-','_')
     print(f"save_table[{mode}]: {table_name}")
     df = df.withColumn(DATE_COL, f.current_timestamp())
     df.write\
