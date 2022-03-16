@@ -1,11 +1,11 @@
 0.3.6 (unreleased)
 ------------------
 
-- Export CSV for Daily reports (deprecate 'report'!)
+- Report always appends; daily just does table
 - Use non-debug-named README.md
-- Rename Right Join Key
-- Use 'on' versus first col (v0.4.0)
-- possible to clean out old files?
+- TODO: Rename Right Join Key
+- TODO: Use 'on' versus first col (v0.4.0)
+- TODO: clean out old files?
 
 0.3.5 (2022-03-09)
 ------------------

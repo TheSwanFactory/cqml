@@ -160,8 +160,10 @@ class Package:
     def save_ext(self, dfs, key, ext, debug=False):
         print(f'save_ext: {ext} for {key} in {self.name}')
         id = f'{key}{DEBUG_SUFFIX}' if debug else key
-        if ext == "daily":
+        if ext == "report":
             return self.export(dfs, key)
+        elif ext == "daily":
+            return save_table(dfs[key], id, "append")
         elif ext == "table":
             return save_table(dfs[key], id)
         return self.save_file(dfs[key], f'{id}.{ext}')
