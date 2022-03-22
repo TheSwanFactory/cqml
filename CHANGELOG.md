@@ -3,9 +3,11 @@
 
 - Report always appends; daily just does table
 - Use non-debug-named README.md
+- TODO: Store GitHub Commit (hash? URL?)
+- TODO: List of SAVE keys
 - TODO: Rename Right Join Key
 - TODO: Use 'on' versus first col (v0.4.0)
-- TODO: clean out old files?
+- TODO: clean out old files from Quilt packages
 
 0.3.5 (2022-03-09)
 ------------------
