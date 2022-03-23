@@ -3,7 +3,7 @@
 # - watch
 # - release
 # - dev
-env:
+init:
     BRANCH: git rev-parse --abbrev-ref HEAD
     DATE: date -u +"%Y-%m-%dT%H:%M:%SZ"
     VERSION: cat version.txt
