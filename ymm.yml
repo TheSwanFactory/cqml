@@ -4,25 +4,19 @@
 # - release
 # - dev
 env:
-    - echo 327
-    - echo 898875077533893
-    - echo https://nauto-biz-prod-us.cloud.databricks.com/?o=4194856255001463#job/327
-    - echo {"run_id":14445,"number_in_job":14445}
-    - echo https://nauto-biz-prod-us.cloud.databricks.com/?o=4194856255001463#job/327/run/14445
+    BRANCH: git rev-parse --abbrev-ref HEAD
+    DATE: date -u +"%Y-%m-%dT%H:%M:%SZ"
+    VERSION: cat version.txt
+    JOB: echo 327
+    REPO: echo 898875077533893
+    URL: echo https://nauto-biz-prod-us.cloud.databricks.com/?o={USER}#job/{JOB}
+    RUN: echo https://nauto-biz-prod-us.cloud.databricks.com/?o={USER}#job/{JOB}/run
 
-install:
-    - pip3 install -r requirements.txt
 build:
     - pip3 install --upgrade pytest
     - pip3 install --upgrade pytest-watch
     - pip3 install --upgrade build
     - pip3 install --upgrade twine
-
-test:
-    - python3 -m pytest
-
-watch:
-    - echo Use `ptw`
 
 release:
     - echo Must update CHANGELOG in order to bump version
@@ -37,26 +31,21 @@ release:
     - cat version.txt
 
 bump-dev:
-    - cat version.txt
     - awk -Fv {{printf("%sv%d\n",$1,$2+1)}} version.txt
-    - sed -i .prev s/{^^}/{^}/ version.txt
+    - sed -i .prev s/{VERSION}/{^}/ version.txt
 
 dev:
     - $bump-dev
-    - cat version.txt
-    - git commit -am {^}
-    - git rev-parse --abbrev-ref HEAD
-    - git push --set-upstream origin {^}
+    - git commit -am {VERSION}
+    - git push --set-upstream origin {BRANCH}
     #- git push
 
 db:
     - $env
-    - date -u +"%Y-%m-%dT%H:%M:%SZ"
-    - git commit -am {^}
+    - git commit -am {DATE}
     - git push
     - git rev-parse --abbrev-ref HEAD
-    - databricks repos update --repo-id {env#2} --branch {^}
-    - cat version.txt
-    - echo {{"version":"{^}"}}
-    - databricks jobs run-now --job-id {env#1} --notebook-params {^}
-    - open {env#3}
+    - databricks repos update --repo-id {REPO} --branch {BRANCH}
+    - echo {{"version":"{VERSION}"}}
+    - databricks jobs run-now --job-id {JOB} --notebook-params {^}
+    - open {RUN}

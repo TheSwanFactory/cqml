@@ -3,9 +3,8 @@
 
 - Report always appends; daily just does table
 - Use non-debug-named README.md
-- TODO: New QUILT grids: https://github.com/quiltdata/quilt/blob/master/docs/Catalog/VisualizationDashboards.md
+- TODO: New QUILT grids: https://github.com/quiltdata/quilt/blob/master/docs/Catalog/VisualizationDashboards.md [change SAVE behavior]
 - TODO: Store GitHub Commit (hash? URL?)
-- TODO: List of SAVE keys
 - TODO: Rename Right Join Key
 - TODO: Use 'on' versus first col (v0.4.0)
 - TODO: clean out old files from Quilt packages
