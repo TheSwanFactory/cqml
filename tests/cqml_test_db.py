@@ -8,8 +8,10 @@
 
 !pip install --upgrade pip
 #!pip install cqml
-!pip --no-cache-dir install git+https://github.com/TheSwanFactory/cqml.git@v33-fixes
-!pip install cqml==0.3.3.dev1
+#--IMPORT-CQML--#
+!pip --no-cache-dir install git+https://github.com/TheSwanFactory/cqml.git@v36-super-saver
+!pip install cqml==0.3.6.dev5
+#++IMPORT-CQML++#
 
 import cqml
 
