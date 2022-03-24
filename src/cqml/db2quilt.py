@@ -36,6 +36,7 @@ except AttributeError:
 # Package Directory
 #
 
+DEBUG_SUFFIX="-debug"
 DBFS="/dbfs"
 DELTA_TABLE="delta"
 PYROOT=DBFS+"/FileStore"
@@ -46,7 +47,7 @@ def to_dir(s): return s.replace(DBFS,'')
 
 def save_table(df, name, mode="overwrite"):
     """saves into managed delta tables in default database"""
-    table_name = f'{DB_NAME}.{name}'
+    table_name = f'{DB_NAME}.{name}'.replace('-','_')
     print(f"save_table[{mode}]: {table_name}")
     df = df.withColumn(DATE_COL, f.current_timestamp())
     df.write\
@@ -150,7 +151,7 @@ class Package:
         pfile = f"{key}.parquet"
         cfile = f"{key}.csv"
         df = cleanup_names(dfs[key])
-        save_table(df, key)
+        save_table(df, key, "append")
         self.save_file(df, cfile)
         msg = self.save_file(df, pfile)
         doc = self.to_report(pfile, msg)
@@ -158,17 +159,13 @@ class Package:
 
     def save_ext(self, dfs, key, ext, debug=False):
         print(f'save_ext: {ext} for {key} in {self.name}')
-        id = f'{key}_debug' if debug else key
+        id = f'{key}{DEBUG_SUFFIX}' if debug else key
         if ext == "report":
             return self.export(dfs, key)
+        elif ext == "daily":
+            return save_table(dfs[key], id, "append")
         elif ext == "table":
             return save_table(dfs[key], id)
-        elif ext == "daily":
-            pfile = f"{key}.parquet"
-            msg = self.save_file(dfs[key], pfile)
-            doc = self.to_report(pfile, msg)
-#            self.save_file(dfs[key], f'{id}.csv')
-            return save_table(dfs[key], id, "append")
         return self.save_file(dfs[key], f'{id}.{ext}')
 
     def copy_file(self, source, dest_name=False):
@@ -261,7 +258,7 @@ class Package:
 def exract_pkg(cvm):
     id, config = itemgetter('id','meta')(cvm.yaml)
     proj = Project(config)
-    pkg_id = id + "-debug" if cvm.debug == True else id
+    pkg_id = id + DEBUG_SUFFIX if cvm.debug == True else id
     print("exract_pkg: "+pkg_id)
     pkg = proj.package(pkg_id)
     #pkg.setup()
@@ -280,7 +277,8 @@ def cvm2pkg(cvm, run=False):
         ext = files[key]
         pkg.save_ext(cvm.df, key, ext, cvm.debug)
     try:
-        pkg.copy_file(f'{pkg.id}.md','README.md')
+        root = pkg.id.replace(DEBUG_SUFFIX,'')
+        pkg.copy_file(f'{root}.md','README.md')
         pkg.copy_file(f'REPORT_HELP.md')
     except FileNotFoundError as err:
         print(err)
