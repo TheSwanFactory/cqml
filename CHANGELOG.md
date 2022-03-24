@@ -1,4 +1,4 @@
-0.3.6 (unreleased)
+0.3.6 (2022-03-23)
 ------------------
 
 - Report always appends; daily just does table
