@@ -36,15 +36,12 @@ bump-dev:
 
 dev:
     - $bump-dev
-    - git commit -am {VERSION}
+    - git commit -am "{VERSION}_{DATE}"
     - git push --set-upstream origin {BRANCH}
     #- git push
 
 db:
-    - $env
-    - git commit -am {DATE}
-    - git push
-    - git rev-parse --abbrev-ref HEAD
+    - $dev
     - databricks repos update --repo-id {REPO} --branch {BRANCH}
     - echo {{"version":"{VERSION}"}}
     - databricks jobs run-now --job-id {JOB} --notebook-params {^}
