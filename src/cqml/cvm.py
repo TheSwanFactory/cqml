@@ -228,6 +228,8 @@ class CVM(VM):
         id, fkey, ikey = itemgetter('id', 'from', 'into')(action)
         df_from = self.get_frame(fkey)
         df_into = self.get_frame(ikey)
+        if kDrop in action:
+            df_from = df_from.drop(*action[kDrop])
         return df_from.union(df_into)
 
     def do_unique(self, action):

@@ -8,9 +8,10 @@ init:
     DATE: date -u +"%Y-%m-%dT%H:%M:%SZ"
     VERSION: cat version.txt
     JOB: echo 327
-    REPO: echo 898875077533893
-    URL: echo https://nauto-biz-prod-us.cloud.databricks.com/?o={USER}#job/{JOB}
-    RUN: echo https://nauto-biz-prod-us.cloud.databricks.com/?o={USER}#job/{JOB}/run
+    REPO: echo 2511695431613401 #cqml
+    OID: echo 4194856255001463
+    URL: echo https://nauto-biz-prod-us.cloud.databricks.com/?o={OID}#job/{JOB}
+    RUN: echo https://nauto-biz-prod-us.cloud.databricks.com/?o={OID}#job/{JOB}/run
     DBTEST: echo tests/cqml_test_db.py
 
 build:
@@ -37,11 +38,12 @@ bump-dev:
 
 regen-test:
     - ls -l {DBTEST}*
-    - git commit -am "pre-regen-{DBTEST}_{VERSION}_{DATE}"
+    - git commit -am "pre-regen-{DBTEST}-{VERSION}"
     - rm -f {DBTEST}
     - mv {DBTEST}.tmp {DBTEST}
     - sed -i .tmp -e s/{{VERSION}}/{VERSION}/ -e s/{{BRANCH}}/{BRANCH}/ {DBTEST}
     - git commit -am "post-regen-{DBTEST}_{VERSION}_{DATE}"
+    - git push --set-upstream origin {BRANCH}
 
 dev:
     - $bump-dev
@@ -50,11 +52,12 @@ dev:
     #- git push
 
 run:
+    - git push
     - databricks repos update --repo-id {REPO} --branch {BRANCH}
-    - echo {{"version":"{VERSION}"}}
-    - databricks jobs run-now --job-id {JOB} --notebook-params {^}
+    - databricks jobs run-now --job-id {JOB}
     - open {RUN}
 
 db:
     - $dev
-    - $test
+    - $regen-test
+    - $run

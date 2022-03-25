@@ -169,3 +169,5 @@ actions:
     do: union
     into: n2_returns
     from: n3_returns
+    drop:
+      - original_so
