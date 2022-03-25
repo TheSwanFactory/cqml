@@ -33,8 +33,15 @@ release:
     - cat version.txt
 
 bump-dev:
-    - awk -Fv {{printf("%sv%d\n",$1,$2+1)}} version.txt
-    - sed -i .prev s/{VERSION}/{^}/ version.txt
+    AWK: awk -Fv {{printf("%sv%d\n",$1,$2+1)}} version.txt
+    SED: sed -i .prev s/{VERSION}/{^}/ version.txt
+    VERSION: cat version.txt
+
+dev:
+    - $bump-dev
+    - git commit -am "{VERSION}_{DATE}"
+    - git push --set-upstream origin {BRANCH}
+    #- git push
 
 regen-test:
     - ls -l {DBTEST}*
@@ -44,12 +51,6 @@ regen-test:
     - sed -i .tmp -e s/{{VERSION}}/{VERSION}/ -e s/{{BRANCH}}/{BRANCH}/ {DBTEST}
     - git commit -am "post-regen-{DBTEST}_{VERSION}_{DATE}"
     - git push --set-upstream origin {BRANCH}
-
-dev:
-    - $bump-dev
-    - git commit -am "{VERSION}_{DATE}"
-    - git push --set-upstream origin {BRANCH}
-    #- git push
 
 run:
     - git push
