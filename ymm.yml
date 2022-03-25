@@ -11,6 +11,7 @@ init:
     REPO: echo 898875077533893
     URL: echo https://nauto-biz-prod-us.cloud.databricks.com/?o={USER}#job/{JOB}
     RUN: echo https://nauto-biz-prod-us.cloud.databricks.com/?o={USER}#job/{JOB}/run
+    DBTEST: echo cqml_test_db.py
 
 build:
     - pip3 install --upgrade pytest
@@ -33,6 +34,13 @@ release:
 bump-dev:
     - awk -Fv {{printf("%sv%d\n",$1,$2+1)}} version.txt
     - sed -i .prev s/{VERSION}/{^}/ version.txt
+
+regen-test:
+    - git commit -am "pre-regen-{DBTEST}_{VERSION}_{DATE}"
+    - rm -f {DBTEST}
+    - mv {DBTEST}.tmp {DBTEST}
+    - sed -i .tmp -e s/{{VERSION}}/{VERSION}/ -e s/{{BRANCH}}/{BRANCH}/ {DBTEST}
+    - git commit -am "post-regen-{DBTEST}_{VERSION}_{DATE}"
 
 dev:
     - $bump-dev
