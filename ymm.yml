@@ -40,7 +40,7 @@ dev:
     - git push --set-upstream origin {BRANCH}
     #- git push
 
-test:
+run:
     - databricks repos update --repo-id {REPO} --branch {BRANCH}
     - echo {{"version":"{VERSION}"}}
     - databricks jobs run-now --job-id {JOB} --notebook-params {^}

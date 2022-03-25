@@ -20,6 +20,11 @@ actions:
       device_status: netsuite_device_status
       details: nauto_item_shipment_detail
       items: items
+  google_sheets:
+    do: load
+    tables:
+      n2_returns: projected_inventory
+      n3_returns: fxe_returns
   box_details:
     do: box
     from: details
@@ -160,3 +165,7 @@ actions:
     ensure_unique: imei
     cols:
       imei: tbd
+  union:
+    do: union
+    into: n2_returns
+    from: n3_returns
