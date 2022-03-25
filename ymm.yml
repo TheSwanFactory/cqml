@@ -49,16 +49,16 @@ regen-test:
     - rm -f {DBTEST}
     - mv {DBTEST}.tmp {DBTEST}
     - sed -i .tmp -e s/{{VERSION}}/{VERSION}/ -e s/{{BRANCH}}/{BRANCH}/ {DBTEST}
-    - git commit -am "post-regen-{DBTEST}_{VERSION}_{DATE}"
+    - git commit -am "post-regen-{DBTEST}-{VERSION}"
     - git push --set-upstream origin {BRANCH}
 
-run:
+dbrun:
     - git push
     - databricks repos update --repo-id {REPO} --branch {BRANCH}
     - databricks jobs run-now --job-id {JOB}
     - open {RUN}
 
-db:
+run:
     - $dev
     - $regen-test
-    - $run
+    - $dbrun
