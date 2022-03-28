@@ -179,9 +179,32 @@ actions:
         - 1
         - 2
         - 3
+
+  number_items:
+    do: select
+    from: items
+    cols:
+      averagecost: double
+      backward_consumption_days: double
+      cost_0: double
+      fixed_lot_size: double
+      forward_consumption_days: double
+      handling_cost: double
+      item_defined_cost: double
+      last_purchase_price: double
+      purchaseorderamount: double
+      purchaseorderquantity: double
+      quantityavailable: double
+      quantitybackordered: double
+      quantityonhand: double
+      shippingcost: double
+      totalvalue: double
+      transferprice: double
+      weight: double
+
   calc_quarters:
     do: calc
-    from: items
+    from: $id
     operator: /
     round: 2
     else: 0
