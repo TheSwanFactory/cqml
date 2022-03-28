@@ -4,7 +4,7 @@
 - Nothing changed yet.
 
 
-0.3.7 (unreleased)
+0.3.7 (2022-03-28)
 ------------------
 
 - Support Unions
