@@ -9,8 +9,8 @@
 !pip install --upgrade pip
 #!pip install cqml
 #--IMPORT-CQML--#
-!pip --no-cache-dir install git+https://github.com/TheSwanFactory/cqml.git@v37-union
-!pip install cqml==0.3.7.dev0
+!pip --no-cache-dir install git+https://github.com/TheSwanFactory/cqml.git@v04-trips
+!pip install cqml==0.4.0.dev1
 
 #++IMPORT-CQML++#
 
