@@ -26,7 +26,7 @@ def test_merge(cvm):
     assert 'item_id' not in dev.columns # alias
 
 def test_call(cvm):
-    n = 11
+    n = 12
     a = cvm.cactions[n]
     print(a)
     assert a['id'] == 'days_unseen'
