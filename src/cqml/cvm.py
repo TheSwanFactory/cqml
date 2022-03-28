@@ -55,18 +55,20 @@ class CVM(VM):
         return df
 
     def do_calc(self, action):
-        from_key,args,cdict = itemgetter('from','args',kCols)(action)
+        id, from_key,args,cdict = itemgetter('id','from','args',kCols)(action)
         df_from = self.get_frame(from_key)
         i = args.index(kColArg)
-        result = ['"*"']
-        for col, id in cdict.items():
+        result = ['*']
+        for col, alias in cdict.items():
             args[i] = col
             sql = call_sql(action, args)
-            expr = f'{sql} as {id}'
+            expr = f'{sql} as {alias}'
             result.append(expr)
         all = ",".join(result)
         self.log(' - do_calc.all: '+all)
-        return df_from.select(all)
+        df_from.registerTempTable(id)
+        select = f"select {all} from {id}"
+        return self.spark.sql(select)
 
     def do_call(self, action):
         args  = action[kArgs]
