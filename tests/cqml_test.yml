@@ -179,7 +179,7 @@ actions:
         - 1
         - 2
         - 3
-  calc_k_items:
+  calc_quarters:
     do: calc
     from: items
     operator: /
@@ -187,7 +187,7 @@ actions:
     else: 0
     args:
         - $col
-        - 1000
+        - 4
     cols:
-      a: a_items
-      b: b_items
+      totalvalue: qprice
+      averagecost: qcost
