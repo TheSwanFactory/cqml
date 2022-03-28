@@ -171,3 +171,11 @@ actions:
     from: n3_returns
     drop:
       - original_so
+  plus_operator:
+    do: call
+    from: status_pending
+    operator: +
+    args:
+        - 1
+        - 2
+        - 3

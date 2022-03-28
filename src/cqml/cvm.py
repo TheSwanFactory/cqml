@@ -54,9 +54,12 @@ class CVM(VM):
         return df
 
     def do_call(self, action):
-        fn, args  = itemgetter(kFunc,kArgs)(action)
-        arglist = ",".join(args)
-        action[kSQL] = f'{fn}({arglist})'
+        args  = action[kArgs]
+        sep = action[kOp] if kOp in action else ","
+        self.log('sep: '+sep)
+        sql = sep.join(map(str, args))
+        if kFunc in action: sql = f'{action[kFunc]}({sql})'
+        action[kSQL] = sql
         return self.do_eval(action)
 
     def do_eval(self, action):
