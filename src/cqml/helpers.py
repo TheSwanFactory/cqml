@@ -33,6 +33,12 @@ def alias_columns(df, columns, table='.'):
         new_columns.append(entry)
     return new_columns
 
+def call_sql(action, args):
+    sep = action[kOp] if kOp in action else ","
+    sql = sep.join(map(str, args))
+    if kFunc in action: sql = f'{action[kFunc]}({sql})'
+    return sql
+
 def cast_columns(df, matching, type):
     for c in df.columns:
         if matching.lower() in c.lower():

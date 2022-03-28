@@ -1,3 +1,4 @@
+from copy import deepcopy
 from functools import reduce
 from operator import itemgetter
 from .keys import *
@@ -53,12 +54,23 @@ class CVM(VM):
         df = bq.box_table()
         return df
 
+    def do_calc(self, action):
+        from_key,args,cdict = itemgetter('from','args',kCols)(action)
+        df_from = self.get_frame(from_key)
+        i = args.index(kColArg)
+        result = ['"*"']
+        for col, id in cdict.items():
+            args[i] = col
+            sql = call_sql(action, args)
+            expr = f'{sql} as {id}'
+            result.append(expr)
+        all = ",".join(result)
+        self.log(' - do_calc.all: '+all)
+        return df_from.select(all)
+
     def do_call(self, action):
         args  = action[kArgs]
-        sep = action[kOp] if kOp in action else ","
-        self.log('sep: '+sep)
-        sql = sep.join(map(str, args))
-        if kFunc in action: sql = f'{action[kFunc]}({sql})'
+        sql = call_sql(action, args)
         action[kSQL] = sql
         return self.do_eval(action)
 

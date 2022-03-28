@@ -179,3 +179,15 @@ actions:
         - 1
         - 2
         - 3
+  calc_k_items:
+    do: calc
+    from: items
+    operator: /
+    round: 2
+    else: 0
+    args:
+        - $col
+        - 1000
+    cols:
+      a: a_items
+      b: b_items
