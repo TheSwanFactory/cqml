@@ -184,6 +184,7 @@ actions:
     do: select
     from: items
     cols:
+      item_id: double
       averagecost: double
       backward_consumption_days: double
       cost_0: double

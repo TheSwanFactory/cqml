@@ -25,6 +25,9 @@ cvm.run()
 
 # COMMAND ----------
 
+print(cvm.df.keys())
+dt = cvm.df['calc_quarters']
+dt.show()
 #dict = cvm.do_save({})
 
 # COMMAND ----------
