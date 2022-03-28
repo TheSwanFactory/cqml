@@ -185,33 +185,28 @@ actions:
     from: items
     cols:
       item_id: double
+      sku: string
       averagecost: double
-      backward_consumption_days: double
-      cost_0: double
-      fixed_lot_size: double
-      forward_consumption_days: double
       handling_cost: double
       item_defined_cost: double
       last_purchase_price: double
-      purchaseorderamount: double
-      purchaseorderquantity: double
-      quantityavailable: double
-      quantitybackordered: double
-      quantityonhand: double
       shippingcost: double
       totalvalue: double
       transferprice: double
       weight: double
+    where:
+      salesprice:
+        0: greater
 
   calc_quarters:
     do: calc
     from: $id
     operator: /
-    round: 2
+    round: 3
     else: 0
     args:
         - $col
         - 4
     cols:
-      totalvalue: qprice
-      averagecost: qcost
+      last_purchase_price: qlast
+      salesprice: qsale
