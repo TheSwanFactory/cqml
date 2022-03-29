@@ -10,7 +10,7 @@
 #!pip install cqml
 #--IMPORT-CQML--#
 !pip --no-cache-dir install git+https://github.com/TheSwanFactory/cqml.git@v04-trips
-!pip install cqml==0.4.0.dev3
+!pip install cqml==0.4.0.dev4
 
 #++IMPORT-CQML++#
 
@@ -25,9 +25,6 @@ cvm.run()
 
 # COMMAND ----------
 
-print(cvm.df.keys())
-dt = cvm.df['calc_quarters']
-dt.show()
 #dict = cvm.do_save({})
 
 # COMMAND ----------
