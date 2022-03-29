@@ -170,6 +170,7 @@ class VM:
         method = getattr(self, f'do_{do}')
         df = method(action)
         self.sizes[id] = len(df) if isinstance(df, dict) else df.count()
+        df = df if kKeepIndistinct in action else df.distinct()
         df = self.ensure_unique(df, action[kUniq]) if kUniq in action else df
         df = df.sort(df[action[kSort]].desc()) if kSort in action else df
         self.set_frame(id, df)

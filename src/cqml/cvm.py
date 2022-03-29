@@ -152,7 +152,7 @@ class CVM(VM):
           print(f" - {key}[{file_name}]: {path}")
           df = cast_columns(df, action[kCast], "int") if kCast in action else df
           self.set_frame(key, df)
-        return self.df
+        return df
 
     def do_merge(self, action):
         id, into, join = itemgetter('id', 'into', 'join')(action)
@@ -228,7 +228,6 @@ class CVM(VM):
             df = df.drop_duplicates([action['dedupe']])
         column_map = alias_columns(df, cols, from_key)
         df = df.select(*column_map)
-        df = df.distinct() # TODO: make optional
         return df
 
     def do_summary(self, action):
