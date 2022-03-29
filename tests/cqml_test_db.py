@@ -10,7 +10,7 @@
 #!pip install cqml
 #--IMPORT-CQML--#
 !pip --no-cache-dir install git+https://github.com/TheSwanFactory/cqml.git@v04-trips
-!pip install cqml==0.4.0.dev4
+!pip install cqml==0.4.0.dev5
 
 #++IMPORT-CQML++#
 
@@ -22,6 +22,13 @@ KEY="cqml_test"
 cvm = cqml.load_cqml(KEY,spark, '.')
 cvm.debug = True
 cvm.run()
+
+# COMMAND ----------
+
+K = list(cvm.df.keys())
+print(K)
+dn = cvm.df[-1]
+dn.show()
 
 # COMMAND ----------
 
