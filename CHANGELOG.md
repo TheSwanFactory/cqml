@@ -1,8 +1,10 @@
-0.3.8 (unreleased)
+0.4.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- do_calc (multiple columns)
+- operator vs function
+- CHANGE: distinct by default
+- CHANGE: sort by default
 
 0.3.7 (2022-03-28)
 ------------------
