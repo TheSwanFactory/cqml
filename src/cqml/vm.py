@@ -90,6 +90,13 @@ class VM:
         self.cactions.append(dict)
         return 1
 
+    def reload(self, yaml_file):
+        with open(yaml_file) as data:
+            raw_yaml = yaml.full_load(data)
+            self.actions = raw_yaml["actions"]
+            self.log(self.actions)
+            self.compile(self.actions)
+
     def compile(self, action_dict):
         flags = []
         for id, action in action_dict.items():
