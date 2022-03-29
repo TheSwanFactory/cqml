@@ -10,7 +10,7 @@
 #!pip install cqml
 #--IMPORT-CQML--#
 !pip --no-cache-dir install git+https://github.com/TheSwanFactory/cqml.git@v04-trips
-!pip install cqml==0.4.0.dev9
+!pip install cqml==0.4.0.dev10
 
 #++IMPORT-CQML++#
 
@@ -24,11 +24,14 @@ cvm.debug = True
 cvm.run()
 
 # COMMAND ----------
-
 K = list(cvm.df.keys())
 print(K)
-dn = cvm.df[K[-1]]
-dn.show()
+def d(i): return cvm.df[K[i]]
+def view(i):
+  print(K[i])
+  d(i).show()
+def values(i, col): return d(i).select(col).distinct().collect()
+view(-1)
 
 # COMMAND ----------
 
