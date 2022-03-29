@@ -37,6 +37,7 @@ def call_sql(action, args):
     sep = action[kOp] if kOp in action else ","
     sql = sep.join(map(str, args))
     if kFunc in action: sql = f'{action[kFunc]}({sql})'
+    if kRound in action: sql = f'round({sql}, {action[kRound]})'
     if kIfNull in action: sql = f'coalesce({sql}, {action[kIfNull]})'
     return sql
 
