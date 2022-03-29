@@ -10,7 +10,7 @@
 #!pip install cqml
 #--IMPORT-CQML--#
 !pip --no-cache-dir install git+https://github.com/TheSwanFactory/cqml.git@v04-trips
-!pip install cqml==0.4.0.dev6
+!pip install cqml==0.4.0.dev7
 
 #++IMPORT-CQML++#
 
@@ -27,7 +27,7 @@ cvm.run()
 
 K = list(cvm.df.keys())
 print(K)
-dn = cvm.df[-1]
+dn = cvm.df[K[-1]]
 dn.show()
 
 # COMMAND ----------
