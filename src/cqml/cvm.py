@@ -152,7 +152,7 @@ class CVM(VM):
           print(f" - {key}[{file_name}]: {path}")
           df = cast_columns(df, action[kCast], "int") if kCast in action else df
           self.set_frame(key, df)
-        return df
+        return self.df
 
     def do_merge(self, action):
         id, into, join = itemgetter('id', 'into', 'join')(action)

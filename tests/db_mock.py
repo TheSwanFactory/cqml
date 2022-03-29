@@ -69,6 +69,7 @@ class MockSpark(object):
 
     def sql(self, arg): return self
     def count(self): return self
+    def distinct(self,arg=None): return self
 
     def setCurrentDatabase(self, db):
         print(f"setCurrentDatabase: {db}")
