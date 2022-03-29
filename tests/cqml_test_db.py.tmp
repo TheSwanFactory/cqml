@@ -25,6 +25,13 @@ cvm.run()
 
 # COMMAND ----------
 
+l = list(cvm.df.keys())
+print(l)
+dn = cvm.df[-1]
+dn.show()
+
+# COMMAND ----------
+
 #dict = cvm.do_save({})
 
 # COMMAND ----------
