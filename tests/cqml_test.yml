@@ -186,8 +186,8 @@ actions:
     cols:
       item_id: double
       averagecost: double
-      totalvalue: double
-      last_purchase_price: double
+      totalvalue|total: double
+      last_purchase_price|last: double
       salesprice: double
     where:
       salesprice:
@@ -203,5 +203,6 @@ actions:
         - $col
         - 4
     cols:
-      last_purchase_price: qlast
+      total: qtotal
+      last: qlast
       salesprice: qsale
