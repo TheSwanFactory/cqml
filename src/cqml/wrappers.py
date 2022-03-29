@@ -39,6 +39,11 @@ def make_frames(yaml_file, spark, debug=False):
     cvm.run()
     return cvm
 
+def reload_cqml(cvm, name, folder="pipes"):
+    yaml_file=f"{folder}/{name}.yml"
+    cvm.reload(yaml_file)
+    return cvm
+
 def load_cqml(name, spark, folder="pipes"):
     yaml_file=f"{folder}/{name}.yml"
     return from_file(yaml_file, spark)
