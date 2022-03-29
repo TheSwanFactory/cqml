@@ -189,6 +189,7 @@ actions:
       handling_cost: double
       item_defined_cost: double
       last_purchase_price: double
+      salesprice: double
       shippingcost: double
       totalvalue: double
       transferprice: double
