@@ -158,7 +158,7 @@ class CVM(VM):
         id, into, join = itemgetter('id', 'into', 'join')(action)
         join_how = action[kJoinType] if kJoinType in action else 'left'
         df_into = self.get_frame(into)
-        df_from = self.do_select(action)
+        df_from = self.do_select(action, False) # do not auto-sort on join column
         cols = get_cols(action, df_from)
         if not df_from:
           return None
@@ -206,11 +206,11 @@ class CVM(VM):
         df_re = df_ts.resample(freq=freq, func=func, fill=True)#.interpolate(method="linear")
         return df_re.df
 
-    def do_select(self, action):
+    def do_select(self, action, autoSort=True):
         from_key = itemgetter('from')(action)
         df = self.get_frame(from_key)
         cols = get_cols(action, df)
-        if kSort not in action: action[kSort] = cols[0]
+        if (kSort not in action) and autoSort: action[kSort] = cols[0]
         if kWhere in action:
             expression = make_expr(action[kWhere])
             self.log(f' - do_select[{kWhere}]: '+expression)
