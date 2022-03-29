@@ -206,3 +206,14 @@ actions:
       total: qtotal
       last: qlast
       salesprice: qsale
+  select_distinct:
+    do: select
+    from: details
+    where:
+      is_inactive:
+        T: not_contains
+    cols:
+      deployed_fleet: $ibid
+      effective_fleet: $ibid
+      exported_fleet: $ibid
+      installed_fleet: $ibid

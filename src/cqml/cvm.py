@@ -227,7 +227,9 @@ class CVM(VM):
         if 'dedupe' in action:
             df = df.drop_duplicates([action['dedupe']])
         column_map = alias_columns(df, cols, from_key)
-        return df.select(*column_map)
+        df = df.select(*column_map)
+        df = df.distinct() # TODO: make optional
+        return df
 
     def do_summary(self, action):
         from_key = action['from']
