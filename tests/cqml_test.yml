@@ -185,7 +185,6 @@ actions:
     from: items
     cols:
       item_id: double
-      sku: string
       averagecost: double
       handling_cost: double
       item_defined_cost: double

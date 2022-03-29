@@ -25,8 +25,8 @@ cvm.run()
 
 # COMMAND ----------
 
-l = list(cvm.df.keys())
-print(l)
+K = list(cvm.df.keys())
+print(K)
 dn = cvm.df[-1]
 dn.show()
 
