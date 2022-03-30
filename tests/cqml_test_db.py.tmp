@@ -33,17 +33,18 @@ def view(i):
 def values(i, col): return d(i).select(col).distinct().collect()
 view(-1)
 
-# COMMAND ----------
-
-#dict = cvm.do_save({})
 
 # COMMAND ----------
 
-#displayHTML(dict['html'])
-#dict
+dict = cvm.do_save({})
 
 # COMMAND ----------
 
+displayHTML(dict['html'])
+dict
+
+# COMMAND ----------
+dbutils.notebook.exit(0)
 #spark.sql('create database nauto')
 
 # COMMAND ----------
