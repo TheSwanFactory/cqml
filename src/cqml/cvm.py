@@ -210,7 +210,9 @@ class CVM(VM):
         from_key = itemgetter('from')(action)
         df = self.get_frame(from_key)
         cols = get_cols(action, df)
-        if (kSort not in action) and autoSort: action[kSort] = cols[0]
+        if (kSort not in action) and autoSort:
+            value = cols[0]
+            action[kSort] = value.split(cAlias)[1] if cAlias in value else value
         if kWhere in action:
             expression = make_expr(action[kWhere])
             self.log(f' - do_select[{kWhere}]: '+expression)
