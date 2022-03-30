@@ -36,12 +36,8 @@ view(-1)
 
 # COMMAND ----------
 
-dict = cvm.do_save({})
-
-# COMMAND ----------
-
-displayHTML(dict['html'])
-dict
+cvm.do_save({})
+displayHTML(cvm.pkg.html)
 
 # COMMAND ----------
 dbutils.notebook.exit(0)

@@ -77,9 +77,9 @@ actions:
     pivot: subtype
     cols:
       type_name: tbd
-  summarize:
+  cqml_test_summarize:
     do: summary
-    save: [daily, csv]
+    save: [grid, csv]
     from: details
     count: nauto_item_shipment_detail_nam
     as: n_serial

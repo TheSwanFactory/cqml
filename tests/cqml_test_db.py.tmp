@@ -24,6 +24,7 @@ cvm.debug = True
 cvm.run()
 
 # COMMAND ----------
+
 K = list(cvm.df.keys())
 print(K)
 def d(i): return cvm.df[K[i]]
@@ -33,15 +34,10 @@ def view(i):
 def values(i, col): return d(i).select(col).distinct().collect()
 view(-1)
 
-
 # COMMAND ----------
 
-dict = cvm.do_save({})
-
-# COMMAND ----------
-
-displayHTML(dict['html'])
-dict
+cvm.do_save({})
+displayHTML(cvm.pkg.html)
 
 # COMMAND ----------
 dbutils.notebook.exit(0)
