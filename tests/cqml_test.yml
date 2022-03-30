@@ -79,7 +79,7 @@ actions:
       type_name: tbd
   cqml_test_summarize:
     do: summary
-    save: [grid, csv]
+    save: [grid, table]
     from: details
     count: nauto_item_shipment_detail_nam
     as: n_serial

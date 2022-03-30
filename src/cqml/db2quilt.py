@@ -147,11 +147,17 @@ class Package:
         self.html = f'Published <a href="{self.url}">{self.name}</a> for <b>{msg}</b>'
         return self
 
-    def save_grid(self, df, key):
+    def save_notebook(self, df, key):
         pfile = f"{key}.parquet"
         msg = self.save_file(df, pfile)
         doc = self.to_report(pfile, msg)
         return doc
+
+    def save_grid(self, df, key):
+        cfile = f"{key}.csv"
+        msg = self.save_file(df, cfile)
+        self.summaries[key] = cfile
+        return msg
 
     def save_ext(self, dfs, key, ext, debug=False):
         print(f'save_ext: {ext} for {key} in {self.name}')
@@ -238,8 +244,8 @@ class Package:
             entry = {
                 "title": title,
                 "path": file,
-                "types": ["voila"]
             }
+            if "ipynb" in file: entry["types"] = ["voila"]
             entries.append(entry)
         path = self.path+NB_SUMMARY
         with open(path, 'w') as f:
