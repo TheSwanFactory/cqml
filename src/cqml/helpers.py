@@ -58,8 +58,8 @@ def drop_table(spark, id):
     spark.sql(f'drop table if exists {DB}.{id}')
 
 def find_exts(ext):
-    if not isinstance(ext,str): return ext
-    if ext == "report": return "daily,csv,grid".split(',')
+    if isinstance(ext, list): return ext
+    if ext == "report": return "daily,grid".split(',')
     return [ext]
 
 def flag2sql(action):

@@ -3,7 +3,7 @@
 
 - do_calc (multiple columns)
 - operator vs function
-- save: ['grid']
+- save: ['grid'] using csv preview
 - CHANGE: distinct by default
 - CHANGE: sort by default
 
