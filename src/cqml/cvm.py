@@ -66,7 +66,7 @@ class CVM(VM):
             result.append(expr)
         all = ",".join(result)
         self.log(' - do_calc.all: '+all)
-        df_from.registerTempTable(id)
+        df_from.createOrReplaceTempView(id)
         select = f"select {all} from {id}"
         return self.spark.sql(select)
 

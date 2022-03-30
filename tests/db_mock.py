@@ -58,7 +58,7 @@ class MockFrame(object):
     def join(self, df_from, join, how): return deepcopy(df_from)
     def orderBy(self, arg): return self
     def pivot(self, arg): return self
-    def registerTempTable(self, arg): return self
+    def createOrReplaceTempView(self, arg): return self
     def sort(self, arg): return self
     def union(self, arg): return self
     def withColumn(self, *arg): return self
