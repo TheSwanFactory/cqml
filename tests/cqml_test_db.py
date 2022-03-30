@@ -10,7 +10,7 @@
 #!pip install cqml
 #--IMPORT-CQML--#
 !pip --no-cache-dir install git+https://github.com/TheSwanFactory/cqml.git@v04-trips
-!pip install cqml==0.4.0.dev15
+!pip install cqml==0.4.0.dev16
 
 #++IMPORT-CQML++#
 
@@ -33,6 +33,7 @@ def view(i):
 def values(i, col): return d(i).select(col).distinct().collect()
 view(-1)
 
+
 # COMMAND ----------
 
 dict = cvm.do_save({})
@@ -43,7 +44,7 @@ displayHTML(dict['html'])
 dict
 
 # COMMAND ----------
-
+dbutils.notebook.exit(0)
 #spark.sql('create database nauto')
 
 # COMMAND ----------
