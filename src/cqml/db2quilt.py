@@ -147,26 +147,23 @@ class Package:
         self.html = f'Published <a href="{self.url}">{self.name}</a> for <b>{msg}</b>'
         return self
 
-    def export(self, dfs, key):
+    def save_grid(self, df, key):
         pfile = f"{key}.parquet"
-        cfile = f"{key}.csv"
-        df = cleanup_names(dfs[key])
-        save_table(df, key, "append")
-        self.save_file(df, cfile)
         msg = self.save_file(df, pfile)
         doc = self.to_report(pfile, msg)
         return doc
 
     def save_ext(self, dfs, key, ext, debug=False):
         print(f'save_ext: {ext} for {key} in {self.name}')
+        df = cleanup_names(dfs[key])
         id = f'{key}{DEBUG_SUFFIX}' if debug else key
-        if ext == "report":
-            return self.export(dfs, key)
+        if ext == "grid":
+            return self.save_grid(df, id)
         elif ext == "daily":
-            return save_table(dfs[key], id, "append")
+            return save_table(df, id, "append")
         elif ext == "table":
-            return save_table(dfs[key], id)
-        return self.save_file(dfs[key], f'{id}.{ext}')
+            return save_table(df, id)
+        return self.save_file(df, f'{id}.{ext}')
 
     def copy_file(self, source, dest_name=False):
         """into package"""
@@ -274,8 +271,9 @@ def cvm2pkg(cvm, run=False):
     msg = pkg.now()
     files = cvm.saveable()
     for key in files:
-        ext = files[key]
-        pkg.save_ext(cvm.df, key, ext, cvm.debug)
+        exts = find_exts(files[key])
+        for ext in exts:
+            pkg.save_ext(cvm.df, key, ext, cvm.debug)
     try:
         root = pkg.id.replace(DEBUG_SUFFIX,'')
         pkg.copy_file(f'{root}.md','README.md')

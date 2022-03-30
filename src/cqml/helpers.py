@@ -57,6 +57,11 @@ def drop_column(df, col):
 def drop_table(spark, id):
     spark.sql(f'drop table if exists {DB}.{id}')
 
+def find_exts(ext):
+    if not isinstance(ext,str): return ext
+    if ext == "report": return "daily,csv,grid".split(',')
+    return [ext]
+
 def flag2sql(action):
     where = action[kWhere]
     condition = make_expr(where)

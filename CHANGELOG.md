@@ -3,6 +3,7 @@
 
 - do_calc (multiple columns)
 - operator vs function
+- save: ['grid']
 - CHANGE: distinct by default
 - CHANGE: sort by default
 
