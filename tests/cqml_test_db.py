@@ -35,12 +35,12 @@ view(-1)
 
 # COMMAND ----------
 
-#dict = cvm.do_save({})
+dict = cvm.do_save({})
 
 # COMMAND ----------
 
-#displayHTML(dict['html'])
-#dict
+displayHTML(dict['html'])
+dict
 
 # COMMAND ----------
 
