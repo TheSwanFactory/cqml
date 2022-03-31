@@ -59,7 +59,7 @@ class BoxQuilt:
         )
         client = Client(auth)
         me = client.user().get()
-        print(f'BOX: Authenticated {me.name} with {me.id}')
+        print(f'BOX.token_init: Authenticated {me.name} with {me.id}')
         return client
 
     def jwt_init(self):
@@ -76,7 +76,7 @@ class BoxQuilt:
         access_token = auth.authenticate_instance()
         client = Client(auth)
         user = client.user().get()
-        print(f'box_init: Service Account user ID is {user.id} @ {user.login}')
+        print(f'BOX.jwt_init: Service Account user ID is {user.id} @ {user.login}')
         return client
 
     def get_file_urls(self, file_id):
@@ -90,10 +90,10 @@ class BoxQuilt:
 
     def save_groups(self, df, skipSave=False):
         if not skipSave:
-            print(f"not skipSave[{self.key}]: {df.count()} -> {self.dir}")
+            print(f"save_groups[{self.key}]: {df.count()} -> {self.dir}")
             df.coalesce(1).sort(*self.sort).write.mode("overwrite").partitionBy(self.key).option("header", "true").csv(self.dir)
         files = os.listdir(self.path)
-        msg = f"{self.key}<{len(files)}>: {self.pkg.now()}"
+        msg = f"{self.path}:{self.key}<{len(files)}>: {self.pkg.now()}"
         print(msg)
         self.pkg.cleanup(msg, meta=files)
         return files
