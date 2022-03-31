@@ -2,8 +2,10 @@
 from copy import deepcopy
 
 class MockBox(object):
-    #def __init__(self, name): self.name = name
-    def folder(self, arg): return self
+    def __init__(self):
+        self.name = "MockBox.name"
+        self.id = "MockBox.id"
+   def folder(self, arg): return self
     def get_items(self): return [self]
 
 class MockCol(object):
