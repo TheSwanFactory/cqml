@@ -22,10 +22,10 @@ def test_select(cvm):
 def test_merge(cvm):
     dev = cvm.df["merged"]
     assert dev
-    assert 'num' in dev.columns # alias
+    assert 'next' in dev.columns # alias
     assert 'note' not in dev.columns # alias
 
 def test_call(cvm):
     for a in cvm.cactions:
-        if a['id'] == 'days_unseen':
-            assert a['sql'] == 'datediff(current_date(),_fivetran_synced)'
+        if a['id'] == 'count_days':
+            assert a['sql'] == 'datediff(current_date(),dat)'
