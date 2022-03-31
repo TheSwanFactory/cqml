@@ -64,8 +64,8 @@ class BoxQuilt:
 
     def jwt_init(self):
         cf = get_secrets(self.spark.conf, "box", BOX_KEYS)
-        print(cf)
-        print(cf['client_id'])
+        #print(cf)
+        #print(cf['client_id'])
         if "mock" in cf["client_id"]: return self.spark.conf.client
         auth = JWTAuth(client_id=cf['client_id'],
           client_secret=cf['client_secret'],
