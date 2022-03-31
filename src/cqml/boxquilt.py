@@ -141,7 +141,7 @@ class BoxQuilt:
                 print(f"{n} update[{file.id}]: {file.name}")
                 if not skipUpdate:
                     file.update_contents(file_path)
-                row['box_url'] = get_file_url(file)
+                row['box_url'] = get_file_url(file, self.until)
 
         return self.rows
 
