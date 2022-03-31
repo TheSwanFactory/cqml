@@ -65,7 +65,13 @@ def show_dir(dir):
           print(f"{f}: {os.path.getmtime(f)}")
 #print(PKG_DATA)
 def make_dir(dir):
-    os.makedirs(dir,exist_ok=True)
+    try:
+        os.makedirs(dir,exist_ok=True)
+        return dir
+    except OSError:
+        local = dir.replace(DBFS,'')
+        return local
+
     #show_dir(dir)
 
 #
@@ -111,7 +117,7 @@ class Project:
         self.repo = "s3://"+bucket
         self.url = f"https://quilt.{org}.com/b/{bucket}/packages"
         self.name = project
-        self.path = f"{root}/{pkg_dir}"
+        self.path = make_dir(f"{root}/{pkg_dir}")
 
     def package(self, id):
         return Package(id, self)
