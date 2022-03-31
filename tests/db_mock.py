@@ -16,13 +16,14 @@ class MockCol(object):
 
 class MockWriter(object):
     def __init__(self, df): self.df = df
-    def parquet(self, arg): return self
     def csv(self, arg): return self
+    def format(self, arg): return self
+    def load(self, arg): return MockFrame(arg)
     def mode(self, arg): return self
     def option(self, *arg): return self
-    def format(self, arg): return self
-    def saveAsTable(self, arg): return self
     def partitionBy(self, *arg): return self
+    def parquet(self, arg): return self
+    def saveAsTable(self, arg): return self
 
 class MockFrame(object):
     def __init__(self, name="frame"):
@@ -79,3 +80,4 @@ spark = MockSpark()
 spark.catalog = spark#.setCurrentDatabase
 spark.conf = spark#.setCurrentDatabase
 spark.conf.client = MockBox()
+spark.read = MockWriter(spark)
