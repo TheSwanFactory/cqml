@@ -18,13 +18,8 @@ except ImportError:
   HAS_TEMPO=False
   pass
 
-HAS_BOX=True
-try:
-  from boxsdk import OAuth2, Client
-  from boxquilt import BoxQuilt
-except ImportError:
-  HAS_BOX=False
-  pass
+from boxsdk import OAuth2, Client
+from .boxquilt import BoxQuilt
 
 class CVM(VM):
     def __init__(self, yaml, spark):
@@ -39,12 +34,9 @@ class CVM(VM):
         print('do_box')
         from_key, group, config = itemgetter('from','group','box')(action)
         df_from = self.get_frame(from_key)
-        if not HAS_BOX or not cvm.pkg:
-            print("SKIPPING: not HAS_BOX")
-            return df_from
         sort = action[kSort] if kSort in action else [group]
         self.log('do_box: init')
-        bq = BoxQuilt(group, sort, cvm, config)
+        bq = BoxQuilt(group, sort, self, config)
         self.log('do_box: save_groups')
         bq.save_groups(df_from, kSkipSave in action) #
         self.log('do_box: load_groups')

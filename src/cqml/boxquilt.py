@@ -1,6 +1,6 @@
 # BOX Configuration for Quilt
 
-from .db2quilt import make_dir
+from .db2quilt import make_dir,exract_pkg
 
 #FILE_EXT='csv'
 #BOX_ROOT='3G_Sunset'
@@ -38,10 +38,9 @@ class BoxQuilt:
     def __init__(self, key, sort, cvm, config):
         self.spark = cvm.spark
         self.client = self.jwt_init() #token_init()#
-        self.root = self.client.folder(config['root_id'])
         self.key = key
         self.sort = sort
-        self.pkg = cvm.pkg
+        self.pkg = exract_pkg(cvm)
         self.dir = self.pkg.dir + config['data_dir']
         self.path = self.pkg.path + config['data_dir']
         self.until = config['expiration_date']
@@ -64,6 +63,9 @@ class BoxQuilt:
 
     def jwt_init(self):
         cf = get_secrets(self.spark.conf, "box", BOX_KEYS)
+        print(cf)
+        print(cf['client_id'])
+        if "mock" in cf["client_id"]: return None
         auth = JWTAuth(client_id=cf['client_id'],
           client_secret=cf['client_secret'],
           enterprise_id=cf['enterprise_id'],

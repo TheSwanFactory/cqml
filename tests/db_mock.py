@@ -2,17 +2,10 @@
 from copy import deepcopy
 
 class MockCol(object):
-    def __init__(self, name):
-        self.name = name
-
-    def alias(self, name,metadata={"meta":"data"}):
-        return name
-
-    def contains(self, value):
-        return True
-
-    def desc(self):
-        return True
+    def __init__(self, name): self.name = name
+    def alias(self, name,metadata={"meta":"data"}): return name
+    def contains(self, value): return True
+    def desc(self): return True
 
 class MockWriter(object):
     def __init__(self, df): self.df = df
@@ -22,6 +15,7 @@ class MockWriter(object):
     def option(self, *arg): return self
     def format(self, arg): return self
     def saveAsTable(self, arg): return self
+    def partitionBy(self, *arg): return self
 
 class MockFrame(object):
     def __init__(self):
@@ -64,15 +58,12 @@ class MockFrame(object):
     def withColumn(self, *arg): return self
 
 class MockSpark(object):
-    def __init__(self):
-        self.columns = []
-
-    def sql(self, arg): return self
+    def __init__(self): self.columns = []
     def count(self): return self
     def distinct(self,arg=None): return self
-
-    def setCurrentDatabase(self, db):
-        print(f"setCurrentDatabase: {db}")
+    def get(self, arg): return "mock_secrets"
+    def setCurrentDatabase(self, db): print(f"setCurrentDatabase: {db}")
+    def sql(self, arg): return self
 
     def table(self, table_name):
         df = MockFrame()
@@ -81,3 +72,4 @@ class MockSpark(object):
 
 spark = MockSpark()
 spark.catalog = spark#.setCurrentDatabase
+spark.conf = spark#.setCurrentDatabase
