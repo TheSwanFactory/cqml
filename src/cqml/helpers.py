@@ -122,7 +122,6 @@ def keep(df, action, j):
     if kKeepJoin not in action:
         return df.drop(*jf_only) if isInner else df.drop(*jf, *ji)
     keep = action[kKeepJoin]
-    self.log(f'keep: {keep}')
     if keep == 'left':
         df = df.drop(*jf_only)
     elif keep == 'right':
