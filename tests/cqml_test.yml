@@ -135,7 +135,7 @@ actions:
     do: group
     from: $id
     agg:
-      check_call: count
+      check_count: count
       count_days: sum
     sort: n_check_count
     cols:
