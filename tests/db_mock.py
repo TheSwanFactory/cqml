@@ -49,7 +49,7 @@ class MockFrame(object):
             cols = list(self.columns)
             cols.remove(col)
             self.columns = cols
-        except ValueError: print("skipping: drop")
+        except ValueError: skipped = True
         return self
 
     def agg(self, *aggs): return self

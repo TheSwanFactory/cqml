@@ -84,7 +84,7 @@ actions:
     cols:
       letter: tbd
       text: tbd
-  names:
+  selected:
     do: select
     from: test2
     where:
