@@ -6,7 +6,7 @@ from .keys import *
 
 def mock_functions():
     from collections import namedtuple
-    keys = "lit,col,desc,expr,sum,min,count,alias,concat_ws,current_date,current_time,current_timestamp,countDistinct,orderBy,over,partitionBy,row_number".split(',')
+    keys = "lit,col,desc,expr,sum,min,max,count,alias,concat_ws,current_date,current_time,current_timestamp,countDistinct,orderBy,over,partitionBy,row_number".split(',')
     func = namedtuple("Func",keys)
     f1 = func(*keys)
     l1 = [lambda *args, **kw: getattr(f1,key) for key in keys]
