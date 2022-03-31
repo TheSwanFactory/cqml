@@ -38,6 +38,7 @@ class BoxQuilt:
     def __init__(self, key, sort, cvm, config):
         self.spark = cvm.spark
         self.client = self.jwt_init() #token_init()#
+        self.root_id = self.client.folder(config['root_id'])
         self.key = key
         self.sort = sort
         self.pkg = exract_pkg(cvm)
@@ -89,16 +90,15 @@ class BoxQuilt:
 
     def save_groups(self, df, skipSave=False):
         if not skipSave:
-            print("not skipSave")
+            print(f"not skipSave: {df.count()}")
             df.coalesce(1).sort(*self.sort).write.mode("overwrite").partitionBy(self.key).option("header", "true").csv(self.dir)
         files = os.listdir(self.path)
-        msg = f"{self.key}: {self.pkg.now()} <{len(files)}>"
-        print(msg)
+        print(f"{self.key}: {self.pkg.now()} <{len(files)}>")
         self.pkg.cleanup(msg, meta=files)
         return files
 
     def box_entries(self):
-        return [dir_row(folder) for folder in self.root.get_items()]
+        return [dir_row(folder) for folder in self.root_id.get_items()]
 
     def load_groups(self):
       for root, dirs, files in os.walk(self.path, topdown = False):
@@ -112,7 +112,7 @@ class BoxQuilt:
       return self.rows
 
     def create_or_update_box(self, skipUpdate=False):
-        children = self.root.get_items()
+        children = self.root_id.get_items()
         folders = {item.name: item.id for item in children}
         box = list(folders.keys())
         dbfs = list(self.rows.keys())
@@ -124,7 +124,7 @@ class BoxQuilt:
         for name in to_create:
             n += 1
             row = self.rows[name]
-            folder = self.root.create_subfolder(name)
+            folder = self.root_id.create_subfolder(name)
             file = folder.upload(row["db_path"], file_name=row["box_file"], file_description=row["db_file"])
             row['box_url'] = get_file_url(file, self.until)
             print(f"{n} create[{file.id}]: {file.name}")

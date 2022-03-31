@@ -4,6 +4,7 @@
 - do_calc (multiple columns)
 - operator vs function
 - save: ['grid'] using csv preview
+- BOX support (require boxsdk)
 - CHANGE: distinct by default
 - CHANGE: sort by default
 
