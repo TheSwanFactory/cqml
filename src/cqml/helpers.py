@@ -97,6 +97,38 @@ def make_isin(query):
     field_expr = [make_any(field, query[field]) for field in query.keys()]
     return " AND ".join(field_expr)
 
+def join_col(cols, join_into):
+    n_joins = len(join_into)
+    join_from = cols[:n_joins]
+    del cols[:n_joins]
+    joins = list(zip(join_into, join_from))
+    return {
+        "zip": joins,
+        "into": join_into,
+        "from": join_from,
+        "cols": cols,
+    }
+
+def keep(df, action, j):
+    isInner = j["how"] == kInner
+    print('joins')
+    print(j)
+    ji = set(j["into"])
+    jf = set(j["from"])
+    overlap = ji & jf
+    ji_only = ji - jf
+    jf_only = jf - ji
+
+    if kKeepJoin not in action:
+        return df.drop(*jf_only) if isInner else df.drop(*jf, *ji)
+    keep = action[kKeepJoin]
+    self.log(f'keep: {keep}')
+    if keep == 'left':
+        df = df.drop(*jf_only)
+    elif keep == 'right':
+        df = df.drop(*ji_only)
+    return df
+
 def join_expr(df_into, df_from, joins):
   expression = join_item(df_into, df_from, joins[0])
   return expression

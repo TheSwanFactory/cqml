@@ -149,27 +149,16 @@ class CVM(VM):
 
     def do_merge(self, action):
         id, into, join = itemgetter('id', 'into', 'join')(action)
-        join_how = action[kJoinType] if kJoinType in action else 'left'
         df_into = self.get_frame(into)
         df_from = self.do_select(action, False) # do not auto-sort on join column
         cols = get_cols(action, df_from)
-        if not df_from:
-          return None
+        #if not df_from: return None
         join_into = join if isinstance(join, list) else [join]
-        n_joins = len(join_into)
-        join_from = cols[:n_joins]
-        del cols[:n_joins]
-        joins = list(zip(join_into, join_from))
-        expression = join_expr(df_into, df_from, joins)
-        df = df_into.join(df_from, expression, join_how)
-        if kKeepJoin not in action:
-            return df.drop(*join_from) if join_how == kInner else df.drop(*join_from, *join_into)
-        keep = action[kKeepJoin]
-        self.log(f'keep: {keep}')
-        if keep == 'left':
-            df = df.drop(*join_from)
-        elif keep == 'right':
-            df = df.drop(*join_into)
+        joins = join_col(cols, join_into)
+        expression = join_expr(df_into, df_from, joins["zip"])
+        joins["how"] = action[kJoinType] if kJoinType in action else 'left'
+        df = df_into.join(df_from, expression, joins["how"])
+        df = keep(df, action, joins)
         return df
 
     def do_pivot(self, action):

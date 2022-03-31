@@ -86,7 +86,7 @@ actions:
       text: tbd
   selected:
     do: select
-    from: test2
+    from: test1
     where:
       letter:
         A: contains
@@ -108,7 +108,7 @@ actions:
       letter:
         A: contains
     cols:
-      num: tbd
+      num|next: tbd
       letter|better: tbd
       dat|dot: tbd
   flagged:
