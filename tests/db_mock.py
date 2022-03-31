@@ -5,7 +5,7 @@ class MockBox(object):
     def __init__(self):
         self.name = "MockBox.name"
         self.id = "MockBox.id"
-   def folder(self, arg): return self
+    def folder(self, arg): return self
     def get_items(self): return [self]
 
 class MockCol(object):
@@ -25,7 +25,8 @@ class MockWriter(object):
     def partitionBy(self, *arg): return self
 
 class MockFrame(object):
-    def __init__(self):
+    def __init__(self, name="frame"):
+        self.name = name
         self.items = {}
         self.columns = []
         self.write = MockWriter(self)
@@ -66,16 +67,13 @@ class MockFrame(object):
 
 class MockSpark(object):
     def __init__(self): self.columns = []
+    def createDataFrame(self, list): return self.table('list')
     def count(self): return self
     def distinct(self,arg=None): return self
     def get(self, arg): return f'mock.get:{arg}'
     def setCurrentDatabase(self, db): print(f"setCurrentDatabase: {db}")
     def sql(self, arg): return self
-
-    def table(self, table_name):
-        df = MockFrame()
-        df.name = table_name
-        return df
+    def table(self, table_name): return MockFrame(table_name)
 
 spark = MockSpark()
 spark.catalog = spark#.setCurrentDatabase
