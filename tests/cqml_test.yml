@@ -28,7 +28,7 @@ actions:
   box_details:
     do: box
     from: items
-    group: type
+    group: type_name
     +doc: Split by type, upload, store URLs
     box:
         root_folder: CQML_Test
@@ -37,7 +37,8 @@ actions:
         file_ext: csv
         expiration_date: '2022-02-23'
     cols:
-      serial: name
+      name: sort
+      displayname: sort
   map_sku:
     do: macro|merge
     into: "{into}"
