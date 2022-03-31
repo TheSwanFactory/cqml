@@ -71,7 +71,7 @@ actions:
     from: $id
     agg:
       sum_num: count
-    sort: max_dat
+    sort: text
     pivot: letter
     cols:
       text: tbd
