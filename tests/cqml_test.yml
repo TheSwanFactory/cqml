@@ -65,7 +65,7 @@ actions:
     sort: max_dat
     cols:
       text: tbd
-      lettter: tbd
+      letter: tbd
   pivoted:
     do: pivot
     from: $id
