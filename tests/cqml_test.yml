@@ -70,7 +70,7 @@ actions:
     do: pivot
     from: $id
     agg:
-      num: sum
+      sum_num: count
     sort: max_dat
     pivot: letter
     cols:
@@ -100,6 +100,7 @@ actions:
       text: tbd
   merged:
     do: merge
+    save: grid
     into: test1
     join: num
     from: test2
