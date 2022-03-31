@@ -40,6 +40,7 @@ class CVM(VM):
         from_key, group, config = itemgetter('from','group','box')(action)
         df_from = self.get_frame(from_key)
         if not HAS_BOX or not cvm.pkg:
+            print("SKIPPING: not HAS_BOX")
             return df_from
         sort = action[kSort] if kSort in action else [group]
         self.log('do_box: init')
