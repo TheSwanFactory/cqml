@@ -90,10 +90,10 @@ class BoxQuilt:
 
     def save_groups(self, df, skipSave=False):
         if not skipSave:
-            print(f"not skipSave: {df.count()}")
+            print(f"not skipSave[{self.key}]: {df.count()} -> {self.dir}")
             df.coalesce(1).sort(*self.sort).write.mode("overwrite").partitionBy(self.key).option("header", "true").csv(self.dir)
         files = os.listdir(self.path)
-        msg = f"{self.key}: {self.pkg.now()} <{len(files)}>"
+        msg = f"{self.key}<{len(files)}>: {self.pkg.now()}"
         print(msg)
         self.pkg.cleanup(msg, meta=files)
         return files
@@ -147,4 +147,5 @@ class BoxQuilt:
 
     def box_table(self):
         array = list(self.rows.values())
+        print(f'box_table: {len(array)}')
         return self.spark.createDataFrame([Row(**i) for i in array])

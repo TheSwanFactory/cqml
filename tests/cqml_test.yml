@@ -27,7 +27,7 @@ actions:
     do: box
     from: test1
     group: num
-    +doc: Split by type, upload, store URLs
+    +doc: Split by num, upload, store URLs
     box:
         root_folder: CQML_Test
         root_id: 156760265584
