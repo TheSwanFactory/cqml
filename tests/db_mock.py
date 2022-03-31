@@ -1,6 +1,11 @@
 # Mock DataBricks spark API for testing
 from copy import deepcopy
 
+class MockBox(object):
+    #def __init__(self, name): self.name = name
+    def folder(self, arg): return self
+    def get_items(self): return [self]
+
 class MockCol(object):
     def __init__(self, name): self.name = name
     def alias(self, name,metadata={"meta":"data"}): return name
@@ -61,7 +66,7 @@ class MockSpark(object):
     def __init__(self): self.columns = []
     def count(self): return self
     def distinct(self,arg=None): return self
-    def get(self, arg): return "mock_secrets"
+    def get(self, arg): return f'mock.get:{arg}'
     def setCurrentDatabase(self, db): print(f"setCurrentDatabase: {db}")
     def sql(self, arg): return self
 
@@ -73,3 +78,4 @@ class MockSpark(object):
 spark = MockSpark()
 spark.catalog = spark#.setCurrentDatabase
 spark.conf = spark#.setCurrentDatabase
+spark.conf.client = MockBox()

@@ -27,9 +27,9 @@ actions:
       n3_returns: fxe_returns
   box_details:
     do: box
-    from: details
-    group: deployed_fleet
-    +doc: Split by fleet, upload, store URLs
+    from: items
+    group: type
+    +doc: Split by type, upload, store URLs
     box:
         root_folder: CQML_Test
         root_id: 156760265584
@@ -37,8 +37,7 @@ actions:
         file_ext: csv
         expiration_date: '2022-02-23'
     cols:
-      serial: tbd
-      install_status: tbd
+      serial: name
   map_sku:
     do: macro|merge
     into: "{into}"

@@ -22,6 +22,7 @@ KEY="cqml_test"
 cvm = cqml.load_cqml(KEY,spark, '.')
 cvm.debug = True
 cvm.run()
+print(cvm.sizes)
 
 # COMMAND ----------
 

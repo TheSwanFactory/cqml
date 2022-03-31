@@ -66,7 +66,7 @@ class BoxQuilt:
         cf = get_secrets(self.spark.conf, "box", BOX_KEYS)
         print(cf)
         print(cf['client_id'])
-        if "mock" in cf["client_id"]: return None
+        if "mock" in cf["client_id"]: return self.spark.conf.client
         auth = JWTAuth(client_id=cf['client_id'],
           client_secret=cf['client_secret'],
           enterprise_id=cf['enterprise_id'],
@@ -93,7 +93,8 @@ class BoxQuilt:
             print(f"not skipSave: {df.count()}")
             df.coalesce(1).sort(*self.sort).write.mode("overwrite").partitionBy(self.key).option("header", "true").csv(self.dir)
         files = os.listdir(self.path)
-        print(f"{self.key}: {self.pkg.now()} <{len(files)}>")
+        msg = f"{self.key}: {self.pkg.now()} <{len(files)}>"
+        print(msg)
         self.pkg.cleanup(msg, meta=files)
         return files
 
