@@ -13,189 +13,162 @@ actions:
       hardware: unique oh
     tables:
       devs: unique_devices
-  netsuite_suiteanalytics:
-    do: load
-    tables:
-      deploy_status: deployment_status
-      device_status: netsuite_device_status
-      details: nauto_item_shipment_detail
-      items: items
   google_sheets:
     do: load
     tables:
       n2_returns: projected_inventory
-      n3_returns: fxe_returns
+  /Workspace/Repos/ernest.prabhakar@nauto.com/cqml/data:
+    do: loadfiles
+    as_number: devices
+    tables:
+      test1: test1.csv
+      test2: test2.csv
   box_details:
     do: box
-    from: items
-    group: type_name
+    from: test1
+    group: num
     +doc: Split by type, upload, store URLs
     box:
         root_folder: CQML_Test
         root_id: 156760265584
         data_dir: test
         file_ext: csv
-        expiration_date: '2022-02-23'
+        expiration_date: '2200-02-02'
     cols:
-      name: sort
-      displayname: sort
-  map_sku:
+      text: sort
+      dat: sort
+  macro_def:
     do: macro|merge
     into: "{into}"
     join: "{join}"
-    from: items
+    from: test2
     join_type: inner
     cols:
-      item_id: tbd
-      name|sku: tbd
-      displayname|item_name: tbd
-    where:
-      name:
-        "{region}": contains
-  map_pn:
-    do: macro.map_sku
-    into: details
-    join: nauto_pn_id
-    region: NA
-  items_grouped:
+      "{join}": tbd
+      num|numerate: tbd
+      text|texas: tbd
+      dat|database: tbd
+  macro_run:
+    do: macro.macro_def
+    into: test1
+    join: letter
+    char: A
+  mult_number:
+    do: assign
+    from: macro_run
+  grouped:
     do: group
-    from: items
+    from: test1
     agg:
-      name: count
-    sort: n_name
+      num: sum
+      dat: max
+    sort: max_dat
     cols:
-      type_name: tbd
-      subtype: tbd
-      product_family_id: tbd
-      item_usage_id: tbd
-  items_pivot:
+      text: tbd
+      lettter: tbd
+  pivoted:
     do: pivot
     from: $id
     agg:
-      n_name: sum
-    sort: Purchase
-    pivot: subtype
+      num: sum
+    sort: max_dat
+    pivot: letter
     cols:
-      type_name: tbd
+      text: tbd
   cqml_test_summarize:
     do: summary
-    save: [grid, table]
-    from: details
-    count: nauto_item_shipment_detail_nam
-    as: n_serial
+    save: [grid, parquet]
+    from: test1
+    count: num
+    as: total
     cols:
-      deployed_action_id: tbd
-      device_status_id: tbd
-      deployed_fleet: tbd
-  item_names:
+      letter: tbd
+      text: tbd
+  names:
     do: select
-    from: items
+    from: test2
     where:
-      name:
-        NA: contains
-        EUA: contains
-      displayname:
+      letter:
+        A: contains
+        B: contains
+      text:
         null: is_not
     cols:
-      item_id: tbd
-      name|sku: tbd
-      displayname|item_name: tbd
-  na_details:
+      num: tbd
+      date: tbd
+      letter: tbd
+      text: tbd
+  merged:
     do: merge
-    into: details
-    join: nauto_pn_id
-    from: items
+    into: test1
+    join: num
+    from: test2
     join_type: inner
     where:
-      name:
-        NA: contains
+      letter:
+        A: contains
     cols:
-      item_id: tbd
-      name|sku: tbd
-      displayname|item_name: tbd
-  status_returning:
+      num: tbd
+      letter|better: tbd
+      dat|dot: tbd
+  flagged:
     do: flag
-    from: deploy_status
+    from: test1
     where:
-      list_item_name:
-        Return: contains
-  status_pending:
-    do: flag
-    from: status_returning
-    where:
-      list_item_name:
-        Deployed: contains
-        Exported: contains
-  days_unseen:
+      text:
+        null: is
+  count_days:
     do: call
-    from: status_pending
+    from: test1
     function: datediff
     args:
         - current_date()
-        - _fivetran_synced
-  is_silent:
+        - dat
+  check_count:
     do: flag
-    from: days_unseen
+    from: $id
     where:
-      days_unseen:
-        10: greater
+      count_days:
+        0: greater
   aggregates:
     do: group
-    from: is_silent
-    agg:
-      status_pending: count
-      days_unseen: sum
-      is_silent: count
-    sort: n_is_silent
-    cols:
-      date_created: tbd
-  active_details:
-    do: select
-    from: details
-    where:
-      is_inactive:
-        T: not_contains
-    matching:
-      device_status_id:
-          device_status: list_id
-  nonunique_imei:
-    do: unique
     from: $id
-    sort: last_modified_date
-    ensure_unique: imei
+    agg:
+      check_call: count
+      count_days: sum
+    sort: n_check_count
     cols:
-      imei: tbd
+      num: tbd
+      letter: tbd
+  leftsemi_match:
+    do: select
+    from: test1
+    matching:
+      num:
+          test2: num
+  unique_num:
+    do: unique
+    from: test1
+    sort: dat
+    ensure_unique: num
+    cols:
+      num: tbd
   union:
     do: union
-    into: n2_returns
-    from: n3_returns
+    into: test1
+    from: test2
     drop:
-      - original_so
+      - note
   plus_operator:
     do: call
-    from: status_pending
+    from: mult_number
     operator: +
     args:
-        - 1
-        - 2
-        - 3
-
-  number_items:
-    do: select
-    from: items
-    cols:
-      item_id: double
-      averagecost: double
-      totalvalue|total: double
-      last_purchase_price|last: double
-      salesprice: double
-    where:
-      salesprice:
-        0: greater
-
+        - numerate
+        - num
   calc_quarters:
     do: calc
-    from: $id
+    from: plus_operator
     operator: /
     round: 3
     else: 0
@@ -203,22 +176,6 @@ actions:
         - $col
         - 4
     cols:
-      total: qtotal
-      last: qlast
-      salesprice: qsale
-  select_distinct:
-    do: select
-    from: details
-    where:
-      is_inactive:
-        T: not_contains
-    cols:
-      deployed_fleet: $ibid
-      effective_fleet: $ibid
-      exported_fleet: $ibid
-      installed_fleet: $ibid
-  /Workspace/Repos/ernest.prabhakar@nauto.com/cqml/data:
-    do: loadfiles
-    as_number: devices
-    tables:
-      t1: test1.csv
+      num: qnum
+      numerate: qnumb
+      plus_operator: qdumb
