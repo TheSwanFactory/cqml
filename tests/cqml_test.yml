@@ -5,7 +5,7 @@ meta:
     project: sangam
     s3.bucket: biz-databricks-root-prod-us
     catalog: quilt
-    root: /tmp
+    root: /dbfs/tmp
 actions:
   nauto:
     do: latest
