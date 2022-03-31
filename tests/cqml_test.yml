@@ -95,7 +95,7 @@ actions:
         null: is_not
     cols:
       num: tbd
-      date: tbd
+      dat: tbd
       letter: tbd
       text: tbd
   merged:
