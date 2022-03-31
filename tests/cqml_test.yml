@@ -217,8 +217,8 @@ actions:
       effective_fleet: $ibid
       exported_fleet: $ibid
       installed_fleet: $ibid
-  /Workspace/Repos/ernest.prabhakar@nauto.com/it/databricks/test:
+  /Workspace/Repos/ernest.prabhakar@nauto.com/cqml/data:
     do: loadfiles
     as_number: devices
     tables:
-      fleet_app: fleets_check.csv
+      t1: test1.csv
