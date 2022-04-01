@@ -111,8 +111,6 @@ def join_col(cols, join_into):
 
 def keep(df, action, j):
     isInner = j["how"] == kInner
-    print('joins')
-    print(j)
     ji = set(j["into"])
     jf = set(j["from"])
     overlap = ji & jf
