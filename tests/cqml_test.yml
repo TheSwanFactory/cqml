@@ -23,6 +23,16 @@ actions:
     tables:
       test1: test1.csv
       test2: test2.csv
+  inner_dupes:
+    do: merge
+    into: test1
+    join: num
+    join_type: inner
+    from: test2
+    keep_join: left
+    cols:
+      num: tbd
+      letter|character: tbd
   box_details:
     do: box
     from: test1

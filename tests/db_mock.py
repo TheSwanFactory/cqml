@@ -44,7 +44,7 @@ class MockFrame(object):
             self.items[col] = mcol
         return self
 
-    def drop(self, col):
+    def drop(self, *col):
         try:
             cols = list(self.columns)
             cols.remove(col)
