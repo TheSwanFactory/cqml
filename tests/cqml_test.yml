@@ -7,24 +7,15 @@ meta:
     catalog: quilt
     root: /dbfs/tmp
 actions:
-  nauto:
-    do: latest
-    cols:
-      hardware: unique oh
-    tables:
-      devs: unique_devices
-  google_sheets:
-    do: load
-    tables:
-      n2_returns: projected_inventory
   /Workspace/Repos/ernest.prabhakar@nauto.com/cqml/data:
     do: loadfiles
     as_number: devices
     tables:
       test1: test1.csv
       test2: test2.csv
-  inner_dupes:
+  cqml_test_inner_dupes:
     do: merge
+    save: table
     into: test1
     join: num
     join_type: inner
