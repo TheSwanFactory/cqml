@@ -40,3 +40,7 @@ def test_call(cvm):
 def test_coalesce(cvm):
     a = get_action(cvm, "call_coalesce")
     assert a['sql'] == "coalesce(text,'Unassigned')"
+
+def test_space(cvm):
+    a = get_action(cvm, "concat_space")
+    assert a['sql'] == "num||' '||letter"
