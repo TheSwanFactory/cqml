@@ -105,6 +105,8 @@ def join_col(cols, join_into):
     jfmap = {d: f'JOIN:{d}' for d in list(dupe)}
     jf2 = [jfmap[j] if j in jfmap else j for j in join_from]
     joins = list(zip(join_into, jf2))
+    print('join_col.alias')
+    print(jfmap)
     return {
         "alias": jfmap,
         "zip": joins,
@@ -134,6 +136,8 @@ def keep(df, action, j):
 
 def join_expr(df_into, df_from, joins):
   df2 = rename_columns(df_from, joins['alias'])
+  print('join_expr.df2')
+  print(df2)
   expression = join_item(df_into, df2, joins["zip"][0])
   return expression
 
