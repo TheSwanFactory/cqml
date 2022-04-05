@@ -113,6 +113,20 @@ actions:
       num: tbd
       letter|better: tbd
       dat|dot: tbd
+  rename_merged:
+    do: merge
+    save: grid
+    into: test1
+    join: num
+    from: test2
+    join_type: inner
+    where:
+      letter:
+        A: contains
+    cols:
+      num|next: tbd
+      letter|better: tbd
+      dat|dot: tbd
   flagged:
     do: flag
     from: test1
