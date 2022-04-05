@@ -15,7 +15,7 @@ import cqml
 
 # COMMAND ----------
 
-KEY="null_test"
+KEY="cqml_test"
 cvm = cqml.load_cqml(KEY,spark, '.')
 cvm.debug = True
 cvm.run()
