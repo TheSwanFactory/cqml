@@ -36,11 +36,3 @@ def test_merge(cvm):
 def test_call(cvm):
     a = get_action(cvm, "count_days")
     assert a['sql'] == 'datediff(current_date(),dat)'
-
-def test_coalesce(cvm):
-    a = get_action(cvm, "call_coalesce")
-    assert a['sql'] == "coalesce(text,'Unassigned')"
-
-def test_space(cvm):
-    a = get_action(cvm, "concat_space")
-    assert a['sql'] == "num||' '||letter"
