@@ -85,11 +85,13 @@ NB_KERNEL = {
    "name": "python3"
  }
 NB_IMPORT= """
-import pandas as pd
-import quilt3 as q3
 import io
 import os
-from perspective import PerspectiveWidget
+import pandas as pd
+import quilt3 as q3
+import ipywidgets as widgets
+from IPython.display import display
+from perspective import Table,PerspectiveWidget
 bucket = os.environ.get("QUILT_PKG_BUCKET")
 handle = os.environ.get("QUILT_PKG_NAME")
 top_hash = os.environ.get("QUILT_PKG_TOP_HASH")
@@ -175,6 +177,8 @@ class Package:
             return save_table(df, id, "append")
         elif ext == "table":
             return save_table(df, id)
+        elif ext == "report":
+            return save_notebook(df, id)
         return self.save_file(df, f'{id}.{ext}')
 
     def copy_file(self, source, dest_name=False):
@@ -215,7 +219,7 @@ class Package:
             [True, NB_IMPORT],
             [True, f"%%capture\npkg = q3.Package.browse(handle, 's3://'+bucket, top_hash=top_hash)"],
             [True, f"data = pkg['{datafile}']()"],
-            [True, f"PerspectiveWidget(data)"]
+            [True, f"grid = PerspectiveWidget(data)"]
         ]
         return self.to_notebook(name, cell_pairs)
 
@@ -264,18 +268,18 @@ class Package:
 # Helpers
 #
 
-def exract_pkg(cvm):
+def extract_pkg(cvm):
     id, config = itemgetter('id','meta')(cvm.yaml)
     proj = Project(config)
     pkg_id = id + DEBUG_SUFFIX if cvm.debug == True else id
-    print("exract_pkg: "+pkg_id)
+    print("extract_pkg: "+pkg_id)
     pkg = proj.package(pkg_id)
     #pkg.setup()
     return pkg
 
 def cvm2pkg(cvm, run=False):
     if run: cvm.run()
-    pkg = exract_pkg(cvm)
+    pkg = extract_pkg(cvm)
     cvm.pkg = pkg
     doc = cvm.key_actions('doc')
     doc["cvm.actions"] = cvm.actions

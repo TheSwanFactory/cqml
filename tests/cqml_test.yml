@@ -13,9 +13,13 @@ actions:
     tables:
       test1: test1.csv
       test2: test2.csv
-  mult_number:
+  widget-report:
     do: assign
-    from: macro_run
+    save: report
+    widgets:
+      num: slider
+      text: combo
+    from: test1
   grouped:
     do: group
     from: test1
