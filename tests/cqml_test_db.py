@@ -9,13 +9,13 @@
 !pip install --upgrade pip
 #!pip install cqml
 !pip --no-cache-dir install git+https://github.com/TheSwanFactory/cqml.git@v04-trips
-!pip install cqml==0.4.0.dev48
+!pip install cqml==0.4.0.dev49
 
 import cqml
 
 # COMMAND ----------
 
-KEY="cqml_test"
+KEY="null_test"
 cvm = cqml.load_cqml(KEY,spark, '.')
 cvm.debug = True
 cvm.run()
