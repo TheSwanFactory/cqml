@@ -64,7 +64,7 @@ class MockFrame(object):
     def orderBy(self, arg): return self
     def pivot(self, arg): return self
     def createOrReplaceTempView(self, arg): return self
-    def sort(self, arg): return self
+    def sort(self, *arg,**kwarg): return self
     def union(self, arg): return self
     def withColumn(self, *arg): return self
 

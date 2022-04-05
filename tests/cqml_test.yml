@@ -36,7 +36,7 @@ actions:
         data_dir: test
         file_ext: csv
         expiration_date: '2200-02-02'
-    cols:
+    sort:
       text: sort
       dat: sort
   macro_def:

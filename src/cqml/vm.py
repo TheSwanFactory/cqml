@@ -180,7 +180,7 @@ class VM:
             self.sizes[id] = df.count()
             df = df if kKeepIndistinct in action else df.distinct()
             df = self.ensure_unique(df, action[kUniq]) if kUniq in action else df
-            df = df.sort(df[action[kSort]].desc()) if kSort in action else df
+            df = df.sort(get_sort(action), ascending=False)
         self.set_frame(id, df)
         self.last = action
         return df

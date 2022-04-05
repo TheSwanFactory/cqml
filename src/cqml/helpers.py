@@ -72,6 +72,12 @@ def flag2sql(action):
 def get_cols(action, df):
     return list(action[kCols].keys()) if kCols in action else df.columns
 
+def get_sort(action):
+    if not kSort in action: return []
+    s = action[kSort]
+    if isinstance(s, list): return s
+    return [s]
+
 def make_list(col): return list([row[0] for row in col.collect()])
 
 def make_aggregates(agg):
