@@ -21,6 +21,7 @@ try:
 except AttributeError:
     f = mock_functions()
     Window = mock_functions()
+    MOCK=True
 
 def alias_columns(df, columns, table='.'):
     new_columns = []
