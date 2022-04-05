@@ -76,6 +76,7 @@ def get_sort(action):
     if not kSort in action: return []
     s = action[kSort]
     if isinstance(s, list): return s
+    if isinstance(s, dict): return list(s.keys())
     return [s]
 
 def make_list(col): return list([row[0] for row in col.collect()])
