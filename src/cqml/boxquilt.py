@@ -1,6 +1,6 @@
 # BOX Configuration for Quilt
 
-from .db2quilt import make_dir
+from .db2quilt import make_dir,exract_pkg
 
 #FILE_EXT='csv'
 #BOX_ROOT='3G_Sunset'
@@ -38,10 +38,10 @@ class BoxQuilt:
     def __init__(self, key, sort, cvm, config):
         self.spark = cvm.spark
         self.client = self.jwt_init() #token_init()#
-        self.root = self.client.folder(config['root_id'])
+        self.root_id = self.client.folder(config['root_id'])
         self.key = key
         self.sort = sort
-        self.pkg = cvm.pkg
+        self.pkg = exract_pkg(cvm)
         self.dir = self.pkg.dir + config['data_dir']
         self.path = self.pkg.path + config['data_dir']
         self.until = config['expiration_date']
@@ -59,11 +59,14 @@ class BoxQuilt:
         )
         client = Client(auth)
         me = client.user().get()
-        print(f'BOX: Authenticated {me.name} with {me.id}')
+        print(f'BOX.token_init: Authenticated {me.name} with {me.id}')
         return client
 
     def jwt_init(self):
         cf = get_secrets(self.spark.conf, "box", BOX_KEYS)
+        #print(cf)
+        #print(cf['client_id'])
+        if "mock" in cf["client_id"]: return self.spark.conf.client
         auth = JWTAuth(client_id=cf['client_id'],
           client_secret=cf['client_secret'],
           enterprise_id=cf['enterprise_id'],
@@ -73,7 +76,7 @@ class BoxQuilt:
         access_token = auth.authenticate_instance()
         client = Client(auth)
         user = client.user().get()
-        print(f'box_init: Service Account user ID is {user.id} @ {user.login}')
+        print(f'BOX.jwt_init: Service Account user ID is {user.id} @ {user.login}')
         return client
 
     def get_file_urls(self, file_id):
@@ -87,16 +90,16 @@ class BoxQuilt:
 
     def save_groups(self, df, skipSave=False):
         if not skipSave:
-            print("not skipSave")
+            print(f"save_groups[{self.key}]: {df.count()} -> {self.dir}")
             df.coalesce(1).sort(*self.sort).write.mode("overwrite").partitionBy(self.key).option("header", "true").csv(self.dir)
         files = os.listdir(self.path)
-        msg = f"{self.key}: {self.pkg.now()} <{len(files)}>"
+        msg = f"{self.path}:{self.key}<{len(files)}>: {self.pkg.now()}"
         print(msg)
         self.pkg.cleanup(msg, meta=files)
         return files
 
     def box_entries(self):
-        return [dir_row(folder) for folder in self.root.get_items()]
+        return [dir_row(folder) for folder in self.root_id.get_items()]
 
     def load_groups(self):
       for root, dirs, files in os.walk(self.path, topdown = False):
@@ -110,7 +113,7 @@ class BoxQuilt:
       return self.rows
 
     def create_or_update_box(self, skipUpdate=False):
-        children = self.root.get_items()
+        children = self.root_id.get_items()
         folders = {item.name: item.id for item in children}
         box = list(folders.keys())
         dbfs = list(self.rows.keys())
@@ -122,7 +125,7 @@ class BoxQuilt:
         for name in to_create:
             n += 1
             row = self.rows[name]
-            folder = self.root.create_subfolder(name)
+            folder = self.root_id.create_subfolder(name)
             file = folder.upload(row["db_path"], file_name=row["box_file"], file_description=row["db_file"])
             row['box_url'] = get_file_url(file, self.until)
             print(f"{n} create[{file.id}]: {file.name}")
@@ -138,10 +141,11 @@ class BoxQuilt:
                 print(f"{n} update[{file.id}]: {file.name}")
                 if not skipUpdate:
                     file.update_contents(file_path)
-                row['box_url'] = get_file_url(file)
+                row['box_url'] = get_file_url(file, self.until)
 
         return self.rows
 
     def box_table(self):
         array = list(self.rows.values())
+        print(f'box_table: {len(array)}')
         return self.spark.createDataFrame([Row(**i) for i in array])

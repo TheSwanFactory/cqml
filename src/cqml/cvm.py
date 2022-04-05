@@ -1,3 +1,4 @@
+from copy import deepcopy
 from functools import reduce
 from operator import itemgetter
 from .keys import *
@@ -17,13 +18,8 @@ except ImportError:
   HAS_TEMPO=False
   pass
 
-HAS_BOX=True
-try:
-  from boxsdk import OAuth2, Client
-  from boxquilt import BoxQuilt
-except ImportError:
-  HAS_BOX=False
-  pass
+from boxsdk import OAuth2, Client
+from .boxquilt import BoxQuilt
 
 class CVM(VM):
     def __init__(self, yaml, spark):
@@ -38,11 +34,9 @@ class CVM(VM):
         print('do_box')
         from_key, group, config = itemgetter('from','group','box')(action)
         df_from = self.get_frame(from_key)
-        if not HAS_BOX or not cvm.pkg:
-            return df_from
         sort = action[kSort] if kSort in action else [group]
         self.log('do_box: init')
-        bq = BoxQuilt(group, sort, cvm, config)
+        bq = BoxQuilt(group, sort, self, config)
         self.log('do_box: save_groups')
         bq.save_groups(df_from, kSkipSave in action) #
         self.log('do_box: load_groups')
@@ -53,10 +47,26 @@ class CVM(VM):
         df = bq.box_table()
         return df
 
+    def do_calc(self, action):
+        id, from_key,args,cdict = itemgetter('id','from','args',kCols)(action)
+        df_from = self.get_frame(from_key)
+        i = args.index(kColArg)
+        result = ['*']
+        for col, alias in cdict.items():
+            args[i] = col
+            sql = call_sql(action, args)
+            expr = f'{sql} as {alias}'
+            result.append(expr)
+        all = ",".join(result)
+        self.log(' - do_calc.all: '+all)
+        df_from.createOrReplaceTempView(id)
+        select = f"select {all} from {id}"
+        return self.spark.sql(select)
+
     def do_call(self, action):
-        fn, args  = itemgetter(kFunc,kArgs)(action)
-        arglist = ",".join(args)
-        action[kSQL] = f'{fn}({arglist})'
+        args  = action[kArgs]
+        sql = call_sql(action, args)
+        action[kSQL] = sql
         return self.do_eval(action)
 
     def do_eval(self, action):
@@ -139,27 +149,17 @@ class CVM(VM):
 
     def do_merge(self, action):
         id, into, join = itemgetter('id', 'into', 'join')(action)
-        join_how = action[kJoinType] if kJoinType in action else 'left'
         df_into = self.get_frame(into)
-        df_from = self.do_select(action)
+        df_from = self.do_select(action, False) # do not auto-sort on join column
         cols = get_cols(action, df_from)
-        if not df_from:
-          return None
+        #if not df_from: return None
         join_into = join if isinstance(join, list) else [join]
-        n_joins = len(join_into)
-        join_from = cols[:n_joins]
-        del cols[:n_joins]
-        joins = list(zip(join_into, join_from))
-        expression = join_expr(df_into, df_from, joins)
-        df = df_into.join(df_from, expression, join_how)
-        if kKeepJoin not in action:
-            return df.drop(*join_from) if join_how == kInner else df.drop(*join_from, *join_into)
-        keep = action[kKeepJoin]
-        self.log(f'keep: {keep}')
-        if keep == 'left':
-            df = df.drop(*join_from)
-        elif keep == 'right':
-            df = df.drop(*join_into)
+        joins = join_col(cols, join_into)
+        joins = join_expr(df_into, df_from, joins)
+        joins["how"] = action[kJoinType] if kJoinType in action else 'left'
+        self.log(joins, 'joins')
+        df = df_into.join(joins['df_f'], joins['expr'], joins["how"])
+        df = keep(df, action, joins)
         return df
 
     def do_pivot(self, action):
@@ -189,10 +189,13 @@ class CVM(VM):
         df_re = df_ts.resample(freq=freq, func=func, fill=True)#.interpolate(method="linear")
         return df_re.df
 
-    def do_select(self, action):
+    def do_select(self, action, autoSort=True):
         from_key = itemgetter('from')(action)
         df = self.get_frame(from_key)
         cols = get_cols(action, df)
+        if (kSort not in action) and autoSort:
+            value = cols[0]
+            action[kSort] = value.split(cAlias)[1] if cAlias in value else value
         if kWhere in action:
             expression = make_expr(action[kWhere])
             self.log(f' - do_select[{kWhere}]: '+expression)
@@ -210,7 +213,8 @@ class CVM(VM):
         if 'dedupe' in action:
             df = df.drop_duplicates([action['dedupe']])
         column_map = alias_columns(df, cols, from_key)
-        return df.select(*column_map)
+        df = df.select(*column_map)
+        return df
 
     def do_summary(self, action):
         from_key = action['from']

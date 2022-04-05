@@ -90,6 +90,13 @@ class VM:
         self.cactions.append(dict)
         return 1
 
+    def reload(self, yaml_file):
+        with open(yaml_file) as data:
+            raw_yaml = yaml.full_load(data)
+            self.actions = raw_yaml["actions"]
+            self.log(self.actions)
+            self.compile(self.actions)
+
     def compile(self, action_dict):
         flags = []
         for id, action in action_dict.items():
@@ -169,9 +176,11 @@ class VM:
         print(f'*perform[{do}]: {id}')
         method = getattr(self, f'do_{do}')
         df = method(action)
-        self.sizes[id] = len(df) if isinstance(df, dict) else df.count()
-        df = self.ensure_unique(df, action[kUniq]) if kUniq in action else df
-        df = df.sort(df[action[kSort]].desc()) if kSort in action else df
+        if not isinstance(df, dict):
+            self.sizes[id] = df.count()
+            df = df if kKeepIndistinct in action else df.distinct()
+            df = self.ensure_unique(df, action[kUniq]) if kUniq in action else df
+            df = df.sort(get_sort(action), ascending=False)
         self.set_frame(id, df)
         self.last = action
         return df

@@ -1,8 +1,18 @@
-0.3.8 (unreleased)
+0.4.1 (unreleased)
 ------------------
 
 - Nothing changed yet.
 
+
+0.4.0 (unreleased)
+------------------
+
+- do_calc (multiple columns)
+- operator vs function
+- save: ['grid'] using csv preview
+- BOX support (require boxsdk)
+- CHANGE: distinct by default
+- CHANGE: sort by default
 
 0.3.7 (2022-03-28)
 ------------------

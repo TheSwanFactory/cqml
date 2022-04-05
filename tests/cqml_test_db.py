@@ -8,32 +8,37 @@
 
 !pip install --upgrade pip
 #!pip install cqml
-#--IMPORT-CQML--#
-!pip --no-cache-dir install git+https://github.com/TheSwanFactory/cqml.git@v37-union
-!pip install cqml==0.3.7.dev0
-
-#++IMPORT-CQML++#
+!pip --no-cache-dir install git+https://github.com/TheSwanFactory/cqml.git@v04-trips
+!pip install cqml==0.4.0.dev50
 
 import cqml
 
 # COMMAND ----------
 
-KEY="cqml_test"
+KEY="null_test"
 cvm = cqml.load_cqml(KEY,spark, '.')
 cvm.debug = True
 cvm.run()
+print(cvm.sizes)
 
 # COMMAND ----------
 
-#dict = cvm.do_save({})
+K = list(cvm.df.keys())
+print(K)
+def d(i): return cvm.df[K[i]]
+def view(i):
+  print(K[i])
+  d(i).show()
+def values(i, col): return d(i).select(col).distinct().collect()
+view(-1)
 
 # COMMAND ----------
 
-#displayHTML(dict['html'])
-#dict
+cvm.do_save({})
+displayHTML(cvm.pkg.html)
 
 # COMMAND ----------
-
+dbutils.notebook.exit(0)
 #spark.sql('create database nauto')
 
 # COMMAND ----------

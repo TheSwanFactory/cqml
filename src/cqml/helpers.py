@@ -6,7 +6,7 @@ from .keys import *
 
 def mock_functions():
     from collections import namedtuple
-    keys = "lit,col,desc,expr,sum,min,count,alias,concat_ws,current_date,current_time,current_timestamp,countDistinct,orderBy,over,partitionBy,row_number".split(',')
+    keys = "lit,col,desc,expr,sum,min,max,count,alias,concat_ws,current_date,current_time,current_timestamp,countDistinct,orderBy,over,partitionBy,row_number".split(',')
     func = namedtuple("Func",keys)
     f1 = func(*keys)
     l1 = [lambda *args, **kw: getattr(f1,key) for key in keys]
@@ -21,6 +21,7 @@ try:
 except AttributeError:
     f = mock_functions()
     Window = mock_functions()
+    MOCK=True
 
 def alias_columns(df, columns, table='.'):
     new_columns = []
@@ -32,6 +33,14 @@ def alias_columns(df, columns, table='.'):
         entry = df[col_name].alias(alias_name,metadata=meta)
         new_columns.append(entry)
     return new_columns
+
+def call_sql(action, args):
+    sep = action[kOp] if kOp in action else ","
+    sql = sep.join(map(str, args))
+    if kFunc in action: sql = f'{action[kFunc]}({sql})'
+    if kRound in action: sql = f'round({sql}, {action[kRound]})'
+    if kIfNull in action: sql = f'coalesce({sql}, {action[kIfNull]})'
+    return sql
 
 def cast_columns(df, matching, type):
     for c in df.columns:
@@ -49,6 +58,11 @@ def drop_column(df, col):
 def drop_table(spark, id):
     spark.sql(f'drop table if exists {DB}.{id}')
 
+def find_exts(ext):
+    if isinstance(ext, list): return ext
+    if ext == "report": return "daily,grid".split(',')
+    return [ext]
+
 def flag2sql(action):
     where = action[kWhere]
     condition = make_expr(where)
@@ -57,6 +71,13 @@ def flag2sql(action):
 
 def get_cols(action, df):
     return list(action[kCols].keys()) if kCols in action else df.columns
+
+def get_sort(action):
+    if not kSort in action: return []
+    s = action[kSort]
+    if isinstance(s, list): return s
+    if isinstance(s, dict): return list(s.keys())
+    return [s]
 
 def make_list(col): return list([row[0] for row in col.collect()])
 
@@ -84,9 +105,51 @@ def make_isin(query):
     field_expr = [make_any(field, query[field]) for field in query.keys()]
     return " AND ".join(field_expr)
 
+def join_col(cols, join_into):
+    n_joins = len(join_into)
+    join_from = cols[:n_joins]
+    #del cols[:n_joins]
+    dupe = set(join_into) & set(join_from)
+    jfmap = {d: f'JOIN:{d}' for d in list(dupe)}
+    jf2 = [jfmap[j] if j in jfmap else j for j in join_from]
+    joins = list(zip(join_into, jf2))
+    print('join_col.alias')
+    print(jfmap)
+    return {
+        "alias": jfmap,
+        "zip": joins,
+        "into": join_into,
+        "from": jf2,
+        "cols": cols,
+    }
+
+def keep(df, action, j):
+    """
+    If overlapping names in Left and Right,
+    AND (only) one of those names is being dropped,
+    THEN we need to rewrite the one being dropped
+    """
+    isInner = j["how"] == kInner
+    ji = j["into"]
+    jf = j["from"]
+
+    if kKeepJoin not in action:
+        return df.drop(*jf) if isInner else df.drop(*jf, *ji)
+    keep = action[kKeepJoin]
+    if keep == 'left':
+        return df.drop(*jf)
+    elif keep == 'right':
+        return df.drop(*ji)
+    return df
+
 def join_expr(df_into, df_from, joins):
-  expression = join_item(df_into, df_from, joins[0])
-  return expression
+  df2 = rename_columns(df_from, joins['alias'])
+  print('join_expr.df2')
+  print(df2)
+  joins["df_i"] = df_into
+  joins["df_f"] = df2
+  joins["expr"] = join_item(df_into, df2, joins["zip"][0])
+  return joins
 
 def join_item(df_into, df_from, item):
   key_into = item[0]
@@ -95,6 +158,14 @@ def join_item(df_into, df_from, item):
       key_from = key_from.split(cAlias)[1]
   expression = (df_into[key_into] == df_from[key_from])
   return expression
+
+# https://stackoverflow.com/questions/38798567/pyspark-rename-more-than-one-column-using-withcolumnrenamed
+
+def rename_columns(df, columns):
+    if isinstance(columns, dict):
+        return df.select(*[f.col(c).alias(columns.get(c, c)) for c in df.columns])
+    else:
+        raise ValueError("'columns' should be a dict, like {'old1':'new1', 'old2':'new2'}")
 
 def sql_expr(field, op, value):
   if op == "contains":

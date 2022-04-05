@@ -1,33 +1,46 @@
 #!/usr/bin/env python3
 import pytest
-from .context import cqml, TEST_YAML
+from .context import cqml, TEST_YAML, DDIR
 from .db_mock import spark
 
 @pytest.fixture
 def cvm():
-    cvm = cqml.make_frames(TEST_YAML, spark, True)
+    cvm = cqml.from_file(TEST_YAML, spark)
+    cvm.test_id(DDIR)
     return cvm
 
+def get_action(cvm, key):
+    cvm.test_id(key)
+    for a in cvm.cactions:
+        if a['id'] == key: return a
+    return None
+
 def test_load(cvm):
-    assert cvm.df["items"]
+    assert cvm.df["test1"]
 
 def test_select(cvm):
-    it = cvm.df["items"]
+    it = cvm.test_id("selected")
+    #cvm.df["selected"]
     assert it
-    assert it.item_id
-    assert 'item_id' in it.columns
-    assert 'sku' in it.columns # alias
+    assert it.num
+    assert 'num' in it.columns
+    #assert 'sku' in it.columns # alias
     # how to test filter with Mock?
 
 def test_merge(cvm):
-    dev = cvm.df["na_details"]
+    dev = cvm.test_id("merged")
     assert dev
-    assert 'sku' in dev.columns # alias
-    assert 'item_id' not in dev.columns # alias
+    assert 'num' in dev.columns # alias
+    assert 'note' not in dev.columns # alias
 
 def test_call(cvm):
-    n = 12
-    a = cvm.cactions[n]
-    print(a)
-    assert a['id'] == 'days_unseen'
-    assert a['sql'] == 'datediff(current_date(),_fivetran_synced)'
+    a = get_action(cvm, "count_days")
+    assert a['sql'] == 'datediff(current_date(),dat)'
+
+def test_coalesce(cvm):
+    a = get_action(cvm, "call_coalesce")
+    assert a['sql'] == "coalesce(text,'Unassigned')"
+
+def test_space(cvm):
+    a = get_action(cvm, "concat_space")
+    assert a['sql'] == "num||' '||letter"
