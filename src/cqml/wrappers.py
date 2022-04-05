@@ -1,11 +1,19 @@
 import yaml
 import os,shutil
+from operator import itemgetter
 from .db2quilt import cvm2pkg
 from .cvm import CVM
 
 class CQML(CVM):
     def __init__(self, yaml_data, spark):
         super().__init__(yaml_data, spark)
+
+    def do_report(self, action):
+        id, from_key,cdict = itemgetter('id','from','cols',)(action)
+        df_from = self.get_frame(from_key)
+        for col, widget in cdict.items():
+            print('col:'+col)
+        return self.pkg.save_notebook(df_from, id)
 
     def do_run(self, action):
         runs = action['pipes']

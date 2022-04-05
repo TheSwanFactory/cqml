@@ -278,9 +278,9 @@ def extract_pkg(cvm):
     return pkg
 
 def cvm2pkg(cvm, run=False):
+    if not hasattr(cvm, pkg): cvm.pkg = extract_pkg(cvm)
     if run: cvm.run()
-    pkg = extract_pkg(cvm)
-    cvm.pkg = pkg
+    pkg = cvm.pkg
     doc = cvm.key_actions('doc')
     doc["cvm.actions"] = cvm.actions
     pkg.save_dict(cvm.actions, pkg.id)

@@ -27,6 +27,10 @@ def test_select(cvm):
     #assert 'sku' in it.columns # alias
     # how to test filter with Mock?
 
+def test_report(cvm):
+    it = cvm.test_id("widget-report")
+    assert it
+
 def test_merge(cvm):
     dev = cvm.test_id("merged")
     assert dev
