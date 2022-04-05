@@ -140,6 +140,14 @@ actions:
     args:
       - text
       - "'Unassigned'"
+  concat_space:
+    do: call
+    from: test1
+    operator: '||'
+    args:
+      - num
+      - "' '"
+      - letter
   count_days:
     do: call
     from: test1
