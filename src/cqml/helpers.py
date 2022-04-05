@@ -100,34 +100,41 @@ def make_isin(query):
 def join_col(cols, join_into):
     n_joins = len(join_into)
     join_from = cols[:n_joins]
-    del cols[:n_joins]
-    joins = list(zip(join_into, join_from))
+    #del cols[:n_joins]
+    dupe = set(join_into) & set(join_from)
+    jfmap = {d: f'JOIN:{d}' for d in list(dupe)}
+    jf2 = [jfmap[j] if j in jfmap else j for j in join_from]
+    joins = list(zip(join_into, jf2))
     return {
+        "alias": jfmap,
         "zip": joins,
         "into": join_into,
-        "from": join_from,
+        "from": jf2,
         "cols": cols,
     }
 
 def keep(df, action, j):
+    """
+    If overlapping names in Left and Right,
+    AND (only) one of those names is being dropped,
+    THEN we need to rewrite the one being dropped
+    """
     isInner = j["how"] == kInner
-    ji = set(j["into"])
-    jf = set(j["from"])
-    overlap = ji & jf
-    ji_only = ji - jf
-    jf_only = jf - ji
+    ji = j["into"]
+    jf = j["from"]
 
     if kKeepJoin not in action:
-        return df.drop(*jf_only) if isInner else df.drop(*jf, *ji)
+        return df.drop(*jf) if isInner else df.drop(*jf, *ji)
     keep = action[kKeepJoin]
     if keep == 'left':
-        df = df.drop(*jf_only)
+        return df.drop(*jf)
     elif keep == 'right':
-        df = df.drop(*ji_only)
+        return df.drop(*ji)
     return df
 
 def join_expr(df_into, df_from, joins):
-  expression = join_item(df_into, df_from, joins[0])
+  df2 = rename_columns(df_from, joins['alias'])
+  expression = join_item(df_into, df2, joins["zip"][0])
   return expression
 
 def join_item(df_into, df_from, item):
@@ -137,6 +144,14 @@ def join_item(df_into, df_from, item):
       key_from = key_from.split(cAlias)[1]
   expression = (df_into[key_into] == df_from[key_from])
   return expression
+
+# https://stackoverflow.com/questions/38798567/pyspark-rename-more-than-one-column-using-withcolumnrenamed
+
+def rename_columns(df, columns):
+    if isinstance(columns, dict):
+        return df.select(*[f.col(c).alias(columns.get(c, c)) for c in df.columns])
+    else:
+        raise ValueError("'columns' should be a dict, like {'old1':'new1', 'old2':'new2'}")
 
 def sql_expr(field, op, value):
   if op == "contains":

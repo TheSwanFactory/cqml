@@ -36,13 +36,14 @@ class MockFrame(object):
         return self.items[item] if item in self.items else MockCol(item)
 
     def select(self, *input):
+        dup = deepcopy(self)
         columns = list(input.values()) if isinstance(input, dict) else input
-        self.columns = columns
+        dup.columns = columns
         for col in columns:
             mcol = MockCol(col)
-            setattr(self, col, mcol)
-            self.items[col] = mcol
-        return self
+            setattr(dup, col, mcol)
+            dup.items[col] = mcol
+        return dup
 
     def drop(self, *col):
         try:

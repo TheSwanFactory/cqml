@@ -30,7 +30,7 @@ def test_select(cvm):
 def test_merge(cvm):
     dev = cvm.test_id("merged")
     assert dev
-    assert 'next' in dev.columns # alias
+    assert 'num' in dev.columns # alias
     assert 'note' not in dev.columns # alias
 
 def test_call(cvm):

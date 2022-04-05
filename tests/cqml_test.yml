@@ -110,7 +110,7 @@ actions:
       letter:
         A: contains
     cols:
-      num|next: tbd
+      num: tbd
       letter|better: tbd
       dat|dot: tbd
   flagged:
