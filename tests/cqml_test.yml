@@ -119,6 +119,13 @@ actions:
     where:
       text:
         null: is
+  call_coalesce:
+    do: call
+    from: test2
+    function: coalesce
+    args:
+      - text
+      - "'Unassigned'"
   count_days:
     do: call
     from: test1

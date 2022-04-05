@@ -9,12 +9,18 @@ def cvm():
     cvm.test_id(DDIR)
     return cvm
 
+def get_action(cvm, key):
+    cvm.test_id(key)
+    for a in cvm.cactions:
+        if a['id'] == key: return a
+    return None
+
 def test_load(cvm):
     assert cvm.df["test1"]
 
 def test_select(cvm):
-    cvm.test_id("selected")
-    it = cvm.df["selected"]
+    it = cvm.test_id("selected")
+    #cvm.df["selected"]
     assert it
     assert it.num
     assert 'num' in it.columns
@@ -22,14 +28,15 @@ def test_select(cvm):
     # how to test filter with Mock?
 
 def test_merge(cvm):
-    cvm.test_id("merged")
-    dev = cvm.df["merged"]
+    dev = cvm.test_id("merged")
     assert dev
     assert 'next' in dev.columns # alias
     assert 'note' not in dev.columns # alias
 
 def test_call(cvm):
-    cvm.test_id("count_days")
-    for a in cvm.cactions:
-        if a['id'] == 'count_days':
-            assert a['sql'] == 'datediff(current_date(),dat)'
+    a = get_action(cvm, "count_days")
+    assert a['sql'] == 'datediff(current_date(),dat)'
+
+def test_coalesce(cvm):
+    a = get_action(cvm, "call_coalesce")
+    assert a['sql'] == "coalesce(text,'Unassigned')"
