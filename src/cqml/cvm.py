@@ -155,10 +155,10 @@ class CVM(VM):
         #if not df_from: return None
         join_into = join if isinstance(join, list) else [join]
         joins = join_col(cols, join_into)
-        expression = join_expr(df_into, df_from, joins)
+        joins = join_expr(df_into, df_from, joins)
         joins["how"] = action[kJoinType] if kJoinType in action else 'left'
         self.log(joins, 'joins')
-        df = df_into.join(df_from, expression, joins["how"])
+        df = df_into.join(joins['df_f'], joins['expr'], joins["how"])
         df = keep(df, action, joins)
         return df
 

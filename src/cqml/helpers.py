@@ -138,8 +138,10 @@ def join_expr(df_into, df_from, joins):
   df2 = rename_columns(df_from, joins['alias'])
   print('join_expr.df2')
   print(df2)
-  expression = join_item(df_into, df2, joins["zip"][0])
-  return expression
+  joins["df_i"] = df_into
+  joins["df_f"] = df2
+  joins["expr"] = join_item(df_into, df2, joins["zip"][0])
+  return joins
 
 def join_item(df_into, df_from, item):
   key_into = item[0]
