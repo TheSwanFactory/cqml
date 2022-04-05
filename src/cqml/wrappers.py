@@ -2,7 +2,6 @@ import yaml
 import os,shutil
 from .db2quilt import cvm2pkg
 from .cvm import CVM
-from .cqml12 import ensure_v02
 
 class CQML(CVM):
     def __init__(self, yaml_data, spark):
@@ -21,17 +20,14 @@ def upgrade_file(yaml_file):
     print("Upgrading "+yaml_file)
     with open(yaml_file) as data:
         raw_yaml = yaml.full_load(data)
-        v02 = ensure_v02(raw_yaml)
-    print(v02)
     with open(yaml_file, 'w') as file:
-        yaml.dump(v02, file, sort_keys=False)
+        yaml.dump(raw_yaml, file, sort_keys=False)
 
 def from_file(yaml_file, spark):
     print("Loading "+yaml_file)
     with open(yaml_file) as data:
         raw_yaml = yaml.full_load(data)
-        v02 = ensure_v02(raw_yaml)
-        return CQML(v02, spark)
+        return CQML(raw_yaml, spark)
 
 def make_frames(yaml_file, spark, debug=False):
     cvm = from_file(yaml_file, spark)
