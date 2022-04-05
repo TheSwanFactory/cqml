@@ -1,0 +1,47 @@
+cqml: 0.4
+order: 30.0
+id: test_null_names
+meta:
+    org: nauto
+    project: sangam
+    s3.bucket: biz-databricks-root-prod-us
+    catalog: quilt
+    database: $$org
+actions:
+  services:
+    do: load
+    tables:
+      dgroups: driver_grouping
+      sgroups: groups
+
+  lds_groups:
+    do: select
+    from: dgroups
+    cols:
+      group_id: group record
+      driver_id|dgroup_id: driver record
+      fleet_id: fleet record
+    where:
+      fleet_id:
+        f-dbb7c36a70b156bb: contains
+
+  named_groups:
+    do: merge
+    into: $id
+    join: group_id
+    from: sgroups
+    cols:
+      id: join on group id
+      name: Group_Name or Unassigned
+      status: group status
+    where:
+      status:
+        inactive: not_contains
+
+  Group_Name:
+    do: call
+    from: $id
+    function: coalesce
+    args:
+      - name
+      - "'Unassigned'"
