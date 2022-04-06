@@ -97,7 +97,8 @@ handle = os.environ.get("QUILT_PKG_NAME")
 top_hash = os.environ.get("QUILT_PKG_TOP_HASH")
 """
 NB_WIDGET="""
-values = list(data['{KEY}'].unique())
+all_values = list(data['{KEY}'].unique())
+values = list(filter(None, all_values))
 control = widgets.{WIDGET}(
     value=values[0],
     placeholder='Choose a {KEY}',
