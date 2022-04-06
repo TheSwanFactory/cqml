@@ -45,6 +45,7 @@ class VM:
         self.df = {}
         self.sizes = {}
         self.times = {}
+        self.pkg = None
 
     def key_actions(self, key):
       return {a['id']: a[key] for a in self.cactions if (key in a) and (kSkip not in a)}

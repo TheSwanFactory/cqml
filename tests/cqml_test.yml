@@ -15,6 +15,7 @@ actions:
       test2: test2.csv
   widget-report:
     do: report
+    skip: true
     from: test1
     cols:
       num: slider
@@ -89,6 +90,7 @@ actions:
     from: $id
     where:
       count_days:
+        1: lesser
   unique_num:
     do: unique
     from: test1
@@ -104,8 +106,8 @@ actions:
       - note
   plus_operator:
     do: call
-    from: mult_number
+    from: rename_merged
     operator: +
     args:
-        - numerate
+        - next
         - num
