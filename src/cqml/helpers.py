@@ -6,7 +6,7 @@ from .keys import *
 
 def mock_functions():
     from collections import namedtuple
-    keys = "lit,col,desc,expr,sum,min,max,count,alias,concat_ws,current_date,current_time,current_timestamp,countDistinct,orderBy,over,partitionBy,row_number".split(',')
+    keys = "lit,col,desc,expr,sum,min,max,count,alias,approx_count_distinct,concat_ws,current_date,current_time,current_timestamp,countDistinct,orderBy,over,partitionBy,row_number".split(',')
     func = namedtuple("Func",keys)
     f1 = func(*keys)
     l1 = [lambda *args, **kw: getattr(f1,key) for key in keys]
@@ -211,5 +211,5 @@ def unique(df_from, sort, cols, to_count=[]):
         df_win = df_win.withColumn(f'_unique_{c}',f.approx_count_distinct(c).over(win))
     #df_dupes = df_win.filter(f.col(N) != 1).drop(N)
     #self.save("DUPE_"+id, df_dupes, "csv")
-    #df = df_win.filter(f.col(N) == 1).drop(N)
+    df = df_win#.filter(f.col(N) == 1).drop(N)
     return df
