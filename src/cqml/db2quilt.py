@@ -111,6 +111,11 @@ def cb(x): grid.restore(**dict)
 dropdown = widgets.interact(cb, x=w)
 grid
 """
+def make_widget(opts):
+    code = [NB_WIDGET.format(KEY=col,WIDGET=w) for col, w in opts.items()]
+    cells = [[True, c] for c in code]
+    return cells
+
 def make_notebook():
     nb = nbf.v4.new_notebook()
     nb['cells'] = []
@@ -170,11 +175,12 @@ class Package:
         self.html = f'Published <a href="{self.url}">{self.name}</a> for <b>{msg}</b>'
         return self
 
-    def save_notebook(self, df, key):
+    def save_notebook(self, df, key, opts={}):
         pfile = f"{key}.parquet"
         msg = self.save_file(df, pfile)
         cells = self.make_report(pfile, msg)
         name = cells[0][1]
+        cells.extend(make_widget(opts))
         doc = self.to_notebook(name, cells)
         return doc
 
@@ -240,11 +246,6 @@ class Package:
             [True, f"grid = PerspectiveWidget(data)"]
         ]
         return cell_pairs #
-
-    def make_widget(self, opts):
-        code = [NB_WIDGET.format(KEY=col,WIDGET=w) for col, w in opts.items()]
-        cells = [[True, c] for c in code]
-        return cells
 
     def to_notebook(self, name, cell_pairs):
         print("to_notebook: "+name)
