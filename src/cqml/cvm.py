@@ -34,7 +34,7 @@ class CVM(VM):
         print('do_box')
         from_key, group, config = itemgetter('from','group','box')(action)
         df_from = self.get_frame(from_key)
-        sort = action[kSort] if kSort in action else [group]
+        sort = get_cols(action, df_from)
         self.log('do_box: init')
         bq = BoxQuilt(group, sort, self, config)
         self.log('do_box: save_groups')
