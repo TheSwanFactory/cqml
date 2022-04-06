@@ -15,7 +15,6 @@ actions:
       test2: test2.csv
   box_details:
     do: box
-    skip: true
     from: test1
     group: num
     +doc: Split by num, upload, store URLs

@@ -183,8 +183,6 @@ class Package:
         cells = self.make_report(pfile, msg)
         name = cells[0][1]
         cells.extend(make_widget(opts))
-        print('save_notebook')
-        print(cells)
         doc = self.to_notebook(name, cells)
         return doc
 
