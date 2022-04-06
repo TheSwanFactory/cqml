@@ -237,7 +237,6 @@ class CVM(VM):
         return df_from.union(df_into)
 
     def do_unique(self, action):
-        N = "windowIndx"
         id, key, sort = itemgetter('id', 'from', kSort)(action)
         df_from = self.get_frame(key)
         cols = get_cols(action, df_from)
