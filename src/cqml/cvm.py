@@ -240,7 +240,8 @@ class CVM(VM):
         id, key, sort = itemgetter('id', 'from', kSort)(action)
         df_from = self.get_frame(key)
         cols = get_cols(action, df_from)
-        df = unique(df_from, sort, cols)
+        count = action[kCount] if kCount in action else []
+        df = unique(df_from, sort, cols, count)
         return df
 
     def do_update(self, action):

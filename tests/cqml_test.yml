@@ -111,6 +111,7 @@ actions:
     ensure_unique: num
     cols:
       num: tbd
+    count: [dat]
   union:
     do: union
     into: test1
