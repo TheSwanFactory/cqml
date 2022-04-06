@@ -207,6 +207,7 @@ def unique(df_from, sort, cols, to_count=[]):
     df_win = df_from.withColumn(N,f.row_number().over(win))
     df_win = df_win.withColumn('_unique__count',f.max(N).over(win))
     for c in to_count:
+        print(f'to_count: {c}')
         df_win = df_win.withColumn(f'_unique_{c}',f.countDistinct(c).over(win))
     #df_dupes = df_win.filter(f.col(N) != 1).drop(N)
     #self.save("DUPE_"+id, df_dupes, "csv")
