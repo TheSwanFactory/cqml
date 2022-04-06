@@ -102,7 +102,7 @@ control = widgets.{WIDGET}(
     value=values[0],
     placeholder='Choose a {KEY}',
     options=values,
-    description={KEY},
+    description='{KEY}',
     ensure_option=True,
     disabled=False
 )
