@@ -98,7 +98,7 @@ top_hash = os.environ.get("QUILT_PKG_TOP_HASH")
 """
 NB_WIDGET="""
 values = list(data[{KEY}].unique())
-w = widgets.{WIDGET}(
+control = widgets.{WIDGET}(
     value=values[0],
     placeholder='Choose a {KEY}',
     options=values,
@@ -106,8 +106,8 @@ w = widgets.{WIDGET}(
     ensure_option=True,
     disabled=False
 )
-def cb(x): grid.restore(filter=[[{KEY}, '==', x]])
-dropdown = widgets.interact(cb, x=w)
+def callback(x): grid.restore(filter=[['{KEY}', '==', x]])
+dropdown = widgets.interact(callback, x=control)
 grid
 """
 def make_widget(opts):
