@@ -106,12 +106,13 @@ w = widgets.{WIDGET}(
     ensure_option=True,
     disabled=False
 )
-dict = {filter: [[{KEY}, '==', x]]}
-def cb(x): grid.restore(**dict)
+def cb(x): grid.restore(filter=[[{KEY}, '==', x]])
 dropdown = widgets.interact(cb, x=w)
 grid
 """
 def make_widget(opts):
+    print('make_widget')
+    print(opts)
     code = [NB_WIDGET.format(KEY=col,WIDGET=w) for col, w in opts.items()]
     cells = [[True, c] for c in code]
     return cells
@@ -181,6 +182,8 @@ class Package:
         cells = self.make_report(pfile, msg)
         name = cells[0][1]
         cells.extend(make_widget(opts))
+        print('save_notebook')
+        print(cells)
         doc = self.to_notebook(name, cells)
         return doc
 

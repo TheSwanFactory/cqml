@@ -12,9 +12,7 @@ class CQML(CVM):
         if not self.pkg: self.pkg = extract_pkg(self)
         id, from_key,cdict = itemgetter('id','from','cols',)(action)
         df_from = self.get_frame(from_key)
-        for col, widget in cdict.items():
-            print('col:'+col)
-        self.pkg.save_notebook(df_from, id)
+        self.pkg.save_notebook(df_from, id, cdict)
         return df_from
 
     def do_run(self, action):
