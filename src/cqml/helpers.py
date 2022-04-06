@@ -203,6 +203,8 @@ def summarize(df, table, col, count, now):
 def unique(df_from, sort, cols, to_count=[]):
     WinI = "windowIndx"
     scol = f.desc(sort) #if kReverse else f.asc(sort)
+    print('unique')
+    print(cols)
     win = Window.partitionBy(cols).orderBy(scol)
     df_win = df_from.withColumn(WinI,f.row_number().over(win))
     df_win = df_win.withColumn('_unique__count',f.max(WinI).over(win))
