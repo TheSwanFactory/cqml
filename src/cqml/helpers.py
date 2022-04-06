@@ -207,7 +207,10 @@ def unique(df_from, sort, cols, to_count=[]):
     print(cols)
     win = Window.partitionBy(cols).orderBy(scol)
     df_win = df_from.withColumn(WinI,f.row_number().over(win))
-    df_win = df_win.withColumn('_unique__count',f.max(WinI).over(win))
+    df_win = df_win.withColumn('_unique__count',f.count(WinI).over(win))
+    df_win = df_win.withColumn('_unique__max',f.max(WinI).over(win))
+    df_win = df_win.withColumn('_unique__min',f.min(WinI).over(win))
+    df_win = df_win.withColumn('_unique__sum',f.sum(WinI).over(win))
     for c in to_count:
         print(f'to_count: {c}')
         df_win = df_win.withColumn(f'_unique_{c}',f.approx_count_distinct(c).over(win))
