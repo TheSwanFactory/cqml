@@ -96,6 +96,21 @@ bucket = os.environ.get("QUILT_PKG_BUCKET")
 handle = os.environ.get("QUILT_PKG_NAME")
 top_hash = os.environ.get("QUILT_PKG_TOP_HASH")
 """
+NB_WIDGET="""
+values = list(data[{KEY}].unique())
+w = widgets.{WIDGET}(
+    value=values[0],
+    placeholder='Choose a {KEY}',
+    options=values,
+    description=KEY,
+    ensure_option=True,
+    disabled=False
+)
+dict = {filter: [[{KEY}, '==', x]]}
+def cb(x): grid.restore(**dict)
+dropdown = widgets.interact(cb, x=w)
+grid
+"""
 def make_notebook():
     nb = nbf.v4.new_notebook()
     nb['cells'] = []
@@ -158,7 +173,9 @@ class Package:
     def save_notebook(self, df, key):
         pfile = f"{key}.parquet"
         msg = self.save_file(df, pfile)
-        doc = self.to_report(pfile, msg)
+        cells = self.make_report(pfile, msg)
+        name = cells[0][1]
+        doc = self.to_notebook(name, cells)
         return doc
 
     def save_grid(self, df, key):
@@ -211,9 +228,10 @@ class Package:
             outfile.write(json_string)
         return path
 
-    def to_report(self, datafile, doc='Auto-Generated Report'):
+    def make_report(self, datafile, doc='Auto-Generated Report'):
         name = Path(datafile).resolve().stem
         cell_pairs=[
+            [False, name],
             [False, doc],
             [False, f"Rendering {datafile}"],
             [True, NB_IMPORT],
@@ -221,7 +239,12 @@ class Package:
             [True, f"data = pkg['{datafile}']()"],
             [True, f"grid = PerspectiveWidget(data)"]
         ]
-        return self.to_notebook(name, cell_pairs)
+        return cell_pairs #
+
+    def make_widget(self, opts):
+        code = [NB_WIDGET.format(KEY=col,WIDGET=w) for col, w in opts.items()]
+        cells = [[True, c] for c in code]
+        return cells
 
     def to_notebook(self, name, cell_pairs):
         print("to_notebook: "+name)

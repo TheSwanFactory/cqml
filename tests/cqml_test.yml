@@ -15,11 +15,10 @@ actions:
       test2: test2.csv
   widget-report:
     do: report
-    skip: true
     from: test1
     cols:
-      num: slider
-      text: combo
+      text: Combobox
+#      num: slider
   grouped:
     do: group
     from: test1
