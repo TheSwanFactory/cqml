@@ -157,6 +157,7 @@ actions:
     from: macro_run
   pivoted:
     do: pivot
+    skip: true
     from: $id
     agg:
       sum_num: count
