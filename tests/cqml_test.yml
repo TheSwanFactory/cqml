@@ -18,7 +18,7 @@ actions:
     from: test1
     sort: dat
     save: grid
-#    ensure_unique: num
+    ensure_unique: num
     cols:
       num: tbd
     count: [letter]

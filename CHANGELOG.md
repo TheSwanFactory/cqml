@@ -1,8 +1,9 @@
 0.4.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Sort BOX CSV files
+- support PyWidget (at least Combox Box)
+- do_report
 
 0.4.0 (unreleased)
 ------------------
