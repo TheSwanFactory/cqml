@@ -41,7 +41,7 @@ actions:
     from: test1
     cols:
       text: Combobox
-#      num: slider
+      letter: Combobox
   grouped:
     do: group
     from: test1
