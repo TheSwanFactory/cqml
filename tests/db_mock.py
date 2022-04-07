@@ -75,6 +75,7 @@ class MockSpark(object):
     def distinct(self,arg=None): return self
     def get(self, arg): return f'mock.get:{arg}'
     def setCurrentDatabase(self, db): print(f"setCurrentDatabase: {db}")
+    def sort(self, *arg, **opt): return self
     def sql(self, arg): return self
     def table(self, table_name): return MockFrame(table_name)
 

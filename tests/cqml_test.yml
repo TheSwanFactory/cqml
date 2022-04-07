@@ -126,3 +126,96 @@ actions:
     args:
         - next
         - num
+  cqml_test_inner_dupes:
+    do: merge
+    save: table
+    into: test1
+    join: num
+    join_type: inner
+    from: test2
+    keep_join: left
+    cols:
+      num: tbd
+      letter|character: tbd
+  macro_def:
+    do: macro|merge
+    into: "{into}"
+    join: "{join}"
+    from: test2
+    join_type: inner
+    cols:
+      "{join}": tbd
+      num|numerate: tbd
+      text|texas: tbd
+      dat|database: tbd
+  macro_run:
+    do: macro.macro_def
+    into: test1
+    join: letter
+    char: A
+  mult_number:
+    do: assign
+    from: macro_run
+  pivoted:
+    do: pivot
+    from: $id
+    agg:
+      sum_num: count
+    sort: text
+    pivot: letter
+    cols:
+      text: tbd
+  cqml_test_summarize:
+    do: summary
+    save: [grid, parquet]
+    from: test1
+    count: num
+    as: total
+    cols:
+      letter: tbd
+      text: tbd
+  call_coalesce:
+    do: call
+    from: test2
+    function: coalesce
+    args:
+      - text
+      - "'Unassigned'"
+  concat_space:
+    do: call
+    from: test1
+    operator: '||'
+    args:
+      - num
+      - "' '"
+      - letter
+  aggregates:
+    do: group
+    from: $id
+    agg:
+      check_count: count
+      count_days: sum
+    sort: n_check_count
+    cols:
+      num: tbd
+      letter: tbd
+  leftsemi_match:
+    do: select
+    skip: true
+    from: test1
+    matching:
+      num:
+        test2: num
+  calc_quarters:
+    do: calc
+    from: plus_operator
+    operator: /
+    round: 3
+    else: 0
+    args:
+        - $col
+        - 4
+    cols:
+      num: qnum
+      numerate: qnumb
+      plus_operator: qdumb
