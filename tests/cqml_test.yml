@@ -176,14 +176,14 @@ actions:
       text: tbd
   call_coalesce:
     do: call
-    from: test2
+    from: test1
     function: coalesce
     args:
       - text
       - "'Unassigned'"
   concat_space:
     do: call
-    from: test1
+    from: $id
     operator: '||'
     args:
       - num
@@ -194,7 +194,7 @@ actions:
     from: $id
     agg:
       concat_space: count
-      count_days: sum
+      call_coalesce: sum
     sort: n_concat_space
     cols:
       num: tbd
