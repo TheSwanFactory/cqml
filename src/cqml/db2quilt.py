@@ -164,7 +164,6 @@ class Package:
 
     def read_csv(self, filename):
         path = self.path+filename
-        print(path)
         df = pd.read_csv(path)
         self.proj.cleanup_dates(df)
         return df
@@ -209,7 +208,6 @@ class Package:
     def copy_file(self, source, dest_name=False):
         """into package"""
         path = self.path + (dest_name if dest_name else source)
-        print(path)
         shutil.copy(source, path)
 
     def save_file(self, df, filename):

@@ -45,7 +45,6 @@ def call_sql(action, args):
 def cast_columns(df, matching, type):
     for c in df.columns:
         if matching.lower() in c.lower():
-            #print(f.col(c))
             df = df.withColumn(c, f.col(c).cast(type))
     return df
 
@@ -113,8 +112,6 @@ def join_col(cols, join_into):
     jfmap = {d: f'JOIN:{d}' for d in list(dupe)}
     jf2 = [jfmap[j] if j in jfmap else j for j in join_from]
     joins = list(zip(join_into, jf2))
-    print('join_col.alias')
-    print(jfmap)
     return {
         "alias": jfmap,
         "zip": joins,
@@ -144,8 +141,6 @@ def keep(df, action, j):
 
 def join_expr(df_into, df_from, joins):
   df2 = rename_columns(df_from, joins['alias'])
-  print('join_expr.df2')
-  print(df2)
   joins["df_i"] = df_into
   joins["df_f"] = df2
   joins["expr"] = join_item(df_into, df2, joins["zip"][0])
@@ -203,8 +198,6 @@ def summarize(df, table, col, count, now):
 def unique(df_from, sort, cols, to_count=[]):
     WinI = "windowIndx"
     scol = f.desc(sort) #if kReverse else f.asc(sort)
-    print('unique')
-    print(cols)
     part = Window.partitionBy(cols).orderBy(scol)
     df_win = df_from.withColumn(WinI,f.row_number().over(part))
     for c in to_count:
