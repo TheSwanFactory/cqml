@@ -1,7 +1,7 @@
 0.4.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fix pivoted
 
 
 0.4.1 (unreleased)
