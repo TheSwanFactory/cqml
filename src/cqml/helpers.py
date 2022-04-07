@@ -207,15 +207,10 @@ def unique(df_from, sort, cols, to_count=[]):
     print(cols)
     part = Window.partitionBy(cols).orderBy(scol)
     df_win = df_from.withColumn(WinI,f.row_number().over(part))
-    df_win = df_win.withColumn('_unique__count',f.count(WinI).over(part))
-    df_win = df_win.withColumn('_unique__max',f.max(WinI).over(part))
-    df_win = df_win.withColumn('_unique__min',f.min(WinI).over(part))
-    df_win = df_win.withColumn('_unique__sum',f.sum(WinI).over(part))
-    df_win = df_win.withColumn('_unique__approx',f.approx_count_distinct(WinI).over(part))
     for c in to_count:
         print(f'to_count: {c}')
         df_win = df_win.withColumn(f'_unique_{c}',f.approx_count_distinct(f.col(c)).over(part))
-    #df_dupes = df_win.filter(f.col(N) != 1).drop(N)
+    #df_dupes = df_win.filter(f.col(WinI) != 1).drop(WinI)
     #self.save("DUPE_"+id, df_dupes, "csv")
-    df = df_win#.filter(f.col(N) == 1).drop(N)
+    df = df_win.filter(f.col(WinI) == 1).drop(WinI)
     return df
