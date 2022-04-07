@@ -29,7 +29,7 @@ class MockFrame(object):
     def __init__(self, name="frame"):
         self.name = name
         self.items = {}
-        self.columns = []
+        self.columns = ['col']
         self.write = MockWriter(self)
 
     def __getitem__(self, item):

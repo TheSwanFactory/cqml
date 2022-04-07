@@ -201,7 +201,6 @@ actions:
       letter: tbd
   leftsemi_match:
     do: select
-    skip: true
     from: test1
     matching:
       num:
