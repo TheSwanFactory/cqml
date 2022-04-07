@@ -93,6 +93,26 @@ actions:
       num|next: tbd
       letter|better: tbd
       dat|dot: tbd
+  plus_operator:
+    do: call
+    from: rename_merged
+    operator: +
+    args:
+        - next
+        - num
+  calc_quarters:
+    do: calc
+    from: plus_operator
+    operator: /
+    round: 3
+    else: 0
+    args:
+        - $col
+        - 4
+    cols:
+      num: qnum
+      next: qnumb
+      plus_operator: qdumb
   flagged:
     do: flag
     from: test1
@@ -118,13 +138,6 @@ actions:
     from: test2
     drop:
       - note
-  plus_operator:
-    do: call
-    from: rename_merged
-    operator: +
-    args:
-        - next
-        - num
   cqml_test_inner_dupes:
     do: merge
     save: table
@@ -205,16 +218,3 @@ actions:
     matching:
       num:
         test2: num
-  calc_quarters:
-    do: calc
-    from: plus_operator
-    operator: /
-    round: 3
-    else: 0
-    args:
-        - $col
-        - 4
-    cols:
-      num: qnum
-      numerate: qnumb
-      plus_operator: qdumb
