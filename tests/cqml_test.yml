@@ -193,9 +193,9 @@ actions:
     do: group
     from: $id
     agg:
-      check_count: count
+      concat_space: count
       count_days: sum
-    sort: n_check_count
+    sort: n_concat_space
     cols:
       num: tbd
       letter: tbd
