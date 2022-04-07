@@ -34,7 +34,7 @@ class CVM(VM):
         print('do_box')
         from_key, group, config = itemgetter('from','group','box')(action)
         df_from = self.get_frame(from_key)
-        sort = action[kSort] if kSort in action else [group]
+        sort = get_cols(action, df_from)
         self.log('do_box: init')
         bq = BoxQuilt(group, sort, self, config)
         self.log('do_box: save_groups')
@@ -237,11 +237,11 @@ class CVM(VM):
         return df_from.union(df_into)
 
     def do_unique(self, action):
-        N = "windowIndx"
         id, key, sort = itemgetter('id', 'from', kSort)(action)
         df_from = self.get_frame(key)
         cols = get_cols(action, df_from)
-        df = unique(df_from, sort, cols)
+        count = action[kCount] if kCount in action else []
+        df = unique(df_from, sort, cols, count)
         return df
 
     def do_update(self, action):

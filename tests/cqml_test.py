@@ -27,6 +27,10 @@ def test_select(cvm):
     #assert 'sku' in it.columns # alias
     # how to test filter with Mock?
 
+def test_report(cvm):
+    it = cvm.test_id("widget-report")
+    assert it
+
 def test_merge(cvm):
     dev = cvm.test_id("merged")
     assert dev
@@ -36,11 +40,3 @@ def test_merge(cvm):
 def test_call(cvm):
     a = get_action(cvm, "count_days")
     assert a['sql'] == 'datediff(current_date(),dat)'
-
-def test_coalesce(cvm):
-    a = get_action(cvm, "call_coalesce")
-    assert a['sql'] == "coalesce(text,'Unassigned')"
-
-def test_space(cvm):
-    a = get_action(cvm, "concat_space")
-    assert a['sql'] == "num||' '||letter"

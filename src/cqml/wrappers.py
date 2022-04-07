@@ -1,12 +1,19 @@
 import yaml
 import os,shutil
-from .db2quilt import cvm2pkg
+from operator import itemgetter
+from .db2quilt import cvm2pkg, extract_pkg
 from .cvm import CVM
-from .cqml12 import ensure_v02
 
 class CQML(CVM):
     def __init__(self, yaml_data, spark):
         super().__init__(yaml_data, spark)
+
+    def do_report(self, action):
+        if not self.pkg: self.pkg = extract_pkg(self)
+        id, from_key,cdict = itemgetter('id','from','cols',)(action)
+        df_from = self.get_frame(from_key)
+        self.pkg.save_notebook(df_from, id, cdict)
+        return df_from
 
     def do_run(self, action):
         runs = action['pipes']
@@ -21,17 +28,14 @@ def upgrade_file(yaml_file):
     print("Upgrading "+yaml_file)
     with open(yaml_file) as data:
         raw_yaml = yaml.full_load(data)
-        v02 = ensure_v02(raw_yaml)
-    print(v02)
     with open(yaml_file, 'w') as file:
-        yaml.dump(v02, file, sort_keys=False)
+        yaml.dump(raw_yaml, file, sort_keys=False)
 
 def from_file(yaml_file, spark):
     print("Loading "+yaml_file)
     with open(yaml_file) as data:
         raw_yaml = yaml.full_load(data)
-        v02 = ensure_v02(raw_yaml)
-        return CQML(v02, spark)
+        return CQML(raw_yaml, spark)
 
 def make_frames(yaml_file, spark, debug=False):
     cvm = from_file(yaml_file, spark)

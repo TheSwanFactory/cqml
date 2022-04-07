@@ -13,6 +13,131 @@ actions:
     tables:
       test1: test1.csv
       test2: test2.csv
+  unique_num:
+    do: unique
+    from: test1
+    sort: dat
+    save: grid
+    ensure_unique: num
+    cols:
+      num: tbd
+    count: [letter]
+  box_details:
+    do: box
+    from: test1
+    group: num
+    +doc: Split by num, upload, store URLs
+    box:
+        root_folder: CQML_Test
+        root_id: 156760265584
+        data_dir: test
+        file_ext: csv
+        expiration_date: '2200-02-02'
+    cols:
+      letter: sort
+      dat: sort
+  widget-report:
+    do: report
+    from: test1
+    cols:
+      text: Combobox
+#      num: slider
+  grouped:
+    do: group
+    from: test1
+    agg:
+      num: sum
+      dat: max
+    sort: max_dat
+    cols:
+      text: tbd
+      letter: tbd
+  selected:
+    do: select
+    from: test1
+    where:
+      letter:
+        A: contains
+        B: contains
+      text:
+        null: is_not
+    cols:
+      num: tbd
+      dat: tbd
+      letter: tbd
+      text: tbd
+  merged:
+    do: merge
+    #save: grid
+    into: test1
+    join: num
+    from: test2
+    join_type: inner
+    where:
+      letter:
+        A: contains
+    cols:
+      num: tbd
+      letter|better: tbd
+      dat|dot: tbd
+  rename_merged:
+    do: merge
+    into: test1
+    join: num
+    from: test2
+    join_type: inner
+    where:
+      letter:
+        A: contains
+    cols:
+      num|next: tbd
+      letter|better: tbd
+      dat|dot: tbd
+  plus_operator:
+    do: call
+    from: rename_merged
+    operator: +
+    args:
+        - next
+        - num
+  calc_quarters:
+    do: calc
+    from: plus_operator
+    operator: /
+    round: 3
+    else: 0
+    args:
+        - $col
+        - 4
+    cols:
+      num: qnum
+      next: qnumb
+      plus_operator: qdumb
+  flagged:
+    do: flag
+    from: test1
+    where:
+      text:
+        null: is
+  count_days:
+    do: call
+    from: test1
+    function: datediff
+    args:
+        - current_date()
+        - dat
+  check_count:
+    do: flag
+    from: $id
+    where:
+      count_days:
+        1: lesser
+  union:
+    do: union
+    into: test1
+    from: test2
+    drop:
+      - note
   cqml_test_inner_dupes:
     do: merge
     save: table
@@ -24,21 +149,6 @@ actions:
     cols:
       num: tbd
       letter|character: tbd
-  box_details:
-    do: box
-    skip: true
-    from: test1
-    group: num
-    +doc: Split by num, upload, store URLs
-    box:
-        root_folder: CQML_Test
-        root_id: 156760265584
-        data_dir: test
-        file_ext: csv
-        expiration_date: '2200-02-02'
-    sort:
-      text: sort
-      dat: sort
   macro_def:
     do: macro|merge
     into: "{into}"
@@ -58,18 +168,9 @@ actions:
   mult_number:
     do: assign
     from: macro_run
-  grouped:
-    do: group
-    from: test1
-    agg:
-      num: sum
-      dat: max
-    sort: max_dat
-    cols:
-      text: tbd
-      letter: tbd
   pivoted:
     do: pivot
+    skip: true
     from: $id
     agg:
       sum_num: count
@@ -86,89 +187,28 @@ actions:
     cols:
       letter: tbd
       text: tbd
-  selected:
-    do: select
-    from: test1
-    where:
-      letter:
-        A: contains
-        B: contains
-      text:
-        null: is_not
-    cols:
-      num: tbd
-      dat: tbd
-      letter: tbd
-      text: tbd
-  merged:
-    do: merge
-    save: grid
-    into: test1
-    join: num
-    from: test2
-    join_type: inner
-    where:
-      letter:
-        A: contains
-    cols:
-      num: tbd
-      letter|better: tbd
-      dat|dot: tbd
-  rename_merged:
-    do: merge
-    save: grid
-    into: test1
-    join: num
-    from: test2
-    join_type: inner
-    where:
-      letter:
-        A: contains
-    cols:
-      num|next: tbd
-      letter|better: tbd
-      dat|dot: tbd
-  flagged:
-    do: flag
-    from: test1
-    where:
-      text:
-        null: is
   call_coalesce:
     do: call
-    from: test2
+    from: test1
     function: coalesce
     args:
       - text
       - "'Unassigned'"
   concat_space:
     do: call
-    from: test1
+    from: $id
     operator: '||'
     args:
       - num
       - "' '"
       - letter
-  count_days:
-    do: call
-    from: test1
-    function: datediff
-    args:
-        - current_date()
-        - dat
-  check_count:
-    do: flag
-    from: $id
-    where:
-      count_days:
-        0: greater
   aggregates:
     do: group
     from: $id
     agg:
-      check_count: count
-      count_days: sum
-    sort: n_check_count
+      concat_space: count
+      call_coalesce: sum
+    sort: n_concat_space
     cols:
       num: tbd
       letter: tbd
@@ -177,37 +217,4 @@ actions:
     from: test1
     matching:
       num:
-          test2: num
-  unique_num:
-    do: unique
-    from: test1
-    sort: dat
-    ensure_unique: num
-    cols:
-      num: tbd
-  union:
-    do: union
-    into: test1
-    from: test2
-    drop:
-      - note
-  plus_operator:
-    do: call
-    from: mult_number
-    operator: +
-    args:
-        - numerate
-        - num
-  calc_quarters:
-    do: calc
-    from: plus_operator
-    operator: /
-    round: 3
-    else: 0
-    args:
-        - $col
-        - 4
-    cols:
-      num: qnum
-      numerate: qnumb
-      plus_operator: qdumb
+        test2: num

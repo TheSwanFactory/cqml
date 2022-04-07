@@ -1,6 +1,6 @@
 # BOX Configuration for Quilt
 
-from .db2quilt import make_dir,exract_pkg
+from .db2quilt import make_dir,extract_pkg
 
 #FILE_EXT='csv'
 #BOX_ROOT='3G_Sunset'
@@ -41,7 +41,7 @@ class BoxQuilt:
         self.root_id = self.client.folder(config['root_id'])
         self.key = key
         self.sort = sort
-        self.pkg = exract_pkg(cvm)
+        self.pkg = extract_pkg(cvm)
         self.dir = self.pkg.dir + config['data_dir']
         self.path = self.pkg.path + config['data_dir']
         self.until = config['expiration_date']

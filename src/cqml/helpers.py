@@ -6,7 +6,7 @@ from .keys import *
 
 def mock_functions():
     from collections import namedtuple
-    keys = "lit,col,desc,expr,sum,min,max,count,alias,concat_ws,current_date,current_time,current_timestamp,countDistinct,orderBy,over,partitionBy,row_number".split(',')
+    keys = "lit,col,desc,expr,sum,min,max,count,alias,approx_count_distinct,concat_ws,current_date,current_time,current_timestamp,countDistinct,orderBy,over,partitionBy,row_number".split(',')
     func = namedtuple("Func",keys)
     f1 = func(*keys)
     l1 = [lambda *args, **kw: getattr(f1,key) for key in keys]
@@ -200,12 +200,17 @@ def summarize(df, table, col, count, now):
     )
     return dsum.orderBy('value')
 
-def unique(df_from, sort, cols):
-    N = "windowIndx"
-    col = f.desc(sort) #if kReverse else f.asc(sort)
-    win = Window.partitionBy(cols).orderBy(col)
-    df_win = df_from.withColumn(N,f.row_number().over(win))
-    df_dupes = df_win.filter(f.col(N) != 1).drop(N)
+def unique(df_from, sort, cols, to_count=[]):
+    WinI = "windowIndx"
+    scol = f.desc(sort) #if kReverse else f.asc(sort)
+    print('unique')
+    print(cols)
+    part = Window.partitionBy(cols).orderBy(scol)
+    df_win = df_from.withColumn(WinI,f.row_number().over(part))
+    for c in to_count:
+        print(f'to_count: {c}')
+        df_win = df_win.withColumn(f'_unique_{c}',f.approx_count_distinct(f.col(c)).over(part))
+    #df_dupes = df_win.filter(f.col(WinI) != 1).drop(WinI)
     #self.save("DUPE_"+id, df_dupes, "csv")
-    df = df_win.filter(f.col(N) == 1).drop(N)
+    df = df_win.filter(f.col(WinI) == 1).drop(WinI)
     return df
