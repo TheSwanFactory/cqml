@@ -4,6 +4,12 @@
 - Nothing changed yet.
 
 
+0.4.3 (2022-04-18)
+------------------
+
+- Fixed release script
+- Release with all prior 4.x changes
+
 0.4.2 (unreleased)
 ------------------
 
