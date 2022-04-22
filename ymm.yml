@@ -52,10 +52,11 @@ regen-test:
     - $ git push --set-upstream origin {BRANCH}
 
 dbrun:
-    - $ git push
-    - $ databricks repos update --repo-id {REPO} --branch {BRANCH}
-    - $ databricks jobs run-now --job-id {JOB}
-    - $ open {RUN}
+   PUSH: $ git push
+   PULL: $ databricks repos update --repo-id {REPO} --branch {BRANCH}
+   RUNID: $ databricks jobs run-now --job-id {JOB}
+   PARSED: ~ run_id
+   OPEN: $ open {RUN}/{PARSED}
 
 run:
     - . dev
