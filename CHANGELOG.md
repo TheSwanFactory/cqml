@@ -1,7 +1,7 @@
 0.4.4 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- YMM 0.6.1 support: open direct URL for test runs
 
 
 0.4.3 (2022-04-18)
