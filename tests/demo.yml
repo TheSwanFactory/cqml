@@ -1,0 +1,142 @@
+cqml: 0.4.4
+id: cqml_demo
+meta:
+    org: nauto
+    project: sangam
+    s3.bucket: biz-databricks-root-prod-us
+    catalog: quilt
+    root: /dbfs/tmp
+actions:
+  /Workspace/Repos/ernest.prabhakar@nauto.com/cqml/data:
+    do: loadfiles
+    as_number: devices
+    tables: {test1: test1.csv, test2: test2.csv}
+  selected:
+    +doc: simple select query
+    do: select
+    from: test1
+    where:
+      letter: {A: contains, B: contains}
+      text: {null: is_not}
+    cols: {num: tbd, dat: tbd}
+  merged:
+    +doc: join and save into a datagrid
+    do: merge
+    save: grid
+    into: $id
+    join: num
+    from: test2
+    join_type: inner
+    cols:
+      num: join
+      letter|better: tbd
+      dat|dot: tbd
+  box_export:
+    +doc: Split by num, upload, store URLs
+    do: box
+    from: $id
+    group: num
+    box:
+        root_folder: CQML_Test
+        root_id: 156760265584
+        data_dir: test
+        file_ext: csv
+        expiration_date: '2200-02-02'
+    cols:
+      letter: sort
+      dat: sort
+  widget-report:
+    do: report
+    from: test1
+    cols:
+      text: Combobox
+  grouped:
+    do: group
+    from: test1
+    agg:
+      num: sum
+      dat: max
+    sort: max_dat
+    cols:
+      text: tbd
+      letter: tbd
+  plus_operator:
+    do: call
+    from: rename_merged
+    operator: +
+    args:
+        - next
+        - num
+  calc_quarters:
+    do: calc
+    from: plus_operator
+    operator: /
+    round: 3
+    else: 0
+    args:
+        - $col
+        - 4
+    cols:
+      num: qnum
+      next: qnumb
+      plus_operator: qdumb
+  flagged:
+    do: flag
+    from: test1
+    where:
+      text:
+        null: is
+  union:
+    do: union
+    into: test1
+    from: test2
+    drop:
+      - note
+  macro_def:
+    do: macro|merge
+    into: "{into}"
+    join: "{join}"
+    from: test2
+    join_type: inner
+    cols:
+      "{join}": tbd
+      num|numerate: tbd
+      text|texas: tbd
+      dat|database: tbd
+  macro_run:
+    do: macro.macro_def
+    into: test1
+    join: letter
+    char: A
+  rename:
+    do: assign
+    from: macro_run
+  pivoted:
+    do: pivot
+    skip: true
+    from: $id
+    agg:
+      sum_num: count
+    sort: text
+    pivot: letter
+    cols:
+      text: tbd
+  cqml_test_summarize:
+    do: summary
+    save: [grid, parquet]
+    from: test1
+    count: num
+    as: total
+    cols:
+      letter: tbd
+      text: tbd
+  aggregates:
+    do: group
+    from: $id
+    agg:
+      concat_space: count
+      call_coalesce: sum
+    sort: n_concat_space
+    cols:
+      num: tbd
+      letter: tbd
