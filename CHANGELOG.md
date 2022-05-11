@@ -1,8 +1,26 @@
-0.4.4 (unreleased)
+0.4.6 (unreleased)
 ------------------
 
 - Nothing changed yet.
 
+
+0.4.5 (2022-05-10)
+------------------
+
+- Fix Manifest
+
+
+0.4.4 (unreleased)
+------------------
+
+- YMM 0.6.1 support: open direct URL for test runs
+
+
+0.4.3 (2022-04-18)
+------------------
+
+- Fixed release script
+- Release with all prior 4.x changes
 
 0.4.2 (unreleased)
 ------------------

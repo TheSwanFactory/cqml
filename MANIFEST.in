@@ -1,7 +1,10 @@
 recursive-include main_directory *
+recursive-include archive-* *.py
 recursive-include tests *.py
 recursive-include tests *.yml
 recursive-include tests *.csv
+recursive-include data *.csv
 include *
+global-exclude *.tmp
 global-exclude *.pyc
 global-exclude .DS_Store
