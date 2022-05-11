@@ -3,6 +3,7 @@ import os,shutil
 from operator import itemgetter
 from .db2quilt import cvm2pkg, extract_pkg
 from .cvm import CVM
+from .yml import *
 
 class CQML(CVM):
     def __init__(self, yaml_data, spark):
@@ -23,14 +24,6 @@ class CQML(CVM):
     def do_save(self, action):
         pkg = cvm2pkg(self, False) # do not re-run
         return pkg
-
-def upgrade_file(yaml_file):
-    print("Upgrading "+yaml_file)
-    with open(yaml_file) as data:
-        raw_yaml = yaml.full_load(data)
-    # insert converter here
-    with open(yaml_file, 'w') as file:
-        yaml.dump(raw_yaml, file, sort_keys=False)
 
 def from_file(yaml_file, spark):
     print("Loading "+yaml_file)
@@ -71,13 +64,6 @@ def pkg_cqml(name, spark, folder="pipes"):
     'times': cvm.times,
     'frames': cvm.df,
     }
-
-def yml_keys(folder="pipes"):
-    files = os.listdir(folder)
-    keys = [os.path.splitext(file)[0] for file in files if file.endswith("ml")]
-    keys.sort()
-    print(keys)
-    return keys
 
 def pkg_all(spark, folder="pipes"):
     keys = yml_keys(folder)
