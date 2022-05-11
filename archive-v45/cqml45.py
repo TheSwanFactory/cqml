@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import os, sys, yaml
+import os, yaml
 
 #
 # Take two paths: root4 root5
@@ -24,9 +24,10 @@ def extract(root):
             print(folder.name)
             for file in os.scandir(folder.path):
                 if file.name.endswith(".yml"):
-                    print(file.name)
                     yml = read_yaml(file.path)
-                    node = {"folder":folder.name, "file": file.name, "yml": yml}
+                    file5 = ''.join([c for c in file.name if not c.isdigit()])
+                    path5 = os.path.join(folder.name, file5)
+                    node = {"path":path5, "yml": yml}
                     tree.append(node)
     return tree
 
@@ -36,5 +37,6 @@ def write_yaml(yaml_file, raw_yaml):
         yaml.dump(raw_yaml, file, sort_keys=False)
 
 t = extract(R4)
-print("\nextracted\n")
-[print(n["file"]) for n in t]
+print(f"\nExtracted: {len(t)} files\n")
+for n in t:
+    print(n["path"])
