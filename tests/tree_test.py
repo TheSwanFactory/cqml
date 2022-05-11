@@ -9,6 +9,9 @@ def test_yml_keys():
     assert "cqml" in keys
 
 def test_yml_tree():
-    keys = cqml.yml_tree("pipes")
-    assert keys
-    assert len(keys) == 2
+    rows = cqml.yml_tree("pipes")
+    assert rows
+    assert len(rows) == 2
+    d0 = rows[0]
+    assert "key" in d0
+    
