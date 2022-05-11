@@ -112,8 +112,8 @@ dropdown = widgets.interact(callback, x=control)
 grid
 """
 def make_widget(opts):
-    print('make_widget')
-    print(opts)
+    #print('make_widget')
+    #print(opts)
     code = [NB_WIDGET.format(KEY=col,WIDGET=w) for col, w in opts.items()]
     cells = [[True, c] for c in code]
     return cells

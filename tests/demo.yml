@@ -62,7 +62,7 @@ actions:
       letter: tbd
   plus_operator:
     do: call
-    from: rename_merged
+    from: grouped
     operator: +
     args:
         - next
