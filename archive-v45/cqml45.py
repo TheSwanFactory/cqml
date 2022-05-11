@@ -17,6 +17,10 @@ def read_yaml(yaml_file):
         raw_yaml = yaml.full_load(data)
         return raw_yaml
 
+def write_yaml(yaml_file, raw_yaml):
+    with open(yaml_file, 'w') as file:
+        yaml.dump(raw_yaml, file, sort_keys=False)
+
 def extract(root):
     tree = []
     for folder in os.scandir(root):
@@ -25,18 +29,25 @@ def extract(root):
             for file in os.scandir(folder.path):
                 if file.name.endswith(".yml"):
                     yml = read_yaml(file.path)
-                    file5 = ''.join([c for c in file.name if not c.isdigit()])
-                    path5 = os.path.join(folder.name, file5)
-                    node = {"path":path5, "yml": yml}
+                    node = {"file":file.name, "folder":folder.name, "yml": yml}
                     tree.append(node)
     return tree
 
-
-def write_yaml(yaml_file, raw_yaml):
-    with open(yaml_file, 'w') as file:
-        yaml.dump(raw_yaml, file, sort_keys=False)
+def convert(root, node):
+    file = ''.join([c for c in node["file"] if not c.isdigit()])
+    path = os.path.join(root, node["folder"], file)
+    yml = node["yml"]
+    del yml["meta"]
+    yml["cqml"] = 0.5
+    yml["project"] = node["folder"]
+    yml["package"] = file
+    write_yaml(path, yml)
+    return path
 
 t = extract(R4)
 print(f"\nExtracted: {len(t)} files\n")
+print(t[0]["yml"])
 for n in t:
-    print(n["path"])
+    print(n["file"])
+    p = convert(R5, n)
+    print("\t",p)
