@@ -1,7 +1,7 @@
 0.4.5 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fix Manifest
 
 
 0.4.4 (unreleased)
