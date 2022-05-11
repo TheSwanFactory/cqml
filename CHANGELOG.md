@@ -1,20 +1,15 @@
-0.4.6 (unreleased)
+0.5.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Use extrinsic folder names for project/package
+- do: schedule for top-level ordering and scheduling
 
 
 0.4.5 (2022-05-10)
 ------------------
 
 - Fix Manifest
-
-
-0.4.4 (unreleased)
-------------------
-
 - YMM 0.6.1 support: open direct URL for test runs
-
 
 0.4.3 (2022-04-18)
 ------------------
