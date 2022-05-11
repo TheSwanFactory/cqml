@@ -34,19 +34,24 @@ def extract(root):
     return tree
 
 def convert(root, node):
+    dir = node["folder"]
     file = ''.join([c for c in node["file"] if not c.isdigit()])
-    path = os.path.join(root, node["folder"], file)
+    prefix = file.split("_")[0]
+    name = file.split("_")[1]
+    if prefix == "rnr": dir = prefix
+    if prefix == "sierra": name = f"{prefix}.yml"
+    path = os.path.join(root, dir, name)
     yml = node["yml"]
     del yml["meta"]
     yml["cqml"] = 0.5
-    yml["project"] = node["folder"]
-    yml["package"] = file
+    yml["project"] = dir
+    yml["package"] = name
     write_yaml(path, yml)
     return path
 
 t = extract(R4)
 print(f"\nExtracted: {len(t)} files\n")
-print(t[0]["yml"])
+#print(t[0]["yml"])
 for n in t:
     print(n["file"])
     p = convert(R5, n)
