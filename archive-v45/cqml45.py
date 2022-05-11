@@ -1,33 +1,27 @@
-from .keys import *
+#!/usr/bin/env python3
+import pytest, sys
 
-kDoc_OLD="doc"
+#
+# Take two paths: root4 root5
+# Copy files in each subfolder
+# Strip out meta
+# Strip leading numbers
+#
 
-def is_v02(yaml_data): return isinstance(yaml_data, dict)
+def convert(root4, root5):
+    for folder in os.listdir(root4):
+        print(file)
+        upgrade_file(file)
 
-def convert_action(action):
-    if kDoc_OLD in action:
-        doc = action.pop(kDoc_OLD)
-        action[kDoc] = doc
-    if kCols in action:
-        cols = action.pop(kCols)
-        if cols != "all":
-            colmap = {key: "tbd" for key in cols}
-            action[kCols] = colmap
-    return action
+def upgrade_file(yaml_file):
+    print("Upgrading "+yaml_file)
+    with open(yaml_file) as data:
+        raw_yaml = yaml.full_load(data)
+    # insert converter here
+    with open(yaml_file, 'w') as file:
+        yaml.dump(raw_yaml, file, sort_keys=False)
 
-def upgrade(cqml1):
-    actions = {}
-    for action in cqml1:
-        print(action)
-        id = action["id"]
-        action.pop("id")
-        new_action = convert_action(action)
-        actions[id] = action
-    cqml2 = {
-      "cqml": 0.2,
-      "actions": actions
-    }
-    return cqml2
-
-def ensure_v02(yaml_data):
-    return yaml_data if is_v02(yaml_data) else upgrade(yaml_data)
+if len(sys.argv) > 2:
+    convert(sys.argv[1], sys.argv[2])
+else:
+    print("cqml45 root4 root5 (requires 2 arguments)")
