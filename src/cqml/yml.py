@@ -14,6 +14,14 @@ def upgrade_file(yaml_file):
 
 def yml_keys(folder="pipes"):
     files = os.listdir(folder)
+    print(files)
+    keys = [os.path.splitext(file)[0] for file in files if file.endswith("ml")]
+    keys.sort()
+    print(keys)
+    return keys
+
+def yml_tree(folder="pipes"):
+    files = os.listdir(folder)
     keys = [os.path.splitext(file)[0] for file in files if file.endswith("ml")]
     keys.sort()
     print(keys)

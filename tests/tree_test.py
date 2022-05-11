@@ -3,11 +3,10 @@ import pytest
 from .context import cqml, TEST_YAML
 from .db_mock import spark
 
-def skip_test_pkg():
-    dict = cqml.pkg_cqml('cqml_test', spark, 'tests')
-    assert 'pkg' in dict
-    assert 'html' in dict
-    assert 'actions' in dict
+def test_yml_keys():
+    dict = cqml.yml_keys("pipes/test")
+    assert dict
+    assert "cqml" in dict
 
 def skip_test_all():
     dict = cqml.pkg_all(spark, 'tests')
