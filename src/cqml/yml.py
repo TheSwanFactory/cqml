@@ -33,18 +33,18 @@ def write_yaml(yaml_file, raw_yaml):
     with open(yaml_file, 'w') as file:
         yaml.dump(raw_yaml, file, sort_keys=False)
 
-def yml_folder(folder, tree):
+def yml_folder(folder, nodes):
     print(folder.name)
     for entry in os.scandir(folder.path):
         if entry.name.endswith(".yml"):
             key = os.path.splitext(entry.name)[0]
             #yml = read_yaml(entry.path)
             node = {"file":entry.name, "folder":folder.name, "path": entry.path, "key": key}
-            tree.append(node)
+            nodes.append(node)
         elif entry.is_dir():
             print(folder.name)
             yml_folder(folder, tree)
-    return tree
+    return nodes
 
 def extract(root):
     tree = []

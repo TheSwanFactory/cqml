@@ -15,29 +15,51 @@ import cqml
 
 # COMMAND ----------
 
-KEY="cqml_test"
-cvm = cqml.load_cqml(KEY,spark, '.')
-cvm.debug = True
-cvm.run()
-print(cvm.sizes)
+CQML_ROOT="pipes"
+croot = cqml.parse(CQML_ROOT)
+dbutils.widgets.dropdown("CONF", tree.default_key(), tree.keys())
+dbutils.widgets.dropdown("DEBUG", "DEBUG", ["DEBUG", "PROD"])
 
 # COMMAND ----------
 
-K = list(cvm.df.keys())
-print(K)
-def d(i): return cvm.df[K[i]]
-def view(i):
-  print(K[i])
-  d(i).show()
-def values(i, col): return d(i).select(col).distinct().collect()
-view(-1)
+CONF=getArgument("CONF")
+DEBUG=True if getArgument("DEBUG") == "DEBUG" else False
+print(f'Parameters[{CONF}]DEBUG={DEBUG} {CF}')
+cvm = croot.new(spark, CONF, DEBUG)
+print(cvm.status())
 
 # COMMAND ----------
 
-cvm.do_save({})
-displayHTML(cvm.pkg.html)
+if not DEBUG:
+    cvm.run()
+    print(cvm.sizes)
+    dbutils.notebook.exit(0)
 
 # COMMAND ----------
+
+cvm.init()
+steps = cvm.steps()
+print(steps)
+#dbutils.notebook.exit(0)
+
+
+# COMMAND ----------
+
+df = {}
+def values(s, col): return df[s].select(col).distinct().collect()
+
+for step in steps:
+    print(step)
+    df[step] = cvm.test(step)
+    df[step].show()
+
+# COMMAND ----------
+
+cvm.save()
+displayHTML(cvm.result())
+
+# COMMAND ----------
+
 dbutils.notebook.exit(0)
 #spark.sql('create database nauto')
 
