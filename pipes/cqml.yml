@@ -1,0 +1,21 @@
+cqml: 0.6
+order: 0.0
+id: main
+env:
+  org: nauto
+  s3.bucket: biz-databricks-root-prod-us
+  catalog: quilt
+  path: .
+refresh_trips:
+  do: schedule
+  start: 0100
+  folders:
+    - refresh
+    - fleet
+core:
+  do: schedule
+  start: 0500
+  folders:
+    - nauto
+    - user
+    - rnr

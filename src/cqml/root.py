@@ -32,8 +32,7 @@ class Root:
                 "path": entry.path,
              }
             self.pipes[key] = yml
-            if name.startswith("cqml"):
-                self.env[folder] = yml
+            if "env" in yml: self.env[folder] = yml["env"]
         elif entry.is_dir():
             print(entry.name)
             self.scan(entry.path)
