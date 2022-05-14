@@ -8,4 +8,4 @@ def test_root():
     assert root
     keys = root.keys()
     assert keys
-    #assert "cqml" in keys
+    assert "test/cqml" in keys

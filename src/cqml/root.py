@@ -12,7 +12,7 @@ class Root:
         self.env = {}
         self.scan(root)
 
-    def keys(self): return self.pipes.keys()
+    def keys(self): return list(self.pipes.keys())
 
     def scan(self, root):
         for entry in os.scandir(root):
@@ -22,7 +22,8 @@ class Root:
         name = entry.name
         if name.endswith(".yml"):
             file_key = os.path.splitext(name)[0]
-            key = f"{folder}/{file_key}"
+            folder_key = folder.split("/")[-1]
+            key = f"{folder_key}/{file_key}"
             yml = read_yaml(entry.path)
             yml["source"] = {
                 "file": name,
