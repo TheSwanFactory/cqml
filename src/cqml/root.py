@@ -1,5 +1,6 @@
 import os, yaml
 from .keys import *
+from .cvm import CVM
 
 def read_yaml(yaml_file):
     with open(yaml_file) as data:
@@ -15,7 +16,11 @@ class Root:
 
     def keys(self): return list(self.pipes.keys())
 
-    def new(self, spark, key, debug=False): return self
+    def new(self, spark, key, debug=False):
+        pipe = self.pipes[key]
+        cvm = CVM(pipe, spark)
+        if debug: cvm.debug = True
+        return cvm
 
     def scan(self, root):
         for entry in os.scandir(root):

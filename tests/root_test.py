@@ -21,3 +21,5 @@ def test_keys(root):
 
 def test_new(root):
     cvm = root.new(spark, T_KEY)
+    assert cvm
+    assert "test" == cvm.log("test")

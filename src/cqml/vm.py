@@ -73,6 +73,7 @@ class VM:
       if self.debug:
          if name: print(name)
          print(str)
+      return str
 
     def macro(self, todo, action):
         mdef = todo.split("|")
