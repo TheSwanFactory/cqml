@@ -9,6 +9,7 @@ DATE_UNIQ='serial_number'
 TRACE=True
 
 cAlias='|'
+kALL='_all_'
 kAbove='above'
 kAny='any'
 kArgs='args'

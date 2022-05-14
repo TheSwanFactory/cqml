@@ -17,7 +17,8 @@ import cqml
 
 CQML_ROOT="pipes"
 root = cqml.root(CQML_ROOT)
-dbutils.widgets.dropdown("CONF", root.default_key(), root.keys())
+keys = root.keys()
+dbutils.widgets.dropdown("CONF", keys[0], keys)
 dbutils.widgets.dropdown("DEBUG", "DEBUG", ["DEBUG", "PROD"])
 
 # COMMAND ----------

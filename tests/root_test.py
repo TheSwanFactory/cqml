@@ -14,4 +14,5 @@ def test_root(root):
 def test_keys(root):
     keys = root.keys()
     assert keys
+    assert keys[0]
     assert "test/cqml" in keys
