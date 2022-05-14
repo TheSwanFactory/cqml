@@ -3,9 +3,15 @@ import pytest
 from .context import cqml, TEST_YAML
 from .db_mock import spark
 
-def test_root():
+@pytest.fixture
+def root():
     root = cqml.root("pipes")
+    return root
+
+def test_root(root):
     assert root
+
+def test_keys(root):
     keys = root.keys()
     assert keys
     assert "test/cqml" in keys
