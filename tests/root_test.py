@@ -6,4 +6,6 @@ from .db_mock import spark
 def test_root():
     root = cqml.root("pipes")
     assert root
+    keys = root.keys()
+    assert keys
     #assert "cqml" in keys

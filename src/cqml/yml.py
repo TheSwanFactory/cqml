@@ -24,15 +24,6 @@ def yml_tree(folder="pipes"):
     keys = extract(folder)
     return keys
 
-def read_yaml(yaml_file):
-    with open(yaml_file) as data:
-        raw_yaml = yaml.full_load(data)
-        return raw_yaml
-
-def write_yaml(yaml_file, raw_yaml):
-    with open(yaml_file, 'w') as file:
-        yaml.dump(raw_yaml, file, sort_keys=False)
-
 def yml_folder(folder, nodes):
     print(folder.name)
     for entry in os.scandir(folder.path):

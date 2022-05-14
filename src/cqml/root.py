@@ -1,9 +1,16 @@
 import os, yaml
 
+def read_yaml(yaml_file):
+    with open(yaml_file) as data:
+        raw_yaml = yaml.full_load(data)
+        return raw_yaml
+
 class Root:
     def __init__(self, root):
         self.pipes = {}
         self.scan(root)
+
+    def keys(self): return self.pipes.keys()
 
     def scan(self, root):
         for entry in os.scandir(root):
@@ -21,7 +28,7 @@ class Root:
                 "folder": folder,
                 "path": entry.path,
              }
-            self.nodes[key] = yml
+            self.pipes[key] = yml
         elif entry.is_dir():
             print(entry.name)
             self.scan(entry.path)
