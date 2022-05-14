@@ -16,8 +16,8 @@ import cqml
 # COMMAND ----------
 
 CQML_ROOT="pipes"
-cq = cqml.parse(CQML_ROOT)
-dbutils.widgets.dropdown("CONF", tree.default_key(), tree.keys())
+root = cqml.root(CQML_ROOT)
+dbutils.widgets.dropdown("CONF", root.default_key(), root.keys())
 dbutils.widgets.dropdown("DEBUG", "DEBUG", ["DEBUG", "PROD"])
 
 # COMMAND ----------
@@ -25,7 +25,7 @@ dbutils.widgets.dropdown("DEBUG", "DEBUG", ["DEBUG", "PROD"])
 CONF=getArgument("CONF")
 DEBUG=True if getArgument("DEBUG") == "DEBUG" else False
 print(f'Parameters[{CONF}]DEBUG={DEBUG} {CF}')
-cvm = cq.new(spark, CONF, DEBUG)
+cvm = root.new(spark, CONF, DEBUG)
 print(cvm.status())
 
 # COMMAND ----------

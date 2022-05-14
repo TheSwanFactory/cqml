@@ -1,6 +1,6 @@
 import os, yaml
 
-class CQML_Parser:
+class Root:
     def __init__(self, root):
         self.nodes = []
         self.scan(root)
