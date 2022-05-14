@@ -7,7 +7,9 @@ def read_yaml(yaml_file):
 
 class Root:
     def __init__(self, root):
+        self.root = root
         self.pipes = {}
+        self.env = {}
         self.scan(root)
 
     def keys(self): return self.pipes.keys()
@@ -22,13 +24,16 @@ class Root:
             file_key = os.path.splitext(name)[0]
             key = f"{folder}/{file_key}"
             yml = read_yaml(entry.path)
-            yml["meta"] = {
+            yml["source"] = {
                 "file": name,
                 "file_key": file_key,
                 "folder": folder,
+                "key": key,
                 "path": entry.path,
              }
             self.pipes[key] = yml
+            if name.startswith("cqml"):
+                self.env[folder] = yml
         elif entry.is_dir():
             print(entry.name)
             self.scan(entry.path)
