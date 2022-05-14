@@ -15,7 +15,7 @@ import cqml
 
 # COMMAND ----------
 
-CQML_ROOT="pipes"
+CQML_ROOT="../pipes"
 root = cqml.root(CQML_ROOT)
 keys = root.keys()
 dbutils.widgets.dropdown("CONF", keys[0], keys)
