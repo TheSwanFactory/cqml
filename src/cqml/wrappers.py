@@ -4,6 +4,7 @@ from operator import itemgetter
 from .db2quilt import cvm2pkg, extract_pkg
 from .cvm import CVM
 from .yml import *
+from .root import Root
 
 class CQML(CVM):
     def __init__(self, yaml_data, spark):
@@ -24,6 +25,9 @@ class CQML(CVM):
     def do_save(self, action):
         pkg = cvm2pkg(self, False) # do not re-run
         return pkg
+
+def root(folder="pipes"):
+    return Root(folder)
 
 def from_file(yaml_file, spark):
     print("Loading "+yaml_file)

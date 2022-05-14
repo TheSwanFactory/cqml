@@ -2,7 +2,7 @@ import os, yaml
 
 class Root:
     def __init__(self, root):
-        self.nodes = []
+        self.pipes = {}
         self.scan(root)
 
     def scan(self, root):
@@ -10,18 +10,18 @@ class Root:
             self.parse(entry, root)
 
     def parse(self, entry, folder):
-        if entry.name.endswith(".yml"):
-            key = os.path.splitext(entry.name)[0]
+        name = entry.name
+        if name.endswith(".yml"):
+            file_key = os.path.splitext(name)[0]
+            key = f"{folder}/{file_key}"
             yml = read_yaml(entry.path)
-            node = {
-                "file":entry.name,
-                "folder":folder,
+            yml["meta"] = {
+                "file": name,
+                "file_key": file_key,
+                "folder": folder,
                 "path": entry.path,
-                 "key": key,
-                 "fkey": f"{folder}.{key}",
-                 "yml": yml
              }
-            self.nodes.append(node)
+            self.nodes[key] = yml
         elif entry.is_dir():
             print(entry.name)
-            self.scan(entry.name)
+            self.scan(entry.path)
