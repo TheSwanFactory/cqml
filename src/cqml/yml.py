@@ -1,8 +1,4 @@
-import yaml
-import os,shutil
-from operator import itemgetter
-from .db2quilt import cvm2pkg, extract_pkg
-from .cvm import CVM
+import os, yaml
 
 def upgrade_file(yaml_file):
     print("Upgrading "+yaml_file)
