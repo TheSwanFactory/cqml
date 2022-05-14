@@ -133,6 +133,14 @@ def make_slug(name): return re.sub(r'[^\w-]', '_', name.lower())
 Quilt Wrappers
 """
 
+DEFAULT_ENV={
+    'catalog': PKG_DIR,
+    'root': PYROOT,
+}
+
+def get_env(env, key, default):
+    return env[key] if key in env else default
+
 class Project:
     def __init__(self, config):
         org, bucket, project = itemgetter('org','s3.bucket','project')(config)
