@@ -25,9 +25,6 @@ class CQML(CVM):
         pkg = cvm2pkg(self, False) # do not re-run
         return pkg
 
-def root(folder="pipes"):
-    return Root(folder)
-
 def from_file(yaml_file, spark):
     print("Loading "+yaml_file)
     with open(yaml_file) as data:
