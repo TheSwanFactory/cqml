@@ -1,6 +1,6 @@
 import os, yaml
 from .keys import *
-from .cvm import CVM
+from .wrappers import CQML
 
 def read_yaml(yaml_file):
     with open(yaml_file) as data:
@@ -33,7 +33,7 @@ class Root:
     def new(self, spark, key, debug=False):
         pipe = self.pipes[key]
         self.set_env(pipe, key)
-        cvm = CVM(pipe, spark)
+        cvm = CQML(pipe, spark)
         if debug: cvm.debug = True
         return cvm
 

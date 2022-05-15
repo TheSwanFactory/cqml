@@ -5,7 +5,8 @@ from .db_mock import spark
 
 @pytest.fixture
 def cvm():
-    cvm = cqml.from_file(TEST_YAML, spark)
+    root = cqml.Root("pipes")
+    cvm = root.new(spark, "test/cqml")
     cvm.test_id(DDIR)
     return cvm
 

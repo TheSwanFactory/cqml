@@ -7,7 +7,7 @@ T_KEY="test/cqml"
 
 @pytest.fixture
 def root():
-    root = cqml.root("pipes")
+    root = cqml.Root("pipes")
     return root
 
 def test_root(root):
