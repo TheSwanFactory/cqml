@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 import pytest
-from .context import cqml, TEST_YAML
+from .context import cqml, TEST_KEY
 from .db_mock import spark
-
-T_KEY="test/cqml"
 
 @pytest.fixture
 def root():
@@ -17,9 +15,9 @@ def test_keys(root):
     keys = root.keys()
     assert keys
     assert keys[0]
-    assert T_KEY in keys
+    assert TEST_KEY in keys
 
 def test_new(root):
-    cvm = root.new(spark, T_KEY)
+    cvm = root.new(spark, TEST_KEY)
     assert cvm
     assert "test" == cvm.log("test")
