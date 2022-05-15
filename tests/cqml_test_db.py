@@ -9,14 +9,14 @@
 !pip install --upgrade pip
 #!pip install cqml
 !pip --no-cache-dir install git+https://github.com/TheSwanFactory/cqml.git@convert45
-!pip install cqml==0.4.6.dev3
+!pip install cqml==0.4.6.dev4
 
 import cqml
 
 # COMMAND ----------
 
 CQML_ROOT="../pipes"
-root = cqml.root(CQML_ROOT)
+root = cqml.Root(CQML_ROOT)
 keys = root.keys()
 dbutils.widgets.dropdown("CONF", keys[0], keys)
 dbutils.widgets.dropdown("DEBUG", "DEBUG", ["DEBUG", "PROD"])
