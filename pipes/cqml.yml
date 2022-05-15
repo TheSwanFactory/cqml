@@ -5,6 +5,7 @@ env:
   org: nauto
   bucket: biz-databricks-root-prod-us
   catalog: quilt
+  root: /dbfs/tmp
   path: .
 refresh_trips:
   do: schedule

@@ -19,10 +19,10 @@ class Root:
     def add_env(self, yml, key):
         if not kEnv in yml: return {}
         self.env[key] = yml[kEnv]
-        yml[kEnv]
+        return yml[kEnv]
 
     def set_env(self, yml, key):
-        folder = yml["source"]["folder"]
+        folder = yml[kEnv]["folder"]
         env = {}
         if self.root in self.env: env.update(self.env[self.root])
         if folder in self.env: env.update(self.env[folder])
@@ -49,13 +49,15 @@ class Root:
             folder_key = folder.split("/")[-1]
             env = self.add_env(yml, folder_key)
             key = f"{folder_key}/{file_key}"
-            yml["source"] = {
+            source = {
                 "file": name,
                 "file_key": file_key,
                 "folder": folder,
                 "key": key,
                 "path": entry.path,
-             }
+            }
+            env.update(source)
+            yml[kEnv] = env
             self.pipes[key] = yml
         elif entry.is_dir():
             print(entry.name)

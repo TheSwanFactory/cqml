@@ -1,11 +1,5 @@
-cqml: 0.4.4
+cqml: 0.5.0
 id: cqml_demo
-meta:
-    org: nauto
-    project: sangam
-    bucket: biz-databricks-root-prod-us
-    catalog: quilt
-    root: /dbfs/tmp
 actions:
   /Workspace/Repos/ernest.prabhakar@nauto.com/cqml/data:
     do: loadfiles
