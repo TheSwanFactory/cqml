@@ -51,19 +51,22 @@ def exec_cqml(name, spark, folder="pipes"):
     cvm.run()
     return cvm
 
+def pkg_cvm(cvm):
+    pkg = cvm2pkg(cvm, False)
+    return {
+        'pkg': pkg,
+        'html': pkg.html,
+        'url': pkg.url,
+        'actions': cvm.actions,
+        'sizes': cvm.sizes,
+        'times': cvm.times,
+        'frames': cvm.df,
+    }
+
 def pkg_cqml(name, spark, folder="pipes"):
     print("\npkg_cqml: "+name)
     cvm = exec_cqml(name, spark, folder)
-    pkg = cvm2pkg(cvm, False)
-    return {
-    'pkg': pkg,
-    'html': pkg.html,
-    'url': pkg.url,
-    'actions': cvm.actions,
-    'sizes': cvm.sizes,
-    'times': cvm.times,
-    'frames': cvm.df,
-    }
+    return pkg_cvm(cvm)
 
 def pkg_all(spark, folder="pipes"):
     keys = yml_keys(folder)

@@ -155,7 +155,7 @@ class Project:
         return Package(id, self)
 
 class Package:
-    def __init__(self, id, proj, reset=False):
+    def __init__(self, id, proj, reset=True):
         self.id = id
         self.name = f"{proj.name}/{id}"
         self.proj = proj
@@ -301,8 +301,9 @@ class Package:
 #
 
 def extract_pkg(cvm):
-    print(cvm.yaml)
+#    print(cvm.yaml)
     config = itemgetter(kEnv)(cvm.yaml)
+    print(f"extract_pkg.config: {config}")
     proj = Project(config)
     id = config["package"]
     pkg_id = id + DEBUG_SUFFIX if cvm.debug == True else id

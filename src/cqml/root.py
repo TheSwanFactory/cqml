@@ -1,6 +1,6 @@
 import os, yaml
 from .keys import *
-from .wrappers import CQML
+from .wrappers import CQML, pkg_cvm
 
 def read_yaml(yaml_file):
     with open(yaml_file) as data:
@@ -37,6 +37,11 @@ class Root:
         if debug: cvm.debug = True
         return cvm
 
+    def pkg(self, spark, key, debug=False):
+        cvm = self.new(spark, key, debug)
+        cvm.run();
+        return pkg_cvm(cvm)
+
     def scan(self, root):
         for entry in os.scandir(root):
             self.parse(entry, root)
@@ -52,7 +57,7 @@ class Root:
             source = {
                 "file": name,
                 "package": file_key,
-                "project": folder,
+                "project": folder_key,
                 "key": key,
                 "path": entry.path,
             }
