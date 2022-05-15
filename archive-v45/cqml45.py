@@ -29,12 +29,12 @@ def extract(root):
             for file in os.scandir(folder.path):
                 if file.name.endswith(".yml"):
                     yml = read_yaml(file.path)
-                    node = {"file":file.name, "folder":folder.name, "yml": yml}
+                    node = {"file":file.name,"project":folder.name, "yml": yml}
                     tree.append(node)
     return tree
 
 def convert(root, node):
-    dir = node["folder"]
+    dir = node["project"]
     file = ''.join([c for c in node["file"] if not c.isdigit()])
     prefix = file.split("_")[0]
     name = file.split("_")[1]

@@ -22,7 +22,7 @@ class Root:
         return yml[kEnv]
 
     def set_env(self, yml, key):
-        folder = yml[kEnv]["folder"]
+        folder = yml[kEnv]["project"]
         env = {}
         if self.root in self.env: env.update(self.env[self.root])
         if folder in self.env: env.update(self.env[folder])
@@ -51,8 +51,8 @@ class Root:
             key = f"{folder_key}/{file_key}"
             source = {
                 "file": name,
-                "file_key": file_key,
-                "folder": folder,
+                "package": file_key,
+                "project": folder,
                 "key": key,
                 "path": entry.path,
             }

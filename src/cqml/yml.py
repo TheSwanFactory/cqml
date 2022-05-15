@@ -26,7 +26,7 @@ def yml_folder(folder, nodes):
         if entry.name.endswith(".yml"):
             key = os.path.splitext(entry.name)[0]
             #yml = read_yaml(entry.path)
-            node = {"file":entry.name, "folder":folder.name, "path": entry.path, "key": key}
+            node = {"file":entry.name,"project":folder.name, "path": entry.path, "key": key}
             nodes.append(node)
         elif entry.is_dir():
             print(folder.name)

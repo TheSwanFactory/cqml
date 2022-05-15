@@ -10,7 +10,7 @@ class MockBox(object):
 
 class MockCol(object):
     def __init__(self, name): self.name = name
-    def alias(self, name,metadata={"meta":"data"}): return name
+    def alias(self, name,metadata={"env":"data"}): return name
     def contains(self, value): return True
     def desc(self): return True
 
