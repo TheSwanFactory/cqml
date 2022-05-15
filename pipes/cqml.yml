@@ -3,7 +3,7 @@ order: 0.0
 id: main
 env:
   org: nauto
-  s3.bucket: biz-databricks-root-prod-us
+  bucket: biz-databricks-root-prod-us
   catalog: quilt
   path: .
 refresh_trips:

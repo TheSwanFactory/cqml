@@ -3,7 +3,7 @@ id: cqml_test
 meta:
     org: nauto
     project: sangam
-    s3.bucket: biz-databricks-root-prod-us
+    bucket: biz-databricks-root-prod-us
     catalog: quilt
     root: /dbfs/tmp
 actions:

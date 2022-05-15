@@ -143,7 +143,7 @@ def get_env(env, key, default):
 
 class Project:
     def __init__(self, config):
-        org, bucket, project = itemgetter('org','s3.bucket','project')(config)
+        org, bucket, project = itemgetter('org','bucket','project')(config)
         pkg_dir = config['catalog'] if 'catalog' in config else PKG_DIR
         root = config['root'] if 'root' in config else PYROOT
         self.repo = "s3://"+bucket

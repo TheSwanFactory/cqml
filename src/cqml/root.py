@@ -16,8 +16,10 @@ class Root:
 
     def keys(self): return list(self.pipes.keys())
 
-    def add_env(self, yml, folder):
-        if kEnv in yml: self.env[folder] = yml[kEnv]
+    def add_env(self, yml, key):
+        if not kEnv in yml: return {}
+        self.env[key] = yml[kEnv]
+        yml[kEnv]
 
     def set_env(self, yml, key):
         folder = yml["source"]["folder"]
@@ -42,10 +44,11 @@ class Root:
     def parse(self, entry, folder):
         name = entry.name
         if name.endswith(".yml"):
+            yml = read_yaml(entry.path)
             file_key = os.path.splitext(name)[0]
             folder_key = folder.split("/")[-1]
+            env = self.add_env(yml, folder_key)
             key = f"{folder_key}/{file_key}"
-            yml = read_yaml(entry.path)
             yml["source"] = {
                 "file": name,
                 "file_key": file_key,
@@ -54,7 +57,6 @@ class Root:
                 "path": entry.path,
              }
             self.pipes[key] = yml
-            self.add_env(yml, folder)
         elif entry.is_dir():
             print(entry.name)
             self.scan(entry.path)
