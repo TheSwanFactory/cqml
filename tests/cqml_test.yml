@@ -1,8 +1,9 @@
-cqml: 0.2
+cqml: 0.5
 id: cqml_test
-meta:
+env:
     org: nauto
     project: sangam
+    package: cqml
     bucket: biz-databricks-root-prod-us
     catalog: quilt
     root: /dbfs/tmp
