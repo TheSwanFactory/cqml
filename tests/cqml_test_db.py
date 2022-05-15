@@ -31,7 +31,7 @@ print(cvm.status())
 
 # COMMAND ----------
 
-if not DEBUG:
+#if not DEBUG:
     cvm.run()
     print(cvm.sizes)
     dbutils.notebook.exit(0)
