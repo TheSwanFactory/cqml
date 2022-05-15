@@ -27,11 +27,11 @@ CONF=getArgument("CONF")
 DEBUG=True if getArgument("DEBUG") == "DEBUG" else False
 print(f'Parameters[{CONF}]DEBUG={DEBUG}')
 cvm = root.new(spark, CONF, DEBUG)
-print(cvm.status())
+#print(cvm.status())
 
 # COMMAND ----------
 
-if not DEBUG:
+#if not DEBUG:
     cvm.run()
     print(cvm.sizes)
     dbutils.notebook.exit(0)
