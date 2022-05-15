@@ -303,11 +303,11 @@ class Package:
 def extract_pkg(cvm):
 #    print(cvm.yaml)
     config = itemgetter(kEnv)(cvm.yaml)
-    print(f"extract_pkg.config: {config}")
+    #print(f"extract_pkg.config: {config}")
     proj = Project(config)
     id = config["package"]
     pkg_id = id + DEBUG_SUFFIX if cvm.debug == True else id
-    print("extract_pkg: "+pkg_id)
+    #print("extract_pkg: "+pkg_id)
     pkg = proj.package(pkg_id)
     #pkg.setup()
     return pkg

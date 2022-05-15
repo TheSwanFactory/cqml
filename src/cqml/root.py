@@ -42,6 +42,10 @@ class Root:
         cvm.run();
         return pkg_cvm(cvm)
 
+    def pkg_all(self, spark, debug=False):
+        pkgs = {key:self.pkg(spark, key, debug) for key in self.keys()}
+        return pkgs
+
     def scan(self, root):
         for entry in os.scandir(root):
             self.parse(entry, root)
