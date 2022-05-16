@@ -9,7 +9,7 @@
 !pip install --upgrade pip
 #!pip install cqml
 !pip --no-cache-dir install git+https://github.com/TheSwanFactory/cqml.git@convert45
-!pip install cqml==0.5.0.dev4
+!pip install cqml==0.5.0.dev5
 
 import cqml
 
@@ -27,7 +27,7 @@ CONF=getArgument("CONF")
 DEBUG=True if getArgument("DEBUG") == "DEBUG" else False
 print(f'Parameters[{CONF}]DEBUG={DEBUG}')
 cvm = root.new(spark, CONF, DEBUG)
-print(cvm.yaml)
+print(cvm.yaml['env'])
 
 # COMMAND ----------
 
