@@ -26,6 +26,4 @@ def test_box(root):
     it = cvm.test_id("box_details")
     assert it
 
-def test_all(root):
-    dict = root.pkg(spark, 'pipes/all', True)
-    assert 'all' in dict
+#def test_all(root): dict = root.pkg(spark, 'pipes/all', True)
