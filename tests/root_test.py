@@ -21,3 +21,6 @@ def test_new(root):
     cvm = root.new(spark, TEST_KEY)
     assert cvm
     assert "test" == cvm.log("test")
+    yml = cvm.yaml
+    assert 'env' in yml
+    assert 'org' in yml['env']
