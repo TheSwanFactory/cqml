@@ -59,8 +59,8 @@ actions:
     from: grouped
     operator: +
     args:
-        - next
-        - num
+        - text
+        - sum_num
   calc_quarters:
     do: calc
     from: plus_operator
