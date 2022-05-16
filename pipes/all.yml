@@ -12,5 +12,5 @@ actions:
     do: run
     start: 0500
     pipes:
-      - demo
-      - test
+      - demo/demo
+      - test/cqml

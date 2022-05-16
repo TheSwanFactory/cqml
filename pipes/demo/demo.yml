@@ -37,7 +37,7 @@ actions:
         file_ext: csv
         expiration_date: '2200-02-02'
     cols:
-      letter: sort
+      better: sort
       dat: sort
   widget-report:
     do: report
