@@ -26,11 +26,8 @@ class Root:
         folder = yml[kEnv]["project"]
         env = {}
         if self.root in self.env: env.update(self.env[self.root])
-        print(f'set_env.root:{env}')
         if folder in self.env: env.update(self.env[folder])
-        print(f'set_env.folder:{env}')
         if kEnv in yml: env.update(yml[kEnv])
-        print(f'set_env.kEnv:{env}')
         yml[kEnv] = env
         return env
 
@@ -46,9 +43,7 @@ class Root:
         cvm.run();
         return pkg_cvm(cvm)
 
-    def pkg_all(self, spark, debug=False):
-        pkgs = {key:self.pkg(spark, key, debug) for key in self.keys()}
-        return pkgs
+    #def pkg_all(self, spark, debug=False): return {key:self.pkg(spark, key, debug) for key in self.keys()}
 
     def scan(self, root):
         for entry in os.scandir(root):

@@ -1,0 +1,16 @@
+cqml: 0.6
+order: 0.0
+id: main
+env:
+  org: nauto
+  bucket: biz-databricks-root-prod-us
+  catalog: quilt
+  root: /dbfs/tmp
+  path: .
+actions:
+  all:
+    do: run
+    start: 0500
+    pipes:
+      - demo
+      - test
