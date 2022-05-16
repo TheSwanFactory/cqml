@@ -12,7 +12,7 @@ BOX_KEYS="client_id,client_secret,enterprise_id,jwt_key_id,rsa_private_key_file_
 from boxsdk import Client, OAuth2, JWTAuth
 from pyspark.sql import Row
 from pyspark.sql.functions import udf,lit
-from pyspark.sql.types import StringType
+from pyspark.sql.types import StringType, StructType
 import os
 
 def dir_row(folder):
@@ -150,4 +150,4 @@ class BoxQuilt:
         if len(array) > 0:
             print(f'box_table: {len(array)}')
             return self.spark.createDataFrame([Row(**i) for i in array])
-        return self.spark.createDataFrame(data = [], schema = StructType([]))
+        return self.spark.createDataFrame([], StructType([]))
