@@ -35,6 +35,8 @@ print(cvm.yaml['env'])
 #if not DEBUG:
 cvm.run()
 print(cvm.sizes)
+cvm.do_save()
+
 dbutils.notebook.exit(0)
 
 # COMMAND ----------

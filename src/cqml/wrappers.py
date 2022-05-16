@@ -21,7 +21,7 @@ class CQML(CVM):
         pkgs = {cqml:pkg_cqml(cqml, self.spark) for cqml in runs}
         return pkgs
 
-    def do_save(self, action):
+    def do_save(self, action={}):
         pkg = cvm2pkg(self, False) # do not re-run
         return pkg
 
