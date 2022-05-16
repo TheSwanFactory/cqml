@@ -24,3 +24,10 @@ def test_new(root):
     yml = cvm.yaml
     assert 'env' in yml
     assert 'org' in yml['env']
+
+def test_demo(root):
+    cvm = root.new(spark, 'demo/demo')
+    yml = cvm.yaml
+    assert 'env' in yml
+    assert 'org' in yml['env']
+    assert 'nauto' in yml['env']['org']

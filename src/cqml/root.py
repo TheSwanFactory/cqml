@@ -22,11 +22,15 @@ class Root:
         return yml[kEnv]
 
     def set_env(self, yml, key):
+        print(f'set_env:{key}')
         folder = yml[kEnv]["project"]
         env = {}
         if self.root in self.env: env.update(self.env[self.root])
+        print(f'set_env.root:{env}')
         if folder in self.env: env.update(self.env[folder])
+        print(f'set_env.folder:{env}')
         if kEnv in yml: env.update(yml[kEnv])
+        print(f'set_env.kEnv:{env}')
         yml[kEnv] = env
         return env
 
