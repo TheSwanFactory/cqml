@@ -71,8 +71,8 @@ actions:
         - $col
         - 4
     cols:
-      num: qnum
-      next: qnumb
+      sum_num: qnum
+      text: qnumb
       plus_operator: qdumb
   flagged:
     do: flag
