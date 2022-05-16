@@ -9,7 +9,7 @@ def read_yaml(yaml_file):
 
 class Root:
     def __init__(self, root):
-        self.root = root
+        self.root = root.split("/")[-1]
         self.pipes = {}
         self.env = {}
         self.scan(root)
