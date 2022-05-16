@@ -147,5 +147,7 @@ class BoxQuilt:
 
     def box_table(self):
         array = list(self.rows.values())
-        print(f'box_table: {len(array)}')
-        return self.spark.createDataFrame([Row(**i) for i in array])
+        if len(array) > 0:
+            print(f'box_table: {len(array)}')
+            return self.spark.createDataFrame([Row(**i) for i in array])
+        return self.spark.createDataFrame(data = [], schema = StructType([]))
