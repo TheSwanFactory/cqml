@@ -9,7 +9,7 @@
 !pip install --upgrade pip
 #!pip install cqml
 !pip --no-cache-dir install git+https://github.com/TheSwanFactory/cqml.git@convert45
-!pip install cqml==0.5.0.dev3
+!pip install cqml==0.5.0.dev4
 
 import cqml
 
@@ -27,14 +27,14 @@ CONF=getArgument("CONF")
 DEBUG=True if getArgument("DEBUG") == "DEBUG" else False
 print(f'Parameters[{CONF}]DEBUG={DEBUG}')
 cvm = root.new(spark, CONF, DEBUG)
-#print(cvm.status())
+print(cvm.yaml)
 
 # COMMAND ----------
 
 #if not DEBUG:
-    cvm.run()
-    print(cvm.sizes)
-    dbutils.notebook.exit(0)
+cvm.run()
+print(cvm.sizes)
+dbutils.notebook.exit(0)
 
 # COMMAND ----------
 
