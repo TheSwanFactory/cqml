@@ -9,7 +9,7 @@
 !pip install --upgrade pip
 #!pip install cqml
 !pip --no-cache-dir install git+https://github.com/TheSwanFactory/cqml.git@convert45
-!pip install cqml==0.5.0.dev17
+!pip install cqml==0.5.0.dev18
 
 import cqml
 
@@ -35,6 +35,8 @@ print(cvm.yaml['env'])
 #if not DEBUG:
 cvm.run()
 print(cvm.sizes)
+cvm.do_save()
+
 dbutils.notebook.exit(0)
 
 # COMMAND ----------
