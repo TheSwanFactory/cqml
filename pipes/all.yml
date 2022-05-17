@@ -3,7 +3,7 @@ order: 0.0
 id: main
 env:
   org: nauto
-  bucket: biz-databricks-root-prod-us
+  bucket: biz-databricks-prod-reports
   catalog: quilt
   root: /dbfs/tmp
   path: .
