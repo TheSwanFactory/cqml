@@ -17,7 +17,6 @@ time_format = "%A, %d %b %Y %H:%M:%S %p"
 from pathlib import Path
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
-QPKG = q3.Package()
 
 def cleanup_names(df):
     for c in df.columns:
@@ -162,13 +161,14 @@ class Package:
         self.url = f"{proj.url}/{self.name}/"
         self.path = f"{proj.path}/{self.name}/"
         self.dir = to_dir(self.path)
+        self.pkg = q3.Package.browse(self.name, registry=self.proj.repo, dest=self.path)
         if reset:
             shutil.rmtree(self.path,ignore_errors=True)
         make_dir(self.path)
         self.summaries={}
 
     def setup(self):
-        QPKG.install(self.name, registry=self.proj.repo, dest=self.path)
+        self.pkg.install(self.name, registry=self.proj.repo, dest=self.path)
 
     def read_csv(self, filename):
         path = self.path+filename
@@ -178,8 +178,10 @@ class Package:
 
     def cleanup(self, msg, meta = {"db2quilt":"v0.1"}):
         self.write_summary()
-        QPKG.set_dir('/',path=self.path, meta=meta)
-        QPKG.push(self.name, self.proj.repo, message=msg,force=True) #,
+        self.pkg.set_dir('/',path=self.path, meta=meta)
+        print(self.pkg)
+
+        self.pkg.push(self.name, self.proj.repo, message=msg,force=True) #,
         #shutil.rmtree(self.path)
         self.html = f'Published <a href="{self.url}">{self.name}</a> for <b>{msg}</b>'
         return self
