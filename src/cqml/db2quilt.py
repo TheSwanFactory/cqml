@@ -161,7 +161,7 @@ class Package:
         self.url = f"{proj.url}/{self.name}/"
         self.path = f"{proj.path}/{self.name}/"
         self.dir = to_dir(self.path)
-        self.pkg = q3.Package.browse(self.name, registry=self.proj.repo, dest=self.path)
+        self.pkg = q3.Package.browse(self.name, registry=self.proj.repo)
         if reset:
             shutil.rmtree(self.path,ignore_errors=True)
         make_dir(self.path)
