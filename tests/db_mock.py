@@ -10,7 +10,7 @@ class MockBox(object):
 
 class MockCol(object):
     def __init__(self, name): self.name = name
-    def alias(self, name,metadata={"meta":"data"}): return name
+    def alias(self, name,metadata={"env":"data"}): return name
     def contains(self, value): return True
     def desc(self): return True
 
@@ -70,7 +70,7 @@ class MockFrame(object):
 
 class MockSpark(object):
     def __init__(self): self.columns = []
-    def createDataFrame(self, list): return self.table('list')
+    def createDataFrame(self, list,  schema=[]): return self.table('list')
     def count(self): return self
     def distinct(self,arg=None): return self
     def get(self, arg): return f'mock.get:{arg}'

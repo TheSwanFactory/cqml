@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 import pytest
-from .context import cqml, TEST_YAML, DDIR
+from .context import cqml, TEST_KEY, DDIR
 from .db_mock import spark
 
 @pytest.fixture
 def cvm():
-    cvm = cqml.from_file(TEST_YAML, spark)
+    root = cqml.Root("pipes")
+    cvm = root.new(spark, TEST_KEY)
     cvm.test_id(DDIR)
     return cvm
 

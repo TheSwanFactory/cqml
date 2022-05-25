@@ -1,11 +1,5 @@
-cqml: 0.4.4
+cqml: 0.5.0
 id: cqml_demo
-meta:
-    org: nauto
-    project: sangam
-    s3.bucket: biz-databricks-root-prod-us
-    catalog: quilt
-    root: /dbfs/tmp
 actions:
   /Workspace/Repos/ernest.prabhakar@nauto.com/cqml/data:
     do: loadfiles
@@ -43,7 +37,7 @@ actions:
         file_ext: csv
         expiration_date: '2200-02-02'
     cols:
-      letter: sort
+      better: sort
       dat: sort
   widget-report:
     do: report
@@ -62,11 +56,11 @@ actions:
       letter: tbd
   plus_operator:
     do: call
-    from: rename_merged
+    from: grouped
     operator: +
     args:
-        - next
-        - num
+        - text
+        - sum_num
   calc_quarters:
     do: calc
     from: plus_operator
@@ -77,8 +71,8 @@ actions:
         - $col
         - 4
     cols:
-      num: qnum
-      next: qnumb
+      sum_num: qnum
+      text: qnumb
       plus_operator: qdumb
   flagged:
     do: flag
@@ -130,13 +124,3 @@ actions:
     cols:
       letter: tbd
       text: tbd
-  aggregates:
-    do: group
-    from: $id
-    agg:
-      concat_space: count
-      call_coalesce: sum
-    sort: n_concat_space
-    cols:
-      num: tbd
-      letter: tbd

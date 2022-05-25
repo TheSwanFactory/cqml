@@ -8,36 +8,62 @@
 
 !pip install --upgrade pip
 #!pip install cqml
-!pip --no-cache-dir install git+https://github.com/TheSwanFactory/cqml.git@ymm-6
-!pip install cqml==0.4.4.dev2
+!pip --no-cache-dir install git+https://github.com/TheSwanFactory/cqml.git@convert45
+!pip install cqml==0.5.0.dev24
 
 import cqml
 
 # COMMAND ----------
 
-KEY="cqml_test"
-cvm = cqml.load_cqml(KEY,spark, '.')
-cvm.debug = True
+CQML_ROOT="../pipes"
+root = cqml.Root(CQML_ROOT)
+keys = root.keys()
+print(f'{root.root}: {root.env}')
+dbutils.widgets.dropdown("CONF", keys[0], keys)
+dbutils.widgets.dropdown("DEBUG", "DEBUG", ["DEBUG", "PROD"])
+
+# COMMAND ----------
+
+CONF=getArgument("CONF")
+DEBUG=True if getArgument("DEBUG") == "DEBUG" else False
+print(f'Parameters[{CONF}]DEBUG={DEBUG}')
+cvm = root.new(spark, CONF, DEBUG)
+print(cvm.yaml['env'])
+
+# COMMAND ----------
+
+#if not DEBUG:
 cvm.run()
 print(cvm.sizes)
+cvm.do_save()
+
+dbutils.notebook.exit(0)
 
 # COMMAND ----------
 
-K = list(cvm.df.keys())
-print(K)
-def d(i): return cvm.df[K[i]]
-def view(i):
-  print(K[i])
-  d(i).show()
-def values(i, col): return d(i).select(col).distinct().collect()
-view(-1)
+cvm.init()
+steps = cvm.steps()
+print(steps)
+#dbutils.notebook.exit(0)
+
 
 # COMMAND ----------
 
-cvm.do_save({})
-displayHTML(cvm.pkg.html)
+df = {}
+def values(s, col): return df[s].select(col).distinct().collect()
+
+for step in steps:
+    print(step)
+    df[step] = cvm.test(step)
+    df[step].show()
 
 # COMMAND ----------
+
+cvm.save()
+displayHTML(cvm.result())
+
+# COMMAND ----------
+
 dbutils.notebook.exit(0)
 #spark.sql('create database nauto')
 

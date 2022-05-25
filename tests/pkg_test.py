@@ -1,14 +1,29 @@
 #!/usr/bin/env python3
 import pytest
-from .context import cqml, TEST_YAML
+from .context import *
 from .db_mock import spark
 
-def test_pkg():
-    dict = cqml.pkg_cqml('cqml_test', spark, 'tests')
+@pytest.fixture
+def root():
+    root = cqml.Root("pipes")
+    return root
+
+def test_pkg(root):
+    dict = root.pkg(spark, TEST_KEY, True)
     assert 'pkg' in dict
     assert 'html' in dict
     assert 'actions' in dict
 
-def skip_test_all():
-    dict = cqml.pkg_all(spark, 'tests')
-    assert 'cqml_test' in dict
+def test_pkg_demo(root):
+    dict = root.pkg(spark, TEST_DEMO, True)
+    assert 'pkg' in dict
+    assert 'html' in dict
+    assert 'actions' in dict
+
+def test_box(root):
+    cvm = root.new(spark, TEST_KEY)
+    cvm.test_id(DDIR)
+    it = cvm.test_id("box_details")
+    assert it
+
+#def test_all(root): dict = root.pkg(spark, 'pipes/all', True)

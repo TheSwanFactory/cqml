@@ -12,7 +12,7 @@ BOX_KEYS="client_id,client_secret,enterprise_id,jwt_key_id,rsa_private_key_file_
 from boxsdk import Client, OAuth2, JWTAuth
 from pyspark.sql import Row
 from pyspark.sql.functions import udf,lit
-from pyspark.sql.types import StringType
+from pyspark.sql.types import StringType, StructType
 import os
 
 def dir_row(folder):
@@ -119,7 +119,7 @@ class BoxQuilt:
         dbfs = list(self.rows.keys())
         to_create = list(set(dbfs) - set(box))
         to_update = list(set(dbfs).intersection(box))
-        print(f"create:{len(to_create)} update:{len(to_update)}")
+        print(f"box_create:{len(to_create)} update:{len(to_update)}")
 
         n = 0
         for name in to_create:
@@ -147,5 +147,7 @@ class BoxQuilt:
 
     def box_table(self):
         array = list(self.rows.values())
-        print(f'box_table: {len(array)}')
-        return self.spark.createDataFrame([Row(**i) for i in array])
+        if len(array) > 0:
+            print(f'box_table: {len(array)}')
+            return self.spark.createDataFrame([Row(**i) for i in array])
+        return self.spark.createDataFrame([], StructType([])) 

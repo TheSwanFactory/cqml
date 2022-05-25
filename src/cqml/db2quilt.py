@@ -17,7 +17,6 @@ time_format = "%A, %d %b %Y %H:%M:%S %p"
 from pathlib import Path
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
-QPKG = q3.Package()
 
 def cleanup_names(df):
     for c in df.columns:
@@ -112,8 +111,8 @@ dropdown = widgets.interact(callback, x=control)
 grid
 """
 def make_widget(opts):
-    print('make_widget')
-    print(opts)
+    #print('make_widget')
+    #print(opts)
     code = [NB_WIDGET.format(KEY=col,WIDGET=w) for col, w in opts.items()]
     cells = [[True, c] for c in code]
     return cells
@@ -133,9 +132,17 @@ def make_slug(name): return re.sub(r'[^\w-]', '_', name.lower())
 Quilt Wrappers
 """
 
+DEFAULT_ENV={
+    'catalog': PKG_DIR,
+    'root': PYROOT,
+}
+
+def get_env(env, key, default):
+    return env[key] if key in env else default
+
 class Project:
     def __init__(self, config):
-        org, bucket, project = itemgetter('org','s3.bucket','project')(config)
+        org, bucket, project = itemgetter('org','bucket','project')(config)
         pkg_dir = config['catalog'] if 'catalog' in config else PKG_DIR
         root = config['root'] if 'root' in config else PYROOT
         self.repo = "s3://"+bucket
@@ -147,20 +154,21 @@ class Project:
         return Package(id, self)
 
 class Package:
-    def __init__(self, id, proj, reset=False):
+    def __init__(self, id, proj, reset=True):
         self.id = id
         self.name = f"{proj.name}/{id}"
         self.proj = proj
         self.url = f"{proj.url}/{self.name}/"
         self.path = f"{proj.path}/{self.name}/"
         self.dir = to_dir(self.path)
+        self.pkg = q3.Package.browse(self.name, registry=self.proj.repo)
         if reset:
             shutil.rmtree(self.path,ignore_errors=True)
         make_dir(self.path)
         self.summaries={}
 
     def setup(self):
-        QPKG.install(self.name, registry=self.proj.repo, dest=self.path)
+        self.pkg.install(self.name, registry=self.proj.repo, dest=self.path)
 
     def read_csv(self, filename):
         path = self.path+filename
@@ -170,8 +178,10 @@ class Package:
 
     def cleanup(self, msg, meta = {"db2quilt":"v0.1"}):
         self.write_summary()
-        QPKG.set_dir('/',path=self.path, meta=meta)
-        QPKG.push(self.name, self.proj.repo, message=msg,force=True) #,
+        self.pkg.set_dir('/',path=self.path, meta=meta)
+        print(self.pkg)
+
+        self.pkg.push(self.name, self.proj.repo, message=msg,force=True) #,
         #shutil.rmtree(self.path)
         self.html = f'Published <a href="{self.url}">{self.name}</a> for <b>{msg}</b>'
         return self
@@ -293,10 +303,13 @@ class Package:
 #
 
 def extract_pkg(cvm):
-    id, config = itemgetter('id','meta')(cvm.yaml)
+#    print(cvm.yaml)
+    config = itemgetter(kEnv)(cvm.yaml)
+    #print(f"extract_pkg.config: {config}")
     proj = Project(config)
+    id = config["package"]
     pkg_id = id + DEBUG_SUFFIX if cvm.debug == True else id
-    print("extract_pkg: "+pkg_id)
+    #print("extract_pkg: "+pkg_id)
     pkg = proj.package(pkg_id)
     #pkg.setup()
     return pkg
